@@ -12,13 +12,35 @@ app.use('/user',userRouter)
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(__dirname + '/public'));
 
 // data base connecting
 
-mongoose.connect("mongodb://localhost:27017/iworld")
-  .then(data => {
-    console.log("Database Connected")
-  }).catch(err => console.log(err))
+// mongoose.connect("mongodb://localhost:27017/iworld")
+//   .then(data => {
+//     console.log("Database Connected")
+//   }).catch(err => console.log(err))
+
+
+//3SCSNGMjlr4GOIxG
+
+database=()=>{
+    const connectionParams = {
+        useNewUrlParser:true,
+        useUnifiedTopology:true,
+    }
+    
+    try{
+        mongoose.connect("mongodb+srv://Shibil:3SCSNGMjlr4GOIxG@cluster0.fxwwlws.mongodb.net/?retryWrites=true&w=majority")
+        connectionParams,
+        console.log("Databse connected");
+    
+    }catch(err){
+        console.log("Database Failed");
+    }
+}
+
+database();
 
 // server coccenting 
 
