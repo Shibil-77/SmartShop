@@ -1,5 +1,5 @@
 
-const userSchema= require('../models/shecma/user-schema')
+const users= require('../models/shecma/user-schema')
 const bcrypt =require('bcrypt')
 const mongoose =require('mongoose')
 
@@ -26,52 +26,61 @@ module.exports = {
     doSignup :async(req,res)=>{
         user = req.body
         // data des
-        try {
-           const {
-            Name,
-            Email,
-            Age,
-            Phone,
-            Password,
-            confirmPassword
-           }=user  
-        //    console.log(Password);
-           if(Password===confirmPassword){
-          
-            // password bcrypt
-            bcryptpassword = await bcrypt.hash(Password,10)
-            // console.log(bcryptpassword);
-
-            // schema
-            const userData = new userSchema({
-                Name,
-                Email,
-                Age,
-                Phone,
-                Password:bcryptpassword
-            })
-            // console.log(userData);
-            //data Add to  database
-            // userData.save(err=>{
-            //     if(err){
-            //         console.log("data insert error");
-            //     }else{
-            //        console.log("insert data");
-            //     }
-            // })
-            userData.save().then((result)=>{
-                console.log(result);
-            }).catch((err)=>{
-                console.log(err);
-            })
-            
-           }else{
-           console.log("hello");
-           }
-        } catch (error) {
-            console.log("error");
+        let ouser = await collection('users').findOne({ email: userData.email })
+        if(ouser){
+          console.log("user excest");
         }
-    
-    }
+        else{
+            try {
+                const {
+                 Name,
+                 Email,
+                 Age,
+                 Phone,
+                 Password,
+                 confirmPassword
+                }=user  
+             //    console.log(Password);
+                if(Password===confirmPassword){
+               
+                 // password bcrypt
+                 bcryptpassword = await bcrypt.hash(Password,10)
+                 // console.log(bcryptpassword);
+     
+                 // schema
+                 const userData = new users({
+                     Name,
+                     Email,
+                     Age,
+                     Phone,
+                     Password:bcryptpassword
+                 })
+                 console.log(userData);
+                 //data Add to  database
+                 // userData.save(err=>{
+                 //     if(err){
+                 //         console.log("data insert error");
+                 //     }else{
+                 //        console.log("insert data");
+                 //     }
+                 // })
+                 userData.save()
+                     .then(data => {
+                         console.log(data);
+                     })
+                     .catch(err => {
+                         console.log(err);
+                     })
+               
+                }else{
+                console.log("hello");
+                }
+             } catch (error) {
+                 console.log("error");
+             }
+         
+         }
+        }
+        
 
 }
