@@ -3,8 +3,14 @@ const app =express()
 const ejs = require('ejs');
 const mongoose = require("mongoose");
 const path = require ('path')
-
+const bodyParser =require('body-parser')
 const userRouter = require('./routes/user')
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
+
+
+
 app.use('/',userRouter)
 
 
@@ -13,6 +19,8 @@ app.use('/',userRouter)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
+
+
 
 // data base connecting
 //password 3SCSNGMjlr4GOIxG

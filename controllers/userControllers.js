@@ -13,5 +13,10 @@ module.exports = {
     },
     forgotPassword :(req,res)=>{
         res.render('user/forgot-password')
+    },
+    doSignup :(req,res)=>{
+    console.log(req.body);
+    
     }
+
 }

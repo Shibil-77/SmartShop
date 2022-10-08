@@ -41,7 +41,7 @@
 <h2>Create Your Account</h2>
 <p>Please fill all forms to continued</p>
 
-<form class="form" method="post" action="#">
+<form class="form" method="post" action="/signup">
 <div class="row">
 <div class="col-12">
 <div class="form-group">
@@ -56,9 +56,31 @@
 </div>
 </div>
 <div class="col-12">
+<div class="row">
+<div class="col-6">
+<div class="form-group">
+     <label>Age<span>*</span></label>
+     <input type="number" name="age" placeholder="Age" required="required">
+</div>
+</div>
+<div class="col-6">
+<div class="form-group">
+    <label>Phone<span>*</span></label>
+    <input type="number" name="phone" placeholder="Phone" required="required">
+</div>
+</div>
+</div>
+</div>
+<div class="col-12">
 <div class="form-group">
 <label>Password<span>*</span></label>
 <input type="password" name="password" placeholder="********" required="required">
+</div>
+</div>
+<div class="col-12">
+<div class="form-group">
+    <label>conPassword<span>*</span></label>
+    <input type="password" name="confirmpassword" placeholder="********" required="required">
 </div>
 </div>
 <div class="col-12">
