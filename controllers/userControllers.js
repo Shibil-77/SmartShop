@@ -5,8 +5,8 @@ module.exports = {
     login :(req,res)=>{
         res.render('user/loginPage')
     },
-    singup :(req,res)=>{
-        res.render('user/singup')
+    signup :(req,res)=>{
+        res.render('user/register')
     },
     error :(req,res)=>{
         res.render('user/error')
