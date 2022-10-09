@@ -10,10 +10,12 @@ router.route('/login')
 router.route('/signup')
        .get(controller.signup)
        .post(controller.doSignup)
-
 router.get('/404',controller.error)
 router.get('/forgotPassword',controller.forgotPassword)
-
+router.get('/Profile',controller.Profile)
+router.route('/editProfile')
+      .get(controller.editProfile)
+      .post(controller.postProfile)
 
 
 module.exports = router;
