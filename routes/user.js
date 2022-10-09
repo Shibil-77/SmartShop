@@ -4,7 +4,9 @@ const controller = require('../controllers/userControllers')
 
 
 router.get('/',controller.home)
-router.get('/login',controller.login)
+router.route('/login')
+            .get(controller.login)
+            .post(controller.dologin)
 router.route('/signup')
        .get(controller.signup)
        .post(controller.doSignup)

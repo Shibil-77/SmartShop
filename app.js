@@ -6,22 +6,16 @@ const path = require ('path')
 const bodyParser =require('body-parser')
 const userRouter = require('./routes/user')
 
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
-
-
 app.use('/',userRouter)
-
 
 // set the view engine to ejs
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
-
-
 
 // data base connecting
 //password 3SCSNGMjlr4GOIxG

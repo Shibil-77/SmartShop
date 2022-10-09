@@ -26,9 +26,9 @@ module.exports = {
     doSignup :async(req,res)=>{
         user = req.body
         // data des
-        let ouser = await collection('users').findOne({ email: userData.email })
-        if(ouser){
-          console.log("user excest");
+        let ouser = await users.find({ Email:user.Email})
+        if(ouser[0]){
+          console.log("user ");
         }
         else{
             try {
@@ -41,12 +41,9 @@ module.exports = {
                  confirmPassword
                 }=user  
              //    console.log(Password);
-                if(Password===confirmPassword){
-               
+                if(Password===confirmPassword){             
                  // password bcrypt
-                 bcryptpassword = await bcrypt.hash(Password,10)
-                 // console.log(bcryptpassword);
-     
+                 bcryptpassword = await bcrypt.hash(Password,10)    
                  // schema
                  const userData = new users({
                      Name,
@@ -55,32 +52,39 @@ module.exports = {
                      Phone,
                      Password:bcryptpassword
                  })
-                 console.log(userData);
                  //data Add to  database
-                 // userData.save(err=>{
-                 //     if(err){
-                 //         console.log("data insert error");
-                 //     }else{
-                 //        console.log("insert data");
-                 //     }
-                 // })
                  userData.save()
                      .then(data => {
-                         console.log(data);
+                        res.redirect('/')
                      })
                      .catch(err => {
                          console.log(err);
                      })
-               
                 }else{
                 console.log("hello");
                 }
              } catch (error) {
                  console.log("error");
              }
-         
          }
-        }
-        
+        },
 
+    //    <- ========dologin======== ->
+
+        dologin:async(req,res)=>{
+          let User = await users.findOne({ Email:req.body.Email})
+          console.log(User);   
+          if(User.Email===req.body.Email){
+            bcrypt.compare(req.body.Password,User.Password).then((data)=>{
+               if(data){
+                res.redirect('/')
+               }else{
+                console.log("password invalied");
+               }
+            })
+          }else{
+            console.log("user ex");
+          }
+        },
+        
 }
