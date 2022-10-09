@@ -13,7 +13,8 @@ router.route('/signup')
 router.get('/404',controller.error)
 router.get('/forgotPassword',controller.forgotPassword)
 router.get('/Profile',controller.Profile)
-router.route('/editProfile')
+router.route('/editProfile/:id')
+    
       .get(controller.editProfile)
       .post(controller.postProfile)
 

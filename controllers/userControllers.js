@@ -22,16 +22,14 @@ module.exports = {
         res.render('user/forgot-password')
     },
     Profile :async(req,res)=>{
-        // console.log(profileEmail);
         let profile = await users.find({ Email:profileEmail})
-        // console.log(profile);
         res.render('user/profile',{profile})
     },
     editProfile :async(req,res)=>{
         let Profile = await users.find({ Email:profileEmail})   
         res.render('user/editProfile',{Profile})
     },
-  
+// <- ====================================================== post method ====================================== ->
 //   <========== dosignup ========>
 
     doSignup :async(req,res)=>{
@@ -107,8 +105,11 @@ module.exports = {
             console.log("user ex");
           }
         },
+
+        //    <- ======== edit profile======== ->
+
         postProfile :(req,res)=>{
-           console.log(req.body);
+           console.log(req.params.id);   
         }
         
 }
