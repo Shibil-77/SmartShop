@@ -5,11 +5,13 @@ const mongoose = require("mongoose");
 const path = require ('path')
 const bodyParser =require('body-parser')
 const userRouter = require('./routes/user')
+const adminRouter = require('./routes/admin')
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
 app.use('/',userRouter)
+app.use('/admin',adminRouter)
 
 // set the view engine to ejs
 
