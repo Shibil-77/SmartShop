@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/userControllers')
-
-
 router.get('/',controller.home)
 router.route('/login')
             .get(controller.login)
@@ -17,4 +15,5 @@ router.route('/editProfile/:id')
       .get(controller.editProfile)
       .post(controller.postProfile)
 
+      
 module.exports = router;

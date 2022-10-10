@@ -86,7 +86,6 @@ module.exports = {
              }
          }
         },
-
     //    <- ========dologin======== ->
 
         dologin:async(req,res)=>{
@@ -97,19 +96,19 @@ module.exports = {
                if(data){
                 profileEmail =req.body.Email
                 res.redirect('/')
-               }else{
+            }else{
                 console.log("password invalied");
                }
             })
           }else{
             console.log("user ex");
-          }
-        },
-
-        //    <- ======== edit profile======== ->
-
-        postProfile :(req,res)=>{
-           console.log(req.params.id);   
         }
+        },
+        //    <- ======== edit profile======== ->
+        postProfile :(req,res)=>{
+            console.log(req.params.id);   
+        }
+    }
+    
+    
         
-}
