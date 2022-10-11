@@ -3,5 +3,7 @@ const router = express.Router()
 const controller = require('../controllers/adminControllers')
 
 router.get('/',controller.productList)
-router.get('/add-prod')
+router.route('/addproduct')
+      .get(controller.addProduct)
+      .post(controller.doProduct)
 module.exports = router;
