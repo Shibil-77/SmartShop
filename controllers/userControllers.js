@@ -3,6 +3,7 @@ const users= require('../models/shecma/user-schema')
 const bcrypt =require('bcrypt')
 const mongoose =require('mongoose')
 
+
 let profileEmail
 module.exports = {
     
@@ -103,10 +104,33 @@ module.exports = {
         }
         },
         //    <- ======== edit profile======== ->
-        postProfile :(req,res)=>{
-            console.log(req.params.id);   
+        postProfile : async(req,res)=>{
+            try{
+            console.log(req.params.id); 
+            ProfileId =req.params.id
+             console.log("ProfileId=",ProfileId);
+            console.log(req.body);
+             await  users.findOneAndUpdate(  
+            { _id: mongoose.Types.ObjectId(ProfileId)}  ,
+            {$set:{
+             Name:req.body.Name,
+             Age:req.body.Age,
+             Email:req.body.Email,
+             Phone:req.body.Phone
+          }})
         }
+        catch(e){
+            console.log("e",)
+        }
+        },
+        
     }
     
-    
+    // User.update({name:"Gourav"}, function (err, result) {
+    //     if (err){
+    //         console.log(err)
+    //     }else{
+    //         console.log("Result :", result) 
+    //     }
+    // });
         

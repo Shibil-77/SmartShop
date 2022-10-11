@@ -4,6 +4,8 @@ const controller = require('../controllers/adminControllers')
 
 router.get('/',controller.productList)
 router.route('/addproduct')
-      .get(controller.addProduct)
-      .post(controller.doProduct)
+      .get(controller.viewProduct)
+      .post(controller.addProduct)
+router.get('/user',controller.userList) 
+
 module.exports = router;

@@ -11,9 +11,6 @@ router.route('/signup')
 router.get('/404',controller.error)
 router.get('/forgotPassword',controller.forgotPassword)
 router.get('/Profile',controller.Profile)
-router.route('/editProfile/:id')
-      .get(controller.editProfile)
-      .post(controller.postProfile)
-
-      
+router.get('/editprofile',controller.editProfile)
+router.post('/editprofile/:id',controller.postProfile)  
 module.exports = router;

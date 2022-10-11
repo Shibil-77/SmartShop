@@ -30,6 +30,7 @@
 </div>
 
 
+
 <section class="shop section">
 <div class="container">
 <div class="row">
@@ -58,11 +59,12 @@
 <th>Price</th>
 <th>Action</th>
 </tr>
+<% product.forEach(product => { %>
 <tr class="account-order-list">
 <td class="product-img"><img src="/img/products/p20.png" alt=""></td>
-<td><div class="product-info">Wireless Headphones</div></td>
-<td><div class="product-info">55 Pcs</div></td>
-<td><div class="product-info">$150.00</div></td>
+<td><div class="product-info"><%-product.Name %></div></td>
+<td><div class="product-info"><%-product.Stock %></div></td>
+<td><div class="product-info"><%-product.Price %></div></td>
 <td>
 <div class="product-info">
 <a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
@@ -70,42 +72,7 @@
 </div>
 </td>
 </tr>
-<tr class="account-order-list">
-<td class="product-img"><img src="/img/products/p20.png" alt=""></td>
-<td><div class="product-info">Wireless Headphones</div></td>
-<td><div class="product-info">55 Pcs</div></td>
-<td><div class="product-info">$150.00</div></td>
-<td>
-<div class="product-info">
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
-</div>
-</td>
-</tr>
-<tr class="account-order-list">
-<td class="product-img"><img src="/img/products/p20.png" alt=""></td>
-<td><div class="product-info">Wireless Headphones</div></td>
-<td><div class="product-info">55 Pcs</div></td>
-<td><div class="product-info">$150.00</div></td>
-<td>
-<div class="product-info">
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
-</div>
- </td>
-</tr>
-<tr class="account-order-list">
-<td class="product-img"><img src="/img/products/p20.png" alt=""></td>
-<td><div class="product-info">Wireless Headphones</div></td>
-<td><div class="product-info">55 Pcs</div></td>
-<td><div class="product-info">$150.00</div></td>
-<td>
-<div class="product-info">
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
-</div>
-</td>
-</tr>
+<% }) %>
 </table>
 </div>
 <div class="col-12">

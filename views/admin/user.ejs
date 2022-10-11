@@ -11,6 +11,7 @@
 </div>
 </div>
 </div>
+
 <%- include('../inclueds/navbar.ejs'); %>
 
 <div class="breadcrumbs">
@@ -20,7 +21,7 @@
 <div class="bread-inner">
 <ul class="bread-list">
 <li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
-<li class="active"><a href="#">Edit Profile</a></li>
+<li class="active"><a href="#">Product List</a></li>
 </ul>
 </div>
 </div>
@@ -29,65 +30,68 @@
 </div>
 
 
+
 <section class="shop section">
 <div class="container">
 <div class="row">
 <div class="col-lg-3 mb-4">
 <div class="account-sidebar">
-<h6 class="sidebar-title">DASHBOARD</h6>
 <div class="sidebar-list">
-<a href="order-list.html" class="active"><i class="far fa-shopping-bag"></i> Orders <span>10</span></a>
-<a href="wishlist.html"><i class="far fa-heart"></i> Wishlist <span>20</span></a>
-<a href="support-ticket.html"><i class="far fa-headset"></i> Support Tickets <span>2</span></a>
-</div>
-<h6 class="sidebar-title mt-4">PROFILE SETTINGS</h6>
-<div class="sidebar-list">
-<a href="profile.html"><i class="far fa-user"></i> Profile Info</a>
-<a href="address-list.html"><i class="far fa-map-marker-alt"></i> Addresses <span>20</span></a>
-<a href="payment-method.html"><i class="far fa-credit-card"></i> Payment Methods <span>2</span></a>
+<a href="dashboard.html" class="active"><i class="far fa-th-large"></i> Dashboard</a>
+<a href="product.html"><i class="far fa-layer-group"></i> Products <span>20</span></a>
+<a href="add-product.html"><i class="far fa-upload"></i> Add New Product</a>
+<a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
+<a href="vendor-profile.html"><i class="far fa-cog"></i> Account Settings</a>
+<a href="#"><i class="far fa-lock"></i> Logout</a>
 </div>
 </div>
 </div>
-
-
-<% Profile.forEach(Profile => { %>
 <div class="col-lg-9">
-<div class="account-content bg-white pt-0">
-<h4 class="account-content-title"><i class="far fa-user"></i> Edit Profile</h4>
-<div class="edit-profile">
-<form action="/editProfile/<%-Profile.id%>" method="post">
- <div class="profile-img">
-<img src="/img/products/review.jpg" alt="">
-<i class="fal fa-camera"></i>
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-map-marker-alt"></i> Products</h4>
+<div class="account-content-table">
+<div class="table-responsive">
+<table class="table table-borderless">
+<tr>
+<th>Image</th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Age</th>
+<th>LoginDate</th>
+<th>Action</th>
+</tr>
+<% userData.forEach(userData => { %>
+<tr class="account-order-list">
+<td class="product-img"><img src="/img/products/p20.png" alt=""></td>
+<td><div class="product-info"><%-userData.Name %></div></td>
+<td><div class="product-info"><%-userData.Email %></div></td>
+<td><div class="product-info"><%-userData.Phone %></div></td>
+<td><div class="product-info"><%-userData.Age %></div></td>
+<td><div class="product-info"><%-userData.Date %></div></td>
+<td>
+<div class="product-info">
+<a href="" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
+<a href="#" class="content-action"><i class="far fa-trash"></i></a>
 </div>
-<div class="row">
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="fname" class="form-label">First Name</label>
-<input type="text" name="Name" class="form-control" value="<%-Profile.Name %>" id="fname">
+</td>
+</tr>
+<% }) %>
+</table>
 </div>
+<div class="col-12">
+
+<div class="pagination center mt-2">
+<ul class="pagination-list">
+<li><a href="#"><i class="ti-arrow-left"></i></a></li>
+<li><a href="#">1</a></li>
+<li class="active"><a href="#">2</a></li>
+<li><a href="#">3</a></li>
+<li><a href="#"><i class="ti-arrow-right"></i></a></li>
+</ul>
 </div>
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="email" class="form-label">Email</label>
-<input type="email" name="Email" class="form-control" value="<%-Profile.Email %>" id="email">
+
 </div>
-</div>
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="lname" class="form-label">Age</label>
-<input type="number" name="Age" class="form-control" value="<%-Profile.Age %>" id="lname">
-</div>
-</div>
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="phone" class="form-label">Phone</label>
-<input type="number" name="Phone" class="form-control" value="<%-Profile.Phone %>" id="phone">
-</div>
-</div>
-</div>
-<button class="btn" type="submit">Save Changes</button>
-</form>
 </div>
 </div>
 </div>
@@ -95,7 +99,6 @@
 </div>
 </section>
 
-<% }) %>
 
 <section class="shop-newsletter py-5">
 <div class="container">
@@ -180,6 +183,7 @@
 </div>
 </div>
 </div>
+
 <%- include('../inclueds/end.ejs'); %>
 
 </body>
