@@ -67,7 +67,8 @@ module.exports = {
                      Age,
                      Phone,
                      Password:bcryptpassword,
-                     Date:today
+                     Date:today,
+                     Action:true
                  })
                  //data Add to  database
                  userData.save()
@@ -89,19 +90,24 @@ module.exports = {
 
         dologin:async(req,res)=>{
           let User = await users.findOne({ Email:req.body.Email})
-        //   console.log(User);   
-          if(User.Email===req.body.Email){
-            bcrypt.compare(req.body.Password,User.Password).then((data)=>{
-               if(data){
-                profileEmail =req.body.Email
-                res.redirect('/')
-            }else{
-                console.log("password invalied");
-               }
-            })
-          }else{
-            console.log("user ex");
-        }
+        //   console.log(User);
+        if(User.Action) {
+            if(User.Email===req.body.Email){
+                bcrypt.compare(req.body.Password,User.Password).then((data)=>{
+                   if(data){
+                    profileEmail =req.body.Email
+                    res.redirect('/')
+                }else{
+                    console.log("password invalied");
+                   }
+                })
+              }else{
+                console.log("user ex");
+            }
+        }else{
+            console.log("block");
+        }  
+          
         },
         //    <- ======== edit profile======== ->
         postProfile : async(req,res)=>{

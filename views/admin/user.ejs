@@ -38,7 +38,7 @@
 <div class="account-sidebar">
 <div class="sidebar-list">
 <a href="dashboard.html" class="active"><i class="far fa-th-large"></i> Dashboard</a>
-<a href="product.html"><i class="far fa-layer-group"></i> Products <span>20</span></a>
+<a href="product.html"><i class="far fa-layer-group"></i> users<span>20</span></a>
 <a href="add-product.html"><i class="far fa-upload"></i> Add New Product</a>
 <a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
 <a href="vendor-profile.html"><i class="far fa-cog"></i> Account Settings</a>
@@ -48,7 +48,7 @@
 </div>
 <div class="col-lg-9">
 <div class="account-content">
-<h4 class="account-content-title"><i class="far fa-map-marker-alt"></i> Products</h4>
+<h4 class="account-content-title"><i class="far fa-map-marker-alt"></i>Users</h4>
 <div class="account-content-table">
 <div class="table-responsive">
 <table class="table table-borderless">
@@ -71,8 +71,8 @@
 <td><div class="product-info"><%-userData.Date %></div></td>
 <td>
 <div class="product-info">
-<a href="" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
+    <a href="/admin/blockUser/<%=userData.id %>" class="bg-danger">block</a>
+    <a href="/admin/unblockUser/<%=userData.id %>" class="bg-success" >unblock</a>
 </div>
 </td>
 </tr>

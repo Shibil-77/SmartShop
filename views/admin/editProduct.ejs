@@ -32,6 +32,7 @@
 </div>
 </div>
 
+<% productData.forEach(productData => { %>
 
 <section class="shop section">
 <div class="container">
@@ -50,21 +51,21 @@
 </div>
 <div class="col-lg-9">
 <div class="account-content bg-white pt-0">
-<h4 class="account-content-title"><i class="far fa-layer-group"></i> Add Product</h4>
+<h4 class="account-content-title"><i class="far fa-layer-group"></i> Edit Product</h4>
 <div class="edit-profile">
-<form action="/admin/addProduct" method="post">
+<form action="/admin/editProduct/<%=productData.id %>" method="post">
 <div class="row">
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="name" class="form-label">Name</label>
-<input type="text" class="form-control" name="Name" id="name">
+<input type="text" class="form-control" name="Name" value="<%-productData.Name %>" id="name">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="category" class="form-label">Category</label>
-<select name="category" class="form-control" id="category">
-<option value="Select Category">Select Category</option>
+<select name="category" class="form-control"  id="category">
+<option value="<%-productData.Category %>">Select Category</option>
 <option value="Cloths">Cloths</option>
 <option value="Shirt">Shirt</option>
 <option value="Furniture">Furniture</option>
@@ -75,50 +76,56 @@
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="stock" class="form-label">Stock</label>
-<input type="text" class="form-control" name="Stock" id="stock">
+<input type="text" class="form-control" value="<%-productData.Stock %>" name="Stock" id="stock">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="tags" class="form-label">Brand</label>
-<input type="text" class="form-control" name="Brand" id="tags">
+<input type="text" class="form-control" value="<%-productData.Brand %>" name="Brand" id="tags">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="price" class="form-label">Price</label>
-<input type="text" class="form-control" name="Price" id="price">
+<input type="text" class="form-control" name="Price" value="<%-productData.Price %>" id="price">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="price" class="form-label">Discount Price</label>
-<input type="text" class="form-control" name="DiscountPrice" id="price">
+<input type="text" class="form-control" name="DiscountPrice" value="<%-productData.Discount %>" id="price">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="price" class="form-label">Views Type</label>
-<input type="text" class="form-control" name="type" id="price">
+<input type="text" class="form-control" name="type" value="<%-productData.type %>" id="price">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="thumnail" class="form-label">Thumnail</label>
-<input type="file" id="thumnail" name="Thumnail">
+<input type="file" id="thumnail" name="Thumnail" value="<%-productData.Thumnail %>">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="moreimage" class="form-label">More Image</label>
-<input type="file" id="moreimage" multiple name="moreImage">
+<input type="file" id="moreimage" multiple name="moreImage" value="<%-productData.moreImage %>">
 </div>
 </div>
-<div class="col-lg-12">
+<!-- <div class="col-lg-12">
 <div class="mb-3">
 <label for="description" class="form-label">Description</label>
-<textarea class="form-control" name="Descreiption"  id="description"  rows="6"></textarea>
+<textarea class="form-control" name="Descreiption"  id="description" value="<%-productData.Descreiption %>" rows="6"></textarea>
 </div>
+</div> -->
+<div class="col-lg-6">
+<div class="mb-3">
+<label for="price" class="form-label">Description</label>
+<input type="text" class="form-control" name="Descreiption" value="<%=productData.Discription %>" id="price">
+ </div>
 </div>
 </div>
 <button class="btn" type="submit">Save Product</button>
@@ -129,8 +136,7 @@
 </div>
 </div>
 </section>
-
-
+<% }) %>
 <section class="shop-newsletter py-5">
 <div class="container">
 <div class="inner-top">

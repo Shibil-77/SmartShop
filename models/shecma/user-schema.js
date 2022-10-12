@@ -25,9 +25,11 @@ const users = new Schema({
     Date:{
         type:String,
         required:true
+    },
+    Action:{
+        type:Boolean,
+        required:true
     }
-   
-   
    
 })
 module.exports =mongoose.model('users',users)
