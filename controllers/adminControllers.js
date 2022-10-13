@@ -1,6 +1,7 @@
 const products= require('../models/shecma/product-schema')
 const users= require('../models/shecma/user-schema')
 const mongoose =require('mongoose')
+const midlewares =require("../midlewares/midlewares")
 const { render } = require('ejs')
 module.exports = {
 adminError :(req,res)=>{
@@ -35,24 +36,27 @@ deleteProduct :async(req,res)=>{
 blockUser :async(req,res)=>{
 console.log(req.params.id);
 userId = req.params.id
-await  users.findOneAndUpdate(  
-    { _id: mongoose.Types.ObjectId(userId)}  ,
+await users.findOneAndUpdate(  
+    { _id: mongoose.Types.ObjectId(userId)},
     {$set:{
      Action:false
-  }})
-}    
-,
+    }})
+  res.redirect('/admin/user')
+},
 unblockUser :async(req,res)=>{
 userId = req.params.id
-try {
+console.log(req.params.id);
     await  users.findOneAndUpdate(  
-        { _id: mongoose.Types.ObjectId(userId)}  ,
+        { _id: mongoose.Types.ObjectId(userId)},
         {$set:{   Action:true   }})
-        res.redirect('admin/user')   
-} catch (error) {
-    console.log("hello");
-}     
-} ,
+        res.redirect('/admin/user')
+},
+addCategory :(req,res)=>{
+  res.render('/Category')
+},
+postCategory :()=>{
+
+},
 // <============== add PRoduct===============>
 addProduct :(req,res)=>{
    let productData = new products({
@@ -66,15 +70,13 @@ addProduct :(req,res)=>{
         moreImage:req.body.moreImage,
         type:req.body.type,
         Discription:req.body.Descreiption
-       
     })
    productData.save()
    .then(data => {
-    console.log("success");
+     console.log("success");
       res.redirect('/admin')
    })
    .catch(err => {
-    //    console.log(err);
     console.log("error");
    })
 },
@@ -84,10 +86,8 @@ console.log(req.body);
 try{
     console.log(req.params.id); 
  let ProductId =req.params.id
-     console.log("ProductId=",ProductId);
-    console.log(req.body);
-     await  products.findOneAndUpdate(  
-    { _id: mongoose.Types.ObjectId(ProductId)}  ,
+    await  products.findOneAndUpdate(  
+    { _id: mongoose.Types.ObjectId(ProductId)},
     {$set:{
      Name:req.body.Name,
      Price:req.body.Price,

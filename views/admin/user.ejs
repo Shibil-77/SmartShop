@@ -71,8 +71,11 @@
 <td><div class="product-info"><%-userData.Date %></div></td>
 <td>
 <div class="product-info">
-    <a href="/admin/blockUser/<%=userData.id %>" class="bg-danger">block</a>
-    <a href="/admin/unblockUser/<%=userData.id %>" class="bg-success" >unblock</a>
+    <% if (userData.Action) { %>
+        <a href="/admin/blockUser/<%=userData.id %>" class="bg-danger">block</a>
+        <%} else { %>
+            <a href="/admin/unblockUser/<%=userData.id %>" class="bg-success" >unblock</a>
+        <% } %>
 </div>
 </td>
 </tr>

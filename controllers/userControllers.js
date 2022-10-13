@@ -3,7 +3,7 @@ const users= require('../models/shecma/user-schema')
 const bcrypt =require('bcrypt')
 const mongoose =require('mongoose')
 
-
+let userError =null
 let profileEmail
 module.exports = {
     
@@ -14,7 +14,8 @@ module.exports = {
         res.render('user/loginPage')
     },
     signup :(req,res)=>{
-        res.render('user/register')
+        res.render('user/register',{userError})
+        userError=null
     },
     error :(req,res)=>{
         res.render('user/error')
@@ -39,7 +40,8 @@ module.exports = {
         profileEmail =req.body.Email
         let ouser = await users.find({ Email:user.Email})
         if(ouser[0]){
-          console.log("user");
+          userError ="user exist"
+          res.redirect('/signup')
         }
         else{
             try {
@@ -73,13 +75,15 @@ module.exports = {
                  //data Add to  database
                  userData.save()
                      .then(data => {
+                        req.session.user =userData
                         res.redirect('/')
                      })
                      .catch(err => {
                          console.log(err);
                      })
                 }else{
-                console.log("hello");
+                userError = "confirm  Password"
+                res.redirect('/signup')
                 }
              } catch (error) {
                  console.log("error");
@@ -106,16 +110,12 @@ module.exports = {
             }
         }else{
             console.log("block");
-        }  
-          
+        }        
         },
         //    <- ======== edit profile======== ->
         postProfile : async(req,res)=>{
             try{
-            console.log(req.params.id); 
             ProfileId =req.params.id
-             console.log("ProfileId=",ProfileId);
-            console.log(req.body);
              await  users.findOneAndUpdate(  
             { _id: mongoose.Types.ObjectId(ProfileId)}  ,
             {$set:{
@@ -131,12 +131,3 @@ module.exports = {
         },
         
     }
-    
-    // User.update({name:"Gourav"}, function (err, result) {
-    //     if (err){
-    //         console.log(err)
-    //     }else{
-    //         console.log("Result :", result) 
-    //     }
-    // });
-        

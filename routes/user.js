@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/userControllers')
+
 router.get('/',controller.home)
 router.route('/login')
             .get(controller.login)
@@ -13,4 +14,5 @@ router.get('/forgotPassword',controller.forgotPassword)
 router.get('/Profile',controller.Profile)
 router.get('/editprofile',controller.editProfile)
 router.post('/editprofile/:id',controller.postProfile)  
+
 module.exports = router;
