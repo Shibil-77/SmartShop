@@ -1,27 +1,36 @@
 const products= require('../models/shecma/product-schema')
 const users= require('../models/shecma/user-schema')
+const category =require('../models/shecma/category')
 const mongoose =require('mongoose')
-const midlewares =require("../midlewares/midlewares")
-const { render } = require('ejs')
+const midlewares =require("../Midlewares/midlewares")
+
+
+
 module.exports = {
+
 adminError :(req,res)=>{
  render('admin/error')
 },
+
 productList : async(req,res)=>{
     let product = await products.find()
     res.render('admin/product',{product})
 },
+
 viewProduct :(req,res)=>{
     res.render('admin/addProduct')
 },
+
 userList :async(req,res)=>{
     let userData = await users.find()
     res.render('admin/user',{userData})
 },
+
 editProduct :async(req,res)=>{
     let productData = await products.find()
     res.render('admin/editProduct',{productData})  
 },
+
 deleteProduct :async(req,res)=>{
      let productId =req.params.id
   try {
@@ -33,8 +42,8 @@ deleteProduct :async(req,res)=>{
     console.log("error=",error);
   }      
 },
+
 blockUser :async(req,res)=>{
-console.log(req.params.id);
 userId = req.params.id
 await users.findOneAndUpdate(  
     { _id: mongoose.Types.ObjectId(userId)},
@@ -43,21 +52,35 @@ await users.findOneAndUpdate(
     }})
   res.redirect('/admin/user')
 },
+
 unblockUser :async(req,res)=>{
 userId = req.params.id
-console.log(req.params.id);
     await  users.findOneAndUpdate(  
         { _id: mongoose.Types.ObjectId(userId)},
         {$set:{   Action:true   }})
         res.redirect('/admin/user')
 },
-addCategory :(req,res)=>{
-  res.render('/Category')
-},
-postCategory :()=>{
 
+addCategory :(req,res)=>{
+  res.render('admin/Category')
 },
+postCategory :(req,res)=>{
+  console.log(req.body.Category);
+  let categoryData = new category({
+      category:req.body.Category,
+})
+   categoryData.save()
+    .then(data => {
+    console.log("success");
+     res.redirect('/admin')
+  })
+  .catch(err => {
+   console.log("errorrr");
+  })
+},
+
 // <============== add PRoduct===============>
+
 addProduct :(req,res)=>{
    let productData = new products({
         Name:req.body.Name,
@@ -80,6 +103,8 @@ addProduct :(req,res)=>{
     console.log("error");
    })
 },
+
+
 postEditProduct :async(req,res)=>{
 console.log(req.params.id)
 console.log(req.body);
@@ -106,4 +131,6 @@ catch(e){
     console.log("e",)
 }
 }
+
+
 }

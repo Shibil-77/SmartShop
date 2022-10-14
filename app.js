@@ -6,6 +6,7 @@ const userRouter = require('./routes/user')
 const adminRouter = require('./routes/admin')
 const dataBase = require('./server')
 const session = require('express-session')
+const multer =require('multer')
 
 // set the session 
 
@@ -28,6 +29,22 @@ app.use('/admin',adminRouter)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
+
+// multer 
+
+// const fileEngine = multer.diskStorage({
+//   destination :(req,file,callback)=>{
+//       callback(null,'./public/sample/')
+//   },
+//   filename :(req,file,callback)=>{
+//    let imagename = Date.now() + '.jpg'
+//     callback(null,file.imagename)
+//   }
+//  })
+//  const upload =multer({storage:fileEngine})
+//  app.use(upload.array('image',4),(req,res,next)=>{
+//    next()
+//  })
 
 // data base connecting
 
