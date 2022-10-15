@@ -60,18 +60,19 @@
  <input type="text" class="form-control" name="Name" id="name">
 </div>
 </div>
+
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="category" class="form-label">Category</label>
 <select name="category" class="form-control" id="category">
-<option value="Select Category">Select Category</option>
-<option value="Cloths">Cloths</option>
-<option value="Shirt">Shirt</option>
-<option value="Furniture">Furniture</option>
-<option value="Gifts">Gifts</option>
+<option value="">Select Category</option>
+<% CATEGORY.forEach(CATEGORY => { %>
+<option value="<%-CATEGORY.category %>">"<%-CATEGORY.category %>"</option>
+<% }) %>
 </select>
 </div>
 </div>
+
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="stock" class="form-label">Stock</label>

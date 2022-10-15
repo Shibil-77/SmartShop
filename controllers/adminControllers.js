@@ -5,7 +5,7 @@ const mongoose =require('mongoose')
 const midlewares =require("../Midlewares/midlewares")
 
 
-
+let CATEGORY 
 module.exports = {
 
 adminError :(req,res)=>{
@@ -18,7 +18,7 @@ productList : async(req,res)=>{
 },
 
 viewProduct :(req,res)=>{
-    res.render('admin/addProduct')
+    res.render('admin/addProduct',{CATEGORY})
 },
 
 userList :async(req,res)=>{
@@ -64,13 +64,14 @@ userId = req.params.id
 addCategory :(req,res)=>{
   res.render('admin/Category')
 },
+
 postCategory :(req,res)=>{
   console.log(req.body.Category);
   let categoryData = new category({
       category:req.body.Category,
 })
    categoryData.save()
-    .then(data => {
+    .then(async(data) => {
     console.log("success");
      res.redirect('/admin')
   })
@@ -103,7 +104,6 @@ addProduct :(req,res)=>{
     console.log("error");
    })
 },
-
 
 postEditProduct :async(req,res)=>{
 console.log(req.params.id)
