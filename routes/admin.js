@@ -16,4 +16,7 @@ router.get('/unblockUser/:id',controller.unblockUser)
 router.route('/category')
        .get(controller.addCategory)
        .post(controller.postCategory)
+router.route('/viewType')
+       .get(controller.addviewType)
+       .post(controller.postviewType)       
 module.exports = router;

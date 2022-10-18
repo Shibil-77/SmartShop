@@ -1,6 +1,7 @@
 const products= require('../models/shecma/product-schema')
 const users= require('../models/shecma/user-schema')
 const category =require('../models/shecma/category')
+const viewType =require('../models/shecma/viewtype')
 const mongoose =require('mongoose')
 const midlewares =require("../Midlewares/midlewares")
 
@@ -17,8 +18,10 @@ productList : async(req,res)=>{
     res.render('admin/product',{product})
 },
 
-viewProduct :(req,res)=>{
-    res.render('admin/addProduct',{CATEGORY})
+viewProduct :async(req,res)=>{
+    let CATEGORY = await category.find()
+    let viewsType =await viewType.find()
+    res.render('admin/addProduct',{CATEGORY,viewsType})
 },
 
 userList :async(req,res)=>{
@@ -76,6 +79,25 @@ postCategory :(req,res)=>{
      res.redirect('/admin')
   })
   .catch(err => {
+   console.log("error");
+  })
+},
+
+addviewType :(req,res)=>{
+    res.render('admin/viewType')
+},
+
+postviewType :(req,res)=>{
+  console.log(req.body.viewType);
+  let viewTypeData = new viewType({
+    viewType:req.body.viewType,
+})
+    viewTypeData.save()
+    .then((data) => {
+    console.log("success");
+     res.redirect('/admin')
+  })
+  .catch(err => {
    console.log("errorrr");
   })
 },
@@ -95,6 +117,7 @@ addProduct :(req,res)=>{
         type:req.body.type,
         Discription:req.body.Descreiption
     })
+    console.log(productData);
    productData.save()
    .then(data => {
      console.log("success");
@@ -131,6 +154,4 @@ catch(e){
     console.log("e",)
 }
 }
-
-
 }
