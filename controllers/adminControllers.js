@@ -105,6 +105,7 @@ postviewType :(req,res)=>{
 // <============== add PRoduct===============>
 
 addProduct :(req,res)=>{
+  console.log(req.body.type);
    let productData = new products({
         Name:req.body.Name,
         Price:req.body.Price,
@@ -133,7 +134,7 @@ console.log(req.params.id)
 console.log(req.body);
 try{
     console.log(req.params.id); 
- let ProductId =req.params.id
+    let ProductId =req.params.id
     await  products.findOneAndUpdate(  
     { _id: mongoose.Types.ObjectId(ProductId)},
     {$set:{

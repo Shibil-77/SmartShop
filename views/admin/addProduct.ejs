@@ -99,16 +99,17 @@
 </div>
 <div class="col-lg-6">
     <div class="mb-3">
-    <label for="category" class="form-label">ViewsType</label>
-    <select name="category" class="form-control" id="category">
-    <% viewsType.forEach(viewsType => { %>
-    <option value="<%=viewsType.viewType %>">Select viewsType</option>
-    <option value="<%=viewsType.viewType %>"><%-viewsType.viewType %></option>
-    <% }) %>
-    </select>
-    </div>
-    </div>
-    <br>
+<label for="category" class="form-label">ViewsType</label>
+<select name="type" class="form-control"  id="category">
+    <option value="">Select Category</option>
+    <% viewsType.forEach(viewsType => { %>      
+        <option value="Cloths">Cloths</option>
+     <% }) %>
+       
+        </select>
+</div>
+</div>
+<br>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="thumnail" class="form-label">Thumnail</label>

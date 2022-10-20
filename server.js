@@ -6,7 +6,7 @@ module.exports = {
         useUnifiedTopology:true,
     }  
     try{
-        mongoose.connect("mongodb+srv://Shibil:3SCSNGMjlr4GOIxG@cluster0.fxwwlws.mongodb.net/?retryWrites=true&w=majority")
+        mongoose.connect("mongodb://localhost:27017/test")
         connectionParams,
         console.log("Databse connected");   
     }catch(err){
@@ -14,4 +14,7 @@ module.exports = {
     }
 }
 }
+
+// mongodb+srv://Shibil:3SCSNGMjlr4GOIxG@cluster0.fxwwlws.mongodb.net/?retryWrites=true&w=majority
 //password 3SCSNGMjlr4GOIxG
+
