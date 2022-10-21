@@ -67,7 +67,7 @@
 <select name="category" class="form-control" id="category">
 <option value="<%=CATEGORY.category %>">Select Category</option>
 <% CATEGORY.forEach(CATEGORY => { %>
-<option value="<%=CATEGORY.category %>">"<%-CATEGORY.category %>"</option>
+<option value="<%=CATEGORY.category %>"><%-CATEGORY.category %></option>
 <% }) %>
 </select>
 </div>
@@ -98,15 +98,14 @@
 </div>
 </div>
 <div class="col-lg-6">
-    <div class="mb-3">
+<div class="mb-3">
 <label for="category" class="form-label">ViewsType</label>
 <select name="type" class="form-control"  id="category">
-    <option value="">Select Category</option>
-    <% viewsType.forEach(viewsType => { %>      
-        <option value="Cloths">Cloths</option>
-     <% }) %>
-       
-        </select>
+<option value="<%=viewsType.viewsType %>">Select viewsType</option>
+<% viewsType.forEach(viewsType => { %>      
+<option value="<%=viewsType.viewType %>"><%-viewsType.viewType %></option>
+<% }) %>
+</select>
 </div>
 </div>
 <br>

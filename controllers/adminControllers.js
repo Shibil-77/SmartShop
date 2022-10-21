@@ -3,7 +3,7 @@ const users= require('../models/shecma/user-schema')
 const category =require('../models/shecma/category')
 const viewType =require('../models/shecma/viewtype')
 const mongoose =require('mongoose')
-const midlewares =require("../Midlewares/midlewares")
+// const midlewares =require("../Midlewares/midlewares")
 
 
 let CATEGORY 
@@ -12,28 +12,32 @@ module.exports = {
 adminError :(req,res)=>{
  render('admin/error')
 },
+      // productList
 
 productList : async(req,res)=>{
     let product = await products.find()
     res.render('admin/product',{product})
 },
-
+   // viewProduct
 viewProduct :async(req,res)=>{
     let CATEGORY = await category.find()
     let viewsType =await viewType.find()
     res.render('admin/addProduct',{CATEGORY,viewsType})
 },
-
+     //  userList
 userList :async(req,res)=>{
     let userData = await users.find()
     res.render('admin/user',{userData})
 },
-
+    //  editProduct
 editProduct :async(req,res)=>{
-    let productData = await products.find()
-    res.render('admin/editProduct',{productData})  
+    let productId =req.params.id
+    let productData = await products.findOne({_id:productId})
+    let CATEGORY = await category.find()
+    let viewsType =await viewType.find()
+    res.render('admin/editProduct',{productData,CATEGORY,viewsType})  
 },
-
+      // deleteProduct
 deleteProduct :async(req,res)=>{
      let productId =req.params.id
   try {
@@ -45,7 +49,7 @@ deleteProduct :async(req,res)=>{
     console.log("error=",error);
   }      
 },
-
+     //  blockUser
 blockUser :async(req,res)=>{
 userId = req.params.id
 await users.findOneAndUpdate(  
@@ -55,7 +59,7 @@ await users.findOneAndUpdate(
     }})
   res.redirect('/admin/user')
 },
-
+    // unblockUser
 unblockUser :async(req,res)=>{
 userId = req.params.id
     await  users.findOneAndUpdate(  
@@ -63,11 +67,11 @@ userId = req.params.id
         {$set:{   Action:true   }})
         res.redirect('/admin/user')
 },
-
+  // addCategory 
 addCategory :(req,res)=>{
   res.render('admin/Category')
 },
-
+     // postCategory
 postCategory :(req,res)=>{
   console.log(req.body.Category);
   let categoryData = new category({
@@ -82,11 +86,11 @@ postCategory :(req,res)=>{
    console.log("error");
   })
 },
-
+   //  addviewType
 addviewType :(req,res)=>{
     res.render('admin/viewType')
 },
-
+    // postviewType
 postviewType :(req,res)=>{
   console.log(req.body.viewType);
   let viewTypeData = new viewType({
@@ -101,9 +105,7 @@ postviewType :(req,res)=>{
    console.log("errorrr");
   })
 },
-
-// <============== add PRoduct===============>
-
+     // addProduct 
 addProduct :(req,res)=>{
   console.log(req.body.type);
    let productData = new products({
@@ -129,8 +131,8 @@ addProduct :(req,res)=>{
    })
 },
 
+   // postEditProduct
 postEditProduct :async(req,res)=>{
-console.log(req.params.id)
 console.log(req.body);
 try{
     console.log(req.params.id); 

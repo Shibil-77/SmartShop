@@ -30,23 +30,23 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
 
-// multer 
+//   < ========= multer  ======== >
 
-// const fileEngine = multer.diskStorage({
-//   destination :(req,file,callback)=>{
-//       callback(null,'./public/sample/')
-//   },
-//   filename :(req,file,callback)=>{
-//    let imagename = Date.now() + '.jpg'
-//     callback(null,file.imagename)
-//   }
-//  })
-//  const upload =multer({storage:fileEngine})
-//  app.use(upload.array('image',4),(req,res,next)=>{
-//    next()
-//  })
+const fileEngine = multer.diskStorage({
+  destination :(req,file,callback)=>{
+      callback(null,'./public/sample/')
+  },
+  filename :(req,file,callback)=>{
+   let imagename = Date.now() + '.jpg'
+    callback(null,file.imagename)
+  }
+ })
+ const upload =multer({storage:fileEngine})
+ app.use(upload.array('image',4),(req,res,next)=>{
+   next()
+ })
 
-// data base connecting
+// data base connecting 
 
 dataBase.database();
 

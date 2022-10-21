@@ -32,7 +32,7 @@
 </div>
 </div>
 
-<% productData.forEach(productData => { %>
+
 
 <section class="shop section">
 <div class="container">
@@ -58,21 +58,20 @@
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="name" class="form-label">Name</label>
-<input type="text" class="form-control" name="Name" value="<%-productData.Name %>" id="name">
+<input type="text" class="form-control" name="Name" value="<%=productData.Name %>" id="name">
 </div>
 </div>
 <div class="col-lg-6">
-<div class="mb-3">
-<label for="category" class="form-label">Category</label>
-<select name="category" class="form-control"  id="category">
-<option value="<%-productData.Category %>">Select Category</option>
-<option value="Cloths">Cloths</option>
-<option value="Shirt">Shirt</option>
-<option value="Furniture">Furniture</option>
-<option value="Gifts">Gifts</option>
-</select>
-</div>
-</div>
+    <div class="mb-3">
+    <label for="category" class="form-label">Category</label>
+    <select name="category" class="form-control" id="category">
+    <option value="<%=productData.category %>">Select Category</option>
+    <% CATEGORY.forEach(CATEGORY => { %>
+    <option value="<%=CATEGORY.category %>"><%-CATEGORY.category %></option>
+    <% }) %>
+    </select>
+    </div>
+    </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="stock" class="form-label">Stock</label>
@@ -97,12 +96,7 @@
 <input type="text" class="form-control" name="DiscountPrice" value="<%-productData.Discount %>" id="price">
 </div>
 </div>
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="price" class="form-label">Views Type</label>
-<input type="text" class="form-control" name="type" value="<%-productData.type %>" id="price">
-</div>
-</div>
+
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="thumnail" class="form-label">Thumnail</label>
@@ -115,6 +109,17 @@
 <input type="file" id="moreimage" multiple name="moreImage" value="<%-productData.moreImage %>">
 </div>
 </div>
+<div class="col-lg-6">
+    <div class="mb-3">
+    <label for="category" class="form-label">ViewsType</label>
+    <select name="type" class="form-control"  id="category">
+    <option value="<%=viewsType.viewsType %>">Select viewsType</option>
+    <% viewsType.forEach(viewsType => { %>      
+    <option value="<%=viewsType.viewType %>"><%-viewsType.viewType %></option>
+    <% }) %>
+    </select>
+    </div>
+    </div>
 <!-- <div class="col-lg-12">
 <div class="mb-3">
 <label for="description" class="form-label">Description</label>
@@ -136,13 +141,11 @@
 </div>
 </div>
 </section>
-<% }) %>
 <section class="shop-newsletter py-5">
 <div class="container">
 <div class="inner-top">
 <div class="row">
 <div class="col-lg-8 offset-lg-2 col-12">
-
 <div class="inner">
 <h4>Newsletter</h4>
 <p> Subscribe to our newsletter and get <span>30%</span> off your first purchase</p>
@@ -168,7 +171,7 @@
 <div class="modal-body">
 <div class="row">
 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-<img src="assets/img/products/p1.png" alt="#">
+<img src="/img/products/p1.png" alt="#">
 </div>
 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 <div class="quickview-content">
