@@ -18,18 +18,16 @@ app.use(express.static(__dirname + '/public'));
 
 //   < ========= multer  ======== >
  
- const fileimage = multer.diskStorage({
+ const filestorage = multer.diskStorage({
   destination:(req,file,callback)=>{
-    callback(null,"images")
+    callback(null,"public/img/sample")
   },
   filename:(req,file,callback)=>{
-    callback(null,new Date().toISOString + "_" +file.originalname)
-  }
-  
+    callback(null ,new Date()+file.originalname)
+  } 
  })
- 
-app.use(multer({dest:'public/img/sample'}).single('image'))
 
+app.use(multer({dest:'public/img/sample',filestorage: filestorage}).single('image'))
 
 // set the session 
 
