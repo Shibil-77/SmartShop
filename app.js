@@ -7,20 +7,28 @@ const adminRouter = require('./routes/admin')
 const dataBase = require('./server')
 const session = require('express-session')
 const multer =require('multer')
-const storage = multer.diskStorage({
-    destination : function(req,file,callback){
-      callback(null,'/public/sample/')
-    },
-    filename: function (req,file,callback) {
-      callback(null,Date.now() + file.originalname)
-    }
-})
 
-const upload = multer({storage : storage})
 
-app.use(upload.array('Thumnail', 3), function (req, res, next) {
-  next()
-})
+
+// set the view engine to ejs
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(__dirname + '/public'));
+
+//   < ========= multer  ======== >
+ 
+ const fileimage = multer.diskStorage({
+  destination:(req,file,callback)=>{
+    callback(null,"images")
+  },
+  filename:(req,file,callback)=>{
+    callback(null,new Date().toISOString + "_" +file.originalname)
+  }
+  
+ })
+ 
+app.use(multer({dest:'public/img/sample'}).single('image'))
 
 
 // set the session 
@@ -38,28 +46,6 @@ app.use(session({
 
 app.use('/',userRouter)
 app.use('/admin',adminRouter)
-
-// set the view engine to ejs
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(__dirname + '/public'));
-
-//   < ========= multer  ======== >
-
-// const fileEngine = multer.diskStorage({
-//   destination :(req,file,callback)=>{
-//       callback(null,'./public/sample/')
-//   },
-//   filename :(req,file,callback)=>{
-//    let imagename = Date.now() + '.jpg'
-//     callback(null,file.imagename)
-//   }
-//  })
-//  const upload =multer({storage:fileEngine})
-//  app.use(upload.array('image',4),(req,res,next)=>{
-//    next()
-//  })
 
 // data base connecting 
 

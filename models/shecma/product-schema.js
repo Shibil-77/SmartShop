@@ -14,10 +14,10 @@ const products = new Schema({
         type:String,
         required:true
     },
-    Thumnail :{
-        type:String,
-        required:true 
-    },
+    // Thumnail :{
+    //     type:String,
+    //     required:true 
+    // },
     Brand :{
         type:String,
         required:true

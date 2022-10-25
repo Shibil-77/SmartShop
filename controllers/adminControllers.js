@@ -3,8 +3,6 @@ const users= require('../models/shecma/user-schema')
 const category =require('../models/shecma/category')
 const viewType =require('../models/shecma/viewtype')
 const mongoose =require('mongoose')
-// const midlewares =require("../Midlewares/midlewares")
-
 
 let CATEGORY 
 module.exports = {
@@ -114,37 +112,25 @@ postviewType :(req,res)=>{
 },
      // addProduct 
 addProduct :(req,res,next)=>{
-  console.log(req.body.type);
-  let imagesName = [];
-  for (file of req.files) {
-      imagesName.push(file.filename)
-  }
+  // console.log(req.body.type);
+  const image =req.file
+  console.log(image);
    let productData = new products({
         Name:req.body.Name,
         Price:req.body.Price,
         Category:req.body.category,
-        Thumnail:req.body.Thumnail,
+        // Thumnail:req.body.Thumnail,
         Brand:req.body.Brand,
         Discount:req.body.DiscountPrice,
         Stock:req.body.Stock,
-        moreImage:imagesName,
+        moreImage:image.path,
         type:req.body.type,
         Discription:req.body.Descreiption
     })
-    console.log(productData);
    productData.save()
    .then(data => {
-    let image = req.files.image;
-    image.mv("./public/img/sample" + data.id + '.jpg', (err, done) => {
-        if (!err) {
-            res.redirect('/admin');
-        } else {
-            console.log(err);
-        }
+            res.redirect('/admin')
     })
-    console.log(result)
-    res.redirect('/admin');
-})
    .catch(err => {
     console.log("error");
    })
