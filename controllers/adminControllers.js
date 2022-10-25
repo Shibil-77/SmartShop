@@ -9,8 +9,15 @@ const mongoose =require('mongoose')
 let CATEGORY 
 module.exports = {
 
+  //  sample
+
+  sample:(req,res)=>{
+   res.render('admin/sample')
+  },
+
+
 adminError :(req,res)=>{
- render('admin/error')
+ res.render('admin/error')
 },
       // productList
 
@@ -106,8 +113,12 @@ postviewType :(req,res)=>{
   })
 },
      // addProduct 
-addProduct :(req,res)=>{
+addProduct :(req,res,next)=>{
   console.log(req.body.type);
+  let imagesName = [];
+  for (file of req.files) {
+      imagesName.push(file.filename)
+  }
    let productData = new products({
         Name:req.body.Name,
         Price:req.body.Price,
@@ -116,16 +127,24 @@ addProduct :(req,res)=>{
         Brand:req.body.Brand,
         Discount:req.body.DiscountPrice,
         Stock:req.body.Stock,
-        moreImage:req.body.moreImage,
+        moreImage:imagesName,
         type:req.body.type,
         Discription:req.body.Descreiption
     })
     console.log(productData);
    productData.save()
    .then(data => {
-     console.log("success");
-      res.redirect('/admin')
-   })
+    let image = req.files.image;
+    image.mv("./public/img/sample" + data.id + '.jpg', (err, done) => {
+        if (!err) {
+            res.redirect('/admin');
+        } else {
+            console.log(err);
+        }
+    })
+    console.log(result)
+    res.redirect('/admin');
+})
    .catch(err => {
     console.log("error");
    })

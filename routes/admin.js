@@ -18,5 +18,10 @@ router.route('/category')
        .post(controller.postCategory)
 router.route('/viewType')
        .get(controller.addviewType)
-       .post(controller.postviewType)       
+       .post(controller.postviewType)   
+router.route('/sample')
+       .get(controller.sample) 
+       // .post(controller.postSample)    
+       
+
 module.exports = router;
