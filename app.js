@@ -23,7 +23,7 @@ app.use(express.static(__dirname + '/public'));
     callback(null,"public/img/sample")
   },
   filename:(req,file,callback)=>{
-    callback(null ,new Date()+file.originalname)
+    callback(null,new Date().toISOString +  file.originalname)
   } 
  })
 
