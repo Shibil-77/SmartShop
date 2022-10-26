@@ -21,6 +21,7 @@ adminError :(req,res)=>{
 
 productList : async(req,res)=>{
     let product = await products.find()
+    console.log(product.moreImage);
     res.render('admin/product',{product})
 },
    // viewProduct
