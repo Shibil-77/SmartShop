@@ -6,14 +6,7 @@ const mongoose =require('mongoose')
 
 let CATEGORY 
 module.exports = {
-
-  //  sample
-
-  sample:(req,res)=>{
-   res.render('admin/sample')
-  },
-
-
+ 
 adminError :(req,res)=>{
  res.render('admin/error')
 },
@@ -21,21 +14,24 @@ adminError :(req,res)=>{
 
 productList : async(req,res)=>{
     let product = await products.find()
-    console.log(product.moreImage);
+    // console.log(product[0].moreImage);
     res.render('admin/product',{product})
 },
    // viewProduct
+
 viewProduct :async(req,res)=>{
     let CATEGORY = await category.find()
     let viewsType =await viewType.find()
     res.render('admin/addProduct',{CATEGORY,viewsType})
 },
      //  userList
+
 userList :async(req,res)=>{
     let userData = await users.find()
     res.render('admin/user',{userData})
 },
     //  editProduct
+
 editProduct :async(req,res)=>{
     let productId =req.params.id
     let productData = await products.findOne({_id:productId})
@@ -44,6 +40,7 @@ editProduct :async(req,res)=>{
     res.render('admin/editProduct',{productData,CATEGORY,viewsType})  
 },
       // deleteProduct
+
 deleteProduct :async(req,res)=>{
      let productId =req.params.id
   try {
@@ -56,6 +53,7 @@ deleteProduct :async(req,res)=>{
   }      
 },
      //  blockUser
+
 blockUser :async(req,res)=>{
 userId = req.params.id
 await users.findOneAndUpdate(  
@@ -66,6 +64,7 @@ await users.findOneAndUpdate(
   res.redirect('/admin/user')
 },
     // unblockUser
+
 unblockUser :async(req,res)=>{
 userId = req.params.id
     await  users.findOneAndUpdate(  
@@ -74,10 +73,12 @@ userId = req.params.id
         res.redirect('/admin/user')
 },
   // addCategory 
+
 addCategory :(req,res)=>{
   res.render('admin/Category')
 },
      // postCategory
+
 postCategory :(req,res)=>{
   console.log(req.body.Category);
   let categoryData = new category({
@@ -93,10 +94,12 @@ postCategory :(req,res)=>{
   })
 },
    //  addviewType
+
 addviewType :(req,res)=>{
     res.render('admin/viewType')
 },
     // postviewType
+
 postviewType :(req,res)=>{
   console.log(req.body.viewType);
   let viewTypeData = new viewType({
@@ -115,6 +118,8 @@ postviewType :(req,res)=>{
 addProduct :(req,res,next)=>{
   // console.log(req.body.type);
   const image =req.file
+  const sample = image.destination +'/'+ image.filename
+  console.log(sample);
   console.log(image);
    let productData = new products({
         Name:req.body.Name,
@@ -130,7 +135,7 @@ addProduct :(req,res,next)=>{
     })
    productData.save()
    .then(data => {
-            res.redirect('/admin')
+        res.redirect('/admin')
     })
    .catch(err => {
     console.log("error");
