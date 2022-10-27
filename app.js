@@ -8,13 +8,11 @@ const dataBase = require('./server')
 const session = require('express-session')
 const multer =require('multer')
 
-
-
 // set the view engine to ejs
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/'));
 
 //   < ========= multer  ======== >
 

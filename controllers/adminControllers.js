@@ -14,7 +14,8 @@ adminError :(req,res)=>{
 
 productList : async(req,res)=>{
     let product = await products.find()
-    // console.log(product[0].moreImage);
+    console.log(product[0].moreImage);
+    
     res.render('admin/product',{product})
 },
    // viewProduct
@@ -119,7 +120,7 @@ addProduct :(req,res,next)=>{
   // console.log(req.body.type);
   const image =req.file
   const sample = image.destination +'/'+ image.filename
-  console.log(sample);
+  // console.log(sample);
   console.log(image);
    let productData = new products({
         Name:req.body.Name,

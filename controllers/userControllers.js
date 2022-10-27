@@ -103,7 +103,7 @@ module.exports = {
                     res.redirect('/')
                 }else{
                     console.log("password invalied");
-                   }
+                }
                 })
               }else{
                 console.log("user ex");
