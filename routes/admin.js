@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/adminControllers')
-router.get('/',controller.productList)
+router.get('/product',controller.productList)
 router.get('/error',controller.adminError)
 router.route('/addproduct')
        .get(controller.viewProduct)
@@ -18,7 +18,8 @@ router.route('/category')
        .post(controller.postCategory)
 router.route('/viewType')
        .get(controller.addviewType)
-       .post(controller.postviewType)    
+       .post(controller.postviewType)
+router.get('/',controller.dashboard)    
 router.get('/categoryList',controller.categoryList)           
 
 module.exports = router;

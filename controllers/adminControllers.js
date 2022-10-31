@@ -10,6 +10,9 @@ module.exports = {
 adminError :(req,res)=>{
  res.render('admin/error')
 },
+dashboard :(req,res)=>{
+  res.render('admin/dashboard')
+},
       // productList
 
 productList : async(req,res)=>{

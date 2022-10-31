@@ -12,7 +12,7 @@
 </div>
 </div>
 
-<%- include('../inclueds/navbar.ejs'); %>
+<%- include('../inclueds/adminNavbar.ejs'); %>
 
 <div class="breadcrumbs">
 <div class="container">
@@ -34,18 +34,20 @@
 <section class="shop section">
 <div class="container">
 <div class="row">
-<div class="col-lg-3 mb-4">
-<div class="account-sidebar">
-<div class="sidebar-list">
-<a href="dashboard.html" class="active"><i class="far fa-th-large"></i> Dashboard</a>
-<a href="product.html"><i class="far fa-layer-group"></i> users<span>20</span></a>
-<a href="add-product.html"><i class="far fa-upload"></i> Add New Product</a>
-<a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
-<a href="vendor-profile.html"><i class="far fa-cog"></i> Account Settings</a>
-<a href="#"><i class="far fa-lock"></i> Logout</a>
-</div>
-</div>
-</div>
+  <div class="col-lg-3 mb-4">
+    <div class="account-sidebar">
+    <div class="sidebar-list">
+    <a href="/admin" class="active"><i class="far fa-th-large"></i> Dashboard</a>
+    <a href="/admin/product"><i class="far fa-layer-group"></i> Products <span>20</span></a>
+    <a href="/admin/addProduct"><i class="far fa-upload"></i> Add New Product</a>
+    <a href="/admin/category"><i class="far fa-upload"></i> Add New Catgory</a>
+    <a href="/admin/viewType"><i class="far fa-upload"></i> Add New ViewType</a>
+    <a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
+    <a href="/admin/user"><i class="far fa-cog"></i>Users </a>
+    <a href="#"><i class="far fa-lock"></i> Logout</a>
+    </div>
+    </div>
+    </div>
 <div class="col-lg-9">
 <div class="account-content">
 <h4 class="account-content-title"><i class="far fa-map-marker-alt"></i>Users</h4>
@@ -53,21 +55,17 @@
 <div class="table-responsive">
 <table class="table table-borderless">
 <tr>
-<th>Image</th>
 <th>Name</th>
 <th>Email</th>
 <th>Phone</th>
-<th>Age</th>
 <th>LoginDate</th>
 <th>Action</th>
 </tr>
 <% userData.forEach(userData => { %>
 <tr class="account-order-list">
-<td class="product-img"><img src="/img/products/p20.png" alt=""></td>
 <td><div class="product-info"><%-userData.Name %></div></td>
 <td><div class="product-info"><%-userData.Email %></div></td>
 <td><div class="product-info"><%-userData.Phone %></div></td>
-<td><div class="product-info"><%-userData.Age %></div></td>
 <td><div class="product-info"><%-userData.Date %></div></td>
 <td>
 <div class="product-info">

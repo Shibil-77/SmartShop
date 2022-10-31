@@ -13,7 +13,7 @@
 </div>
 </div>
 
-<%- include('../inclueds/navbar.ejs'); %>
+<%- include('../inclueds/adminNavbar.ejs'); %>
 
 
 
@@ -39,11 +39,13 @@
 <div class="col-lg-3 mb-4">
 <div class="account-sidebar">
 <div class="sidebar-list">
-<a href="dashboard.html" class="active"><i class="far fa-th-large"></i> Dashboard</a>
-<a href="product.html"><i class="far fa-layer-group"></i> Products <span>20</span></a>
-<a href="add-product.html"><i class="far fa-upload"></i> Add New Product</a>
+<a href="/admin" class="active"><i class="far fa-th-large"></i> Dashboard</a>
+<a href="/admin/product"><i class="far fa-layer-group"></i> Products <span>20</span></a>
+<a href="/admin/addProduct"><i class="far fa-upload"></i> Add New Product</a>
+<a href="/admin/category"><i class="far fa-upload"></i> Add New Catagory</a>
+<a href="/admin/viewType"><i class="far fa-upload"></i> Add New ViewType</a>
 <a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
-<a href="vendor-profile.html"><i class="far fa-cog"></i> Account Settings</a>
+<a href="/admin/user"><i class="fa fa-user-o"></i>Users</a>
 <a href="#"><i class="far fa-lock"></i> Logout</a>
 </div>
 </div>
@@ -109,12 +111,6 @@
 </div>
 </div>
 <br>
-<!-- <div class="col-lg-6">
-<div class="mb-3">
-<label for="thumnail" class="form-label">Thumnail</label>
-<input type="file" id="thumnail" name="Thumnail">
-</div>
-</div> -->
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="moreimage" class="form-label">More Image</label>
