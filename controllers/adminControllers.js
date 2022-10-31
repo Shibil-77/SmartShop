@@ -93,6 +93,12 @@ postCategory :(req,res)=>{
   .catch(err => {
    console.log("error");
   })
+}, 
+
+categoryList :async(req,res)=>{
+  let category_List = await category.find()
+  console.log(category_List);
+  res.render('admin/categoryList',{category_List})
 },
    //  addviewType
 
