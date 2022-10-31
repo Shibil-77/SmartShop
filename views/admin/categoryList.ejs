@@ -57,15 +57,16 @@
 <table class="table table-borderless">
     <tr>
     <th>Catagory</th>
+    <th>Delete</th>
     </tr>
     <% category_List.forEach( category_List=> { %>
     <tr class="account-order-list">
-    <td class="product-img"><img src="public/img/products/p20.png" alt=""></td>
     <td><div class="product-info"><%-category_List.category %></div></td>
     <td>
-    <div class="product-info">
-    </div>
-    </td>
+        <div class="product-info">
+        <a href="/admin/deletecategory/<%=category_List.id %>" class="content-action"><i class="far fa-trash"></i></a>
+        </div>
+        </td>
     </tr>
     <% }) %>
     </table>

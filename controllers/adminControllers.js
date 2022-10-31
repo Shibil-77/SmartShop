@@ -103,6 +103,19 @@ categoryList :async(req,res)=>{
   console.log(category_List);
   res.render('admin/categoryList',{category_List})
 },
+
+deletecategory:async(req,res)=>{
+  let categoryId =req.params.id
+  console.log(categoryId);
+try {
+ await  category.deleteOne(  
+     { _id: mongoose.Types.ObjectId(categoryId)})
+     res.redirect('/admin/categoryList')
+  } 
+catch (error) {
+ console.log("error=",error);
+}
+},
    //  addviewType
 
 addviewType :(req,res)=>{

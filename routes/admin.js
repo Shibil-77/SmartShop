@@ -23,6 +23,8 @@ router.route('/viewType')
        .get(controller.addviewType)
        .post(controller.postviewType)
 router.get('/',controller.dashboard)    
-router.get('/categoryList',controller.categoryList)           
+router.get('/categoryList',controller.categoryList)
+router.get('/deletecategory/:id',controller.deletecategory) 
+
 
 module.exports = router;
