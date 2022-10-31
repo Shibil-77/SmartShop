@@ -1,11 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/adminControllers')
+const storage = require('../Midlewares/multer')
+
+
 router.get('/product',controller.productList)
 router.get('/error',controller.adminError)
 router.route('/addproduct')
        .get(controller.viewProduct)
-       .post(controller.addProduct)
+       .post(storage.array('image',3),controller.addProduct)
 router.get('/user',controller.userList) 
 router.route('/editproduct/:id')
        .get(controller.editProduct)

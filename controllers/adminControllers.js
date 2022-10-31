@@ -126,11 +126,10 @@ postviewType :(req,res)=>{
 },
      // addProduct 
 addProduct :(req,res,next)=>{
-  // console.log(req.body.type);
-  const image =req.file
-  const sample = image.destination +'/'+ image.filename
-  // console.log(sample);
-  console.log(image);
+  const image=req.files 
+  let database_image =image.map((data)=>data.filename)
+  console.log(database_image);
+
    let productData = new products({
         Name:req.body.Name,
         Price:req.body.Price,
@@ -139,7 +138,7 @@ addProduct :(req,res,next)=>{
         Brand:req.body.Brand,
         Discount:req.body.DiscountPrice,
         Stock:req.body.Stock,
-        moreImage:image.path,
+        moreImage:database_image,
         type:req.body.type,
         Discription:req.body.Descreiption
     })
@@ -153,6 +152,7 @@ addProduct :(req,res,next)=>{
 },
 
    // postEditProduct
+
 postEditProduct :async(req,res)=>{
 console.log(req.body);
 try{

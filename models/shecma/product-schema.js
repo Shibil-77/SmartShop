@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { array } = require('../../Midlewares/multer')
 const Schema = mongoose.Schema
 
 const products = new Schema({
@@ -31,7 +32,7 @@ const products = new Schema({
         required:true
     },
     moreImage :{
-        type:String,
+        type:Array,
         required:true
     },
     type:{
