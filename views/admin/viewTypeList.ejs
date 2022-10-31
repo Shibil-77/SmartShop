@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('../inclueds/head.ejs'); %>
-
 <body>
 
 <div class="preloader">
@@ -12,10 +11,7 @@
 </div>
 </div>
 </div>
-
 <%- include('../inclueds/adminNavbar.ejs'); %>
-
-
 
 <div class="breadcrumbs">
 <div class="container">
@@ -24,7 +20,7 @@
 <div class="bread-inner">
 <ul class="bread-list">
 <li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
-<li class="active"><a href="#">Add Product</a></li>
+<li class="active"><a href="#">Product List</a></li>
 </ul>
 </div>
 </div>
@@ -33,10 +29,11 @@
 </div>
 
 
+
 <section class="shop section">
 <div class="container">
 <div class="row">
-        <div class="col-lg-3 mb-4">
+    <div class="col-lg-3 mb-4">
         <div class="account-sidebar">
         <div class="sidebar-list">
         <a href="/admin" class="active"><i class="far fa-th-large"></i> Dashboard</a>
@@ -51,20 +48,43 @@
         </div>
         </div>
 <div class="col-lg-9">
-<div class="account-content bg-white pt-0">
-<h4 class="account-content-title"><i class="far fa-layer-group"></i> Add VIEW TYPE</h4>
-<div class="edit-profile">
-<form action="/admin/viewType" method="post">
-<div class="row">
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="name" class="form-label">ViewType</label>
-<input type="text" class="form-control" name="viewType" id="name">
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-map-marker-alt"></i> Products</h4>
+<div class="account-content-table">
+<div class="table-responsive">
+
+
+<table class="table table-borderless">
+    <tr>
+    <th>Catagory</th>
+    <th>Delete</th>
+    </tr>
+    <% viewType_List.forEach( viewType_List=> { %>
+    <tr class="account-order-list">
+    <td><div class="product-info"><%-viewType_List.viewType %></div></td>
+    <td>
+        <div class="product-info">
+        <a href="/admin/deleteviewType/<%=viewType_List.id %>" class="content-action"><i class="far fa-trash"></i></a>
+        </div>
+        </td>
+    </tr>
+    <% }) %>
+    </table>
+
+
 </div>
+<div class="col-12">
+
+<div class="pagination center mt-2">
+<ul class="pagination-list">
+<li><a href="#"><i class="ti-arrow-left"></i></a></li>
+<li><a href="#">1</a></li>
+<li class="active"><a href="#">2</a></li>
+<li><a href="#">3</a></li>
+<li><a href="#"><i class="ti-arrow-right"></i></a></li>
+</ul>
 </div>
-</div>
-<button class="btn" type="submit">Save Product</button>
-</form>
+
 </div>
 </div>
 </div>
@@ -85,10 +105,9 @@
 <p> Subscribe to our newsletter and get <span>30%</span> off your first purchase</p>
 <form action="#" method="get" class="newsletter-inner">
 <input name="email" placeholder="Your email address" required="" type="email">
-<button class="btn">Subscribe <i class="fal fa-paper-plane"></i></button>
+<button class="btn">Subscribe<i class="fal fa-paper-plane"></i></button>
 </form>
 </div>
-
 </div>
 </div>
 </div>
@@ -157,6 +176,7 @@
 </div>
 </div>
 </div>
+
 <%- include('../inclueds/end.ejs'); %>
 
 </body>

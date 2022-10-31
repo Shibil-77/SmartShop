@@ -84,7 +84,6 @@ addCategory :(req,res)=>{
      // postCategory
 
 postCategory :(req,res)=>{
-  console.log(req.body.Category);
   let categoryData = new category({
       category:req.body.Category,
 })
@@ -100,13 +99,11 @@ postCategory :(req,res)=>{
 
 categoryList :async(req,res)=>{
   let category_List = await category.find()
-  console.log(category_List);
   res.render('admin/categoryList',{category_List})
 },
 
 deletecategory:async(req,res)=>{
   let categoryId =req.params.id
-  console.log(categoryId);
 try {
  await  category.deleteOne(  
      { _id: mongoose.Types.ObjectId(categoryId)})
@@ -124,7 +121,6 @@ addviewType :(req,res)=>{
     // postviewType
 
 postviewType :(req,res)=>{
-  console.log(req.body.viewType);
   let viewTypeData = new viewType({
     viewType:req.body.viewType,
 })
@@ -137,17 +133,32 @@ postviewType :(req,res)=>{
    console.log("errorrr");
   })
 },
+
+viewTypeList :async(req,res)=>{
+  let viewType_List = await viewType.find()
+  res.render('admin/viewTypeList',{viewType_List})
+},
+
+deleteviewType :async(req,res)=>{
+  let viewtypeId =req.params.id
+try {
+ await  viewType.deleteOne(  
+     { _id: mongoose.Types.ObjectId(viewtypeId)})
+     res.redirect('/admin/viewTypeList')
+  } 
+catch (error) {
+ console.log("error=",error);
+}
+},
+
      // addProduct 
 addProduct :(req,res,next)=>{
   const image=req.files 
   let database_image =image.map((data)=>data.filename)
-  console.log(database_image);
-
    let productData = new products({
         Name:req.body.Name,
         Price:req.body.Price,
         Category:req.body.category,
-        // Thumnail:req.body.Thumnail,
         Brand:req.body.Brand,
         Discount:req.body.DiscountPrice,
         Stock:req.body.Stock,

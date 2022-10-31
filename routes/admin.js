@@ -25,6 +25,8 @@ router.route('/viewType')
 router.get('/',controller.dashboard)    
 router.get('/categoryList',controller.categoryList)
 router.get('/deletecategory/:id',controller.deletecategory) 
+router.get('/viewTypeList',controller.viewTypeList)
+router.get('/deleteviewType/:id',controller.deleteviewType) 
 
 
 module.exports = router;
