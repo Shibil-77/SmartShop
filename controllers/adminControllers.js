@@ -103,7 +103,7 @@ module.exports = {
           moreImage: database_image
         }
       })
-      res.redirect('/admin/product')
+       res.redirect('/admin/product')
     }else{
       try {
         await products.findOneAndUpdate(
