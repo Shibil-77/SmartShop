@@ -18,13 +18,16 @@
 <div class="container">
 <div class="main-hero-slider owl-carousel owl-theme">
 
+    <% banner_Data.forEach(banner_Data=> { %>
+
+
 <div class="item">
 <div class="single-slider item">
 <div class="row">
 <div class="col-lg-7 col-md-8 my-auto">
 <div class="text-inner">
 <div class="hero-text">
-<h1><span>UP TO 50% OFF </span>For Your First Buy</h1>
+<h1><span>UP TO <%-banner_Data.offer %> % OFF </span>For Your First Buy</h1>
 <p>There are many variations of passages of lorem ipsum <br> available but the majority have suffered alteration in <br> some form by injected humour.</p>
 <div class="button">
 <a href="#" class="btn">Shop Now!</a>
@@ -35,55 +38,12 @@
 </div>
 </div>
 <div class="col-lg-5 col-md-4 my-auto">
-<img src="/img/slider/slider-2.png" class="w-100" alt="">
+<img src="/img/banner/<%-banner_Data.bannerimage %>" class="w-100" alt="">
 </div>
 </div>
 </div>
 </div>
-
-
-<div class="item">
-<div class="single-slider item">
-<div class="row">
-<div class="col-lg-7 col-md-8 my-auto">
-<div class="text-inner">
-<div class="hero-text">
-<h1><span>UP TO 50% OFF </span>For Your First Buy</h1>
-<p>There are many variations of passages of lorem ipsum <br> available but the majority have suffered alteration in <br> some form by injected humour.</p>
-<div class="button">
-<a href="#" class="btn">Shop Now!</a>
-</div>
-</div>
-</div>
-</div>
-<div class="col-lg-5 col-md-4 my-auto">
-<img src="/img/slider/slider-2.png" class="w-100" alt="">
-</div>
-</div>
-</div>
-</div>
-
-r
-<div class="item">
-<div class="single-slider item">
-<div class="row">
-<div class="col-lg-7 col-md-8  my-auto">
-<div class="text-inner">
-<div class="hero-text">
-<h1><span>UP TO 50% OFF </span>For Your First Buy</h1>
-<p>There are many variations of passages of lorem ipsum <br> available but the majority have suffered alteration in <br> some form by injected humour.</p> 
-<div class="button">
-<a href="#" class="btn">Shop Now!</a>
-</div>
-</div>
-</div>
-</div>
-<div class="col-lg-5 col-md-4 my-auto">
-<img src="/img/slider/slider-2.png" class="w-100" alt="">
-</div>
-</div>
-</div>
-</div>
+<% }); %>
 
 </div>
 </div>

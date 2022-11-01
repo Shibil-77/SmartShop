@@ -83,31 +83,51 @@ module.exports = {
 
   // postEditProduct
 
-  postEditProduct: async (req, res) => {
-    try {
-      let ProductId = req.params.id
-      await products.findOneAndUpdate(
-        { _id: mongoose.Types.ObjectId(ProductId) },
-        {
-          $set: {
-            Name: req.body.Name,
-            Price: req.body.Price,
-            Category: req.body.category,
-            Stock: req.body.Stock,
-            Thumnail: req.body.Thumnail,
-            moreImage: req.body.moreImage,
-            Discription: req.body.Descreiption,
-            type: req.body.type,
-            Discount: req.body.DiscountPrice,
-            Brand: req.body.Brand
-          }
-        })
-      res.redirect('/admin')
+  postEditProduct: async (req,res) => {
+    let image = req.files
+    let ProductId = req.params.id
+    if(req.files.length!==0){
+     database_image = image.map((data) => data.filename)
+     await products.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(ProductId) },
+      {
+        $set: {
+          Name: req.body.Name,
+          Price: req.body.Price,
+          Category: req.body.category,
+          Stock: req.body.Stock,
+          Discription: req.body.Descreiption,
+          type: req.body.type,
+          Discount: req.body.DiscountPrice,
+          Brand: req.body.Brand,
+          moreImage: database_image
+        }
+      })
+      res.redirect('/admin/product')
+    }else{
+      try {
+        await products.findOneAndUpdate(
+          { _id: mongoose.Types.ObjectId(ProductId) },
+          {
+            $set: {
+              Name: req.body.Name,
+              Price: req.body.Price,
+              Category: req.body.category,
+              Stock: req.body.Stock,
+              Discription: req.body.Descreiption,
+              type: req.body.type,
+              Discount: req.body.DiscountPrice,
+              Brand: req.body.Brand
+            }
+          })
+        res.redirect('/admin/product')
+      }
+      catch (e) {
+        console.log("e",)
+      }
     }
-    catch (e) {
-      console.log("e",)
     }
-  },
+  ,
 
   //<- ============= user  management ========== ->
 

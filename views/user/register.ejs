@@ -34,7 +34,7 @@
 
 <% if (userError) { %>
     <p><%=userError %></p>
-    <% } %>
+<% } %>
 
 <section class="shop login section">
 <div class="container">
@@ -49,7 +49,7 @@
 <div class="col-12">
 <div class="form-group">
 <label>Name<span>*</span></label>
-<input type="text" name="Name" placeholder="Laura Beard" required="required">
+<input type="text" name="Name" placeholder="Laura Beard" required="required" id="name">
 </div>
 </div>
 <div class="col-12">
@@ -189,6 +189,9 @@ I agree with the <a href="#" class="text-success">Terms & Conditions.</a>
 </div>
 
 <%- include('../inclueds/end.ejs'); %>
-
+<script>
+    let name = document.getElementById('')
+    
+</script>
 </body>
 </html>

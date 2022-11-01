@@ -50,7 +50,7 @@
 <div class="account-content bg-white pt-0">
 <h4 class="account-content-title"><i class="far fa-layer-group"></i> Edit Product</h4>
 <div class="edit-profile">
-<form action="/admin/editProduct/<%=productData.id %>" method="post">
+<form action="/admin/editProduct/<%=productData.id %>" method="post" enctype="multipart/form-data">
 <div class="row">
 <div class="col-lg-6">
 <div class="mb-3">
@@ -97,14 +97,8 @@
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
-<label for="thumnail" class="form-label">Thumnail</label>
-<input type="file" id="thumnail" name="Thumnail" value="<%=productData.Thumnail %>">
-</div>
-</div>
-<div class="col-lg-6">
-<div class="mb-3">
 <label for="moreimage" class="form-label">More Image</label>
-<input type="file" id="moreimage" multiple name="moreImage" value="<%=productData.moreImage %>">
+<input type="file" id="moreimage" multiple  name="images" >
 </div>
 </div>
 <div class="col-lg-6">
