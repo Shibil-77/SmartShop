@@ -10,10 +10,6 @@ const users = new Schema({
         type:String,
         required:true 
     },
-    Age:{
-        type:Number,
-        required:true  
-    },
     Phone:{
         type:Number,
         required:true    

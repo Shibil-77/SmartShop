@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/adminControllers')
 const storage = require('../Midlewares/multer')
-
+const bannerstorage =require('../Midlewares/bannermulter')
 
 router.get('/product',controller.productList)
 router.get('/error',controller.adminError)
@@ -27,6 +27,9 @@ router.get('/categoryList',controller.categoryList)
 router.get('/deletecategory/:id',controller.deletecategory) 
 router.get('/viewTypeList',controller.viewTypeList)
 router.get('/deleteviewType/:id',controller.deleteviewType) 
-
+router.route('/addbanner')
+       .get(controller.addbanner)
+       .post(bannerstorage.single ("bannerimage"),controller.postaddbanner)
+router.get('/bannerList',controller.bannerList)
 
 module.exports = router;

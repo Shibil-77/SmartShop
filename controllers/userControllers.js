@@ -1,5 +1,7 @@
 
 const users= require('../models/shecma/user-schema')
+const products = require('../models/shecma/product-schema')
+const banner = require('../models/shecma/banner-schema')
 const bcrypt =require('bcrypt')
 const mongoose =require('mongoose')
 
@@ -7,8 +9,10 @@ let userError =null
 let profileEmail
 module.exports = {
     
-    home : (req,res)=>{
-        res.render('user/home')
+    home : async(req,res)=>{
+        let banner_Data = await banner.find()
+        let product = await products.find()
+        res.render('user/home',{product,banner_Data})
     },
     login :(req,res)=>{
         res.render('user/loginPage')
@@ -66,7 +70,6 @@ module.exports = {
                  const userData = new users({
                      Name,
                      Email,
-                     Age,
                      Phone,
                      Password:bcryptpassword,
                      Date:today,
