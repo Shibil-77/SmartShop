@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/userControllers')
+const session =require('../Midlewares/session')
 
 router.get('/',controller.home)
 router.route('/login')

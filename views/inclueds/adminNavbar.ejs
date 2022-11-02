@@ -20,7 +20,7 @@
     <ul class="list-main">
     <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
     <li><i class="ti-user"></i> <a href="#">My account</a></li>
-    <li><i class="ti-power-off"></i><a href="login.html">Login</a></li>
+    <li><i class="ti-power-off"></i><a href="/adminlogin">Login</a></li>
     <li>
     <div class="dropdown top-dropdown">
     <a href="#" id="lang" data-bs-toggle="dropdown" aria-expanded="false">
@@ -138,21 +138,35 @@
     <li class="active">
         <a href="/admin" class="text-dark">Home</a>
     </li>
-    <li><a href="#">Users<i class="ti-angle-down"></i></a>
+    <li><a href="/admin/user">Users<i class="ti-angle-down"></i></a>
+        <ul class="dropdown">
+            <li><a href="/admin/user">Users List</a></li>
+        </ul>
     </li>
     <li><a href="/admin/product">products<i class="ti-angle-down"></i></a>
     <ul class="dropdown">
-    <li><a href="/admin/addProduct">Add Products</a></li>
+       <li><a href="/admin/addProduct">Add Products</a></li>
+       <li><a href="/admin/product">Products List</a></li>
     </ul>
     </li>
-    <li><a href="#">Orders<i class="ti-angle-down"></i><span class="new">New</span></a>
+    <li><a href="#">Orders<i class="ti-angle-down"></i></a>
     <ul class="dropdown">
     <li><a href="shop-grid.html">Shop Grid</a></li>
     <li><a href="shop-list.html">Shop List</a></li>
     </ul>
     </li>
-    <li><a href="#">Categorys<i class="ti-angle-down"></i></a>
-    </li>
+    <li><a href="/admin/category">Categorys<i class="ti-angle-down"></i></a>
+        <ul class="dropdown">
+           <li><a href="/admin/Category">Add Category</a></li>
+           <li><a href="/admin/categoryList">Category List</a></li>
+       </ul>
+     </li>
+     <li><a href="/admin/banner">Banner<i class="ti-angle-down"></i></a>
+        <ul class="dropdown">
+           <li><a href="/admin//addbanner">Add Banner</a></li>
+           <li><a href="/admin/bannerList">Banner List</a></li>
+       </ul>
+     </li>
     </ul>
     </li>
     </ul>
