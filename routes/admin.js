@@ -31,5 +31,9 @@ router.route('/addbanner')
        .get(controller.addbanner)
        .post(bannerstorage.single ("bannerimage"),controller.postaddbanner)
 router.get('/bannerList',controller.bannerList)
+router.route('/editbanner/:id')
+      .get(controller.editBanner)
+      .post(bannerstorage.single ("bannerimage"),controller.posteditBanner)
+router.get('/deletebanner/:id',controller.deletebanner) 
 
 module.exports = router;

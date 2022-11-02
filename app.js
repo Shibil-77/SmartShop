@@ -14,19 +14,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
 
-//   < ========= multer  ======== >
-
-// const storage = multer.diskStorage({
-//   destination :(req,file,callback)=>{
-//      callback(null,'public/img/sample');
-//   },
-//   filename:(req,file,callback)=>{
-//     callback(null,Date.now()+"_"+file.originalname)
-//   }
-// });
-
-// app.use(multer({dest:'public/img/sample',storage:storage}).single('image'))
-
 // set the session 
 
 app.use(bodyParser.json())

@@ -14,5 +14,6 @@ router.get('/forgotPassword',controller.forgotPassword)
 router.get('/Profile',controller.Profile)
 router.get('/editprofile',controller.editProfile)
 router.post('/editprofile/:id',controller.postProfile)  
-
+router.get('/shopsingle/:id',controller.shopsingle)
+router.get('/otp',controller.otp)
 module.exports = router;

@@ -71,7 +71,7 @@
 <td>
 <div class="product-info">
 <a href="/admin/editProduct/<%=product.id %>" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="/admin/deleteProduct/<%=product.id %>" class="content-action"><i class="far fa-trash"></i></a>
+<a href="/admin/deleteProduct/<%=product.id %>" class="content-action" onclick="return confirm('Are you want delete')"><i class="far fa-trash"></i></a>
 </div>
 </td>
 </tr>

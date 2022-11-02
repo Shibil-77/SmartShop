@@ -35,6 +35,16 @@ module.exports = {
         let Profile = await users.find({ Email:profileEmail})   
         res.render('user/editProfile',{Profile})
     },
+
+    shopsingle :async(req,res)=>{
+        console.log(req.params.id);
+        let product = await products.findOne({ _id :req.params.id})  
+        console.log(product);
+        res.render('user/shopsingle',{product})
+     },
+     otp :(req,res)=>{
+      res.render('user/otp')
+     },
 // <- ====================================================== post method ====================================== ->
 //   <========== dosignup ========>
 
@@ -79,7 +89,7 @@ module.exports = {
                  userData.save()
                      .then(data => {
                         req.session.user =userData
-                        res.redirect('/')
+                        res.redirect('/otp')
                      })
                      .catch(err => {
                          console.log(err);
