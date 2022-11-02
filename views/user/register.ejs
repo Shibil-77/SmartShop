@@ -44,35 +44,39 @@
 <h2>Create Your Account</h2>
 <p>Please fill all forms to continued</p>
 
-<form class="form" method="post" action="/signup">
+<form class="form" method="post" action="#signupSubmission" id="#signupSubmission">
 <div class="row">
 <div class="col-12">
 <div class="form-group">
 <label>Name<span>*</span></label>
 <input type="text" name="Name" placeholder="Laura Beard" required="required" id="name">
 </div>
+<p class="text-danger" id="nameErr"></p>
 </div>
 <div class="col-12">
 <div class="form-group">
 <label>Email<span>*</span></label>
-<input type="email" name="Email" placeholder="example@mail.com" required="required">
+<input type="email" name="Email" placeholder="example@mail.com" required="required" id="email">
 </div>
+<p class="text-danger" id="emailErr"></p>
 </div>
 <div class="col-12">
 <div class="row">
 <div class="col-12">
 <div class="form-group">
     <label>Phone<span>*</span></label>
-    <input type="number" name="Phone" placeholder="Phone" required="required">
+    <input type="number" name="Phone" placeholder="Phone" required="required" id="phone">
 </div>
+<p class="text-danger" id="phoneErr"></p>
 </div>
 </div>
 </div>
 <div class="col-12">
 <div class="form-group">
 <label>Password<span>*</span></label>
-<input type="password" name="Password" placeholder="********" required="required">
+<input type="password" name="Password" placeholder="********" required="required" id="password">
 </div>
+<p class="text-danger" id="passwordErr"></p>
 </div>
 <div class="col-12">
 <div class="form-group">
@@ -190,8 +194,85 @@ I agree with the <a href="#" class="text-success">Terms & Conditions.</a>
 
 <%- include('../inclueds/end.ejs'); %>
 <script>
-    let name = document.getElementById('')
+   
+ 
+    $("#signupSubmission").submit((e) => {
+        e.preventDefault()
+
+        let specialCheck = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
+
+        let nameCheck = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/
+
+        let phonenumber =  /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/
+
+        let email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+        // The string must be eight characters or longer
+
+
+
+        let Name = document.getElementById('name').value
+        let Mobile = document.getElementById('phone').value
+        let Email = document.getElementById('email').value
+        let passWord = document.getElementById('passWord').value
+        let phone = Mobile.toString()
+
+        let flag = 0
+        if (!nameCheck.test(name)) {
+            document.getElementById('firstNameErr').innerHTML = ""
+            flag++
+        }
+        else {
+            document.getElementById('firstNameErr').innerHTML = "Reject Special Carecterse&Numbers"
+            // console.log('fist name sp')
+            flag = 0
+        }
+        if (!phonenumber.test(phone)) {
+            document.getElementById('phoneErr').innerHTML = ""
+            flag++
+        } else {
+            //console.log('mobile wrong')
+            document.getElementById('phoneErr').innerHTML = "Maximum 10 carecters"
+            flag = 0
+        }
+        if (!email.test(Email)) {
+            document.getElementById('emailErr').innerHTML = ""
+            //console.log("email is valid")
+            flag++
+        } else {
+            //console.log('not valid')
+            document.getElementById('emailErr').innerHTML = "Enter A valid Email Adress"
+            flag = 0
+        }
+        if (passWord.length >= 8) {
+            document.getElementById('passwordErr').innerHTML = ""
+            //console.log("everything is ok")
+            flag++
+
+
+        } else {
+            // console.log('password max length')
+            document.getElementById('passwordErr').innerHTML = "Password Must be 8 carecters"
+            flag = 0
+        }
+        if (flag == 4) {
+            $.ajax({
+                url: '/signup',
+                method: 'post',
+                data: $("#signupSubmission").serialize(),
+                success: (response) => {
+                    console.log(response)
+                    if (response.status) {
+                        location.href = '/OTP-confermation'
+                    } else if (response.emailExist) {
+                        document.getElementById('emailErr').innerHTML = "This Email Already Exist..!"
+                    }
+                }
+            })
+        }
+    })
     
 </script>
+
 </body>
 </html>
