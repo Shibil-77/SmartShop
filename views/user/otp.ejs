@@ -23,12 +23,16 @@
 <div class="inner">
 <h4>O T P</h4>
 <p> PLEACE ENTER OTP </p>
-<form action="#" method="get" class="newsletter-inner">
-<input name="number" placeholder="Your OTP" required="" type="email">
+<form action="/otp" method="post" class="newsletter-inner">
+<input name="otp" placeholder="Your OTP" required="" type="number">
 <button class="btn">Submit<i class="fal fa-paper-plane"></i></button>
 </form>
 </div>
-
+<% if (OTPincorrect) { %>
+    <p class="ms-5 text-danger">OTPincorrect </p>
+<%} else { %>
+    <p></p>
+<% } %>
 </div>
 </div>
 </div>

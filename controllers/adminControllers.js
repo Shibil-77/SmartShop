@@ -14,6 +14,9 @@ res.render('admin/error')
 dashboard: (req, res) => {
 res.render('admin/dashboard')
 },
+adminlogin :(req,res)=>{
+   res.render('admin/adminlogin')
+},
 
 
 //<- ============= product  management ========== ->

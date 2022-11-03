@@ -7,22 +7,20 @@
 
 <body>
 
-
-
 <section class="shop login section">
 <div class="container">
 <div class="row">
 <div class="col-lg-5 mx-auto">
 <div class="login-form">
-<h2>Welcome To Smartshop</h2>
+<h2>Welcome To Smartshop Admin Page</h2>
 <p>Login with email & password</p>
 
-<form class="form" action="" id="loginSubmission">
+<form class="form" action="" id="adminloginSubmission">
 <div class="row">
 <div class="col-12">
 <div class="form-group">
-<label>Email or Phone Number<span>*</span></label>
-<input type="email" name="Email" placeholder="example@mail.com" required="required" id="email">
+<label>Email<span>*</span></label>
+<input type="email" name="Email" placeholder="example@gmail.com" required="required" id="email">
 </div>
 <p
 class="text-danger"
@@ -44,9 +42,6 @@ id="passwordErr"></p>
 </div>
 <div class="d-flex social-login pt-4">
 <a class="btn g-btn" type="submit" href="/"></i>Home</a>
-</div>
-<p>Don't have an account? <a href="/signup">Register.</a></p>
-</div>
 </form>
 
 </div>
@@ -55,17 +50,13 @@ id="passwordErr"></p>
 </div>
 </section>
 
-
-
 <%- include('../inclueds/end.ejs'); %>
 
 </body>
 </html>
 
-
-
 <script>
-    $("#loginSubmission").submit((e) => {
+    $("#adminloginSubmission").submit((e) => {
     e.preventDefault()
     console.log("gone");
     const validateEmail = (email) => {
@@ -75,8 +66,6 @@ id="passwordErr"></p>
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
     };
-    
-  
     let userEmail = document.getElementById('email').value
     console.log(userEmail);
     let passWord = document.getElementById('passWord').value
@@ -104,9 +93,9 @@ id="passwordErr"></p>
     }
     if (flag == 2) {
         $.ajax({
-            url: '/login',
+            url: '/adminlogin',
             method: 'post',
-            data: $("#loginSubmission").serialize(),
+            data: $("#adminloginSubmission").serialize(),
             success: (response) => {
                 console.log(response)
                 if (response.status) {
