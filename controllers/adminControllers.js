@@ -9,7 +9,6 @@ const bcrypt =require('bcrypt')
 
 let CATEGORY
 module.exports = {
-
 adminError: (req, res) => {
 res.render('admin/error')
 },
@@ -118,7 +117,7 @@ adminAccess:async(req,res)=>{
 // productList
 
 productList: async (req, res) => {
-let product = await products.find()
+let product = await products.find({Delete:false})
 res.render('admin/product', { product })
 },
 // viewProduct
@@ -143,12 +142,16 @@ res.render('admin/editProduct', { productData, CATEGORY, viewsType })
 deleteProduct: async (req, res) => {
 let productId = req.params.id
 try {
-await products.deleteOne(
-{ _id: mongoose.Types.ObjectId(productId) })
-res.redirect('/admin/product')
-}
-catch (error) {
-console.log("error=", error);
+   await products.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(productId)},
+      {
+      $set: {      
+      Delete: true
+      }
+      })
+      res.redirect('/admin/product')
+} catch (error) {
+   res.redirect('/error')
 }
 },
 
@@ -166,7 +169,8 @@ Discount: req.body.DiscountPrice,
 Stock: req.body.Stock,
 moreImage: database_image,
 type: req.body.type,
-Discription: req.body.Descreiption
+Discription: req.body.Descreiption,
+Delete:false
 })
 productData.save()
 .then(data => {

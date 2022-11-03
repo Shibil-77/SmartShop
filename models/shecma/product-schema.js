@@ -42,6 +42,11 @@ const products = new Schema({
     Discription :{
         type:String,
         required:true 
+    },
+    Delete:{
+        type:Boolean,
+        required:true 
     }
 })
+
 module.exports = mongoose.model('products',products)
