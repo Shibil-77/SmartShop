@@ -3,7 +3,9 @@ const users = require('../models/shecma/user-schema')
 const category = require('../models/shecma/category')
 const viewType = require('../models/shecma/viewtype')
 const banner = require('../models/shecma/banner-schema')
+const Admin = require('../models/shecma/admin')
 const mongoose = require('mongoose')
+const bcrypt =require('bcrypt')
 
 let CATEGORY
 module.exports = {
@@ -14,10 +16,98 @@ res.render('admin/error')
 dashboard: (req, res) => {
 res.render('admin/dashboard')
 },
+adminsignup:(req,res)=>{
+  res.render('admin/adminsignup')
+},
 adminlogin :(req,res)=>{
    res.render('admin/adminlogin')
 },
 
+postadminsignup :async(req,res)=>{
+   console.log(req.body);
+   let  AdminData =  req.body
+   let  bcryptpassword = await bcrypt.hash(AdminData.Password,10) 
+   const adminData = new Admin({
+      Name:AdminData.Name,
+      Email:AdminData.Email,
+      Password:bcryptpassword,
+      Admin:false
+  })
+
+  adminData.save()
+  .then(data => {
+      res.json({status:true})
+  }) 
+
+},
+
+postadminlogin :async(req,res)=>{
+   //   console.log(req.body);
+   let AdminData = await Admin.findOne({ Email:req.body.Email})
+     console.log(AdminData);
+     if(AdminData){
+      if(AdminData.Admin) {
+         bcrypt.compare(req.body.Password,AdminData.Password).then((data)=>{
+         if(data){
+          req.session.AdminId = AdminData 
+          req.session.adminloggedIn = true
+         res.json({status:true})
+         }else{
+            res.json({passworError:true})
+         console.log("password invalied");
+         }
+         })
+         }else{
+            res.json({accessError:true})
+         console.log("block");
+         }        
+         }else{
+            console.log("email error");
+            res.json({emailError:true})
+         }
+   }
+,
+
+adminList :async(req,res)=>{
+   let adminData = await Admin.find()
+   res.render('admin/adminList',{adminData})
+},
+
+adminAccess:async(req,res)=>{
+ let  adminId = req.params.id
+ console.log(adminId);
+   try {
+      console.log("============1==========");
+      await Admin.findOneAndUpdate(
+         { _id: mongoose.Types.ObjectId(adminId)},
+         {
+         $set: {      
+         Admin: false
+         }
+         })
+         res.redirect('/admin/adminList')
+   } catch (error) {
+      res.redirect('/error')
+   }
+  },
+
+  adminAccessblock:async(req,res)=>{
+   let  adminId = req.params.id
+   console.log(adminId);
+     try {
+      console.log("============3==========");
+        await Admin.findOneAndUpdate(
+           { _id: mongoose.Types.ObjectId(adminId)},
+           {
+           $set: {     
+                 Admin: true
+           }
+           })
+           res.redirect('/admin/adminList')
+     } catch (error) {
+        res.redirect('/error')
+     }
+    },
 
 //<- ============= product  management ========== ->
 

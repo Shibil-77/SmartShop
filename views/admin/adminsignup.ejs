@@ -13,10 +13,16 @@
 <div class="col-lg-5 mx-auto">
 <div class="login-form">
 <h2>Welcome To Smartshop Admin Page</h2>
-<p>Login with email & password</p>
+<p>SignUp with email & password</p>
 
-<form class="form" action="" id="adminloginSubmission">
+<form class="form" action="" id="adminsignupSubmission">
 <div class="row">
+<div class="col-12">
+<div class="form-group">
+<label>Name<span>*</span></label>
+<input type="text" name="Name" placeholder="Name" required="required" id="">
+</div>
+</div>
 <div class="col-12">
 <div class="form-group">
 <label>Email<span>*</span></label>
@@ -37,7 +43,7 @@ id="passwordErr"></p>
 </div>
 <div class="col-12">
 <div class="form-group login-btn">
-<button class="btn" type="submit">Login</button>
+<button class="btn" type="submit">SignUp</button>
 </div>
 </div>
 <div class="d-flex social-login pt-4">
@@ -57,7 +63,7 @@ id="passwordErr"></p>
 
 
 <script>
-    $("#adminloginSubmission").submit((e) => {
+    $("#adminsignupSubmission").submit((e) => {
     e.preventDefault()
     console.log("gone");
     const validateEmail = (email) => {
@@ -94,19 +100,13 @@ id="passwordErr"></p>
     }
     if (flag == 2) {
         $.ajax({
-            url: '/admin/adminlogin',
+            url: '/admin/adminsignup',
             method: 'post',
-            data: $("#adminloginSubmission").serialize(),
+            data: $("#adminsignupSubmission").serialize(),
             success: (response) => {
                 console.log(response)
                 if (response.status) {
-                    location.href = '/admin'
-                }else if(response.passworError){
-                    document.getElementById('passwordErr').innerHTML = "Password Incorrect"
-                }else if(response.emailError){
-                    document.getElementById('emailErr').innerHTML = "Email Incorrect "
-                }else if(response.accessError){
-                    document.getElementById('passwordErr').innerHTML = "Not Access"
+                    location.href = '/admin/adminlogin'
                 }
             }
         })

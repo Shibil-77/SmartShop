@@ -57,22 +57,18 @@
 <tr>
 <th>Name</th>
 <th>Email</th>
-<th>Phone</th>
-<th>LoginDate</th>
 <th>Action</th>
 </tr>
-<% userData.forEach(userData => { %>
+<% adminData.forEach(adminData => { %>
 <tr class="account-order-list">
-<td><div class="product-info"><%-userData.Name %></div></td>
-<td><div class="product-info"><%-userData.Email %></div></td>
-<td><div class="product-info"><%-userData.Phone %></div></td>
-<td><div class="product-info"><%-userData.Date %></div></td>
+<td><div class="product-info"><%-adminData.Name %></div></td>
+<td><div class="product-info"><%-adminData.Email %></div></td>
 <td>
 <div class="product-info">
-    <% if (userData.Action) { %>
-        <a href="/admin/blockUser/<%=userData.id %>" class="bg-danger">block</a>
+    <% if (adminData.Admin) { %>
+        <a href="/admin/adminAccess/<%=adminData.id %>" class="bg-success">Access</a>
         <%} else { %>
-            <a href="/admin/unblockUser/<%=userData.id %>" class="bg-success" >unblock</a>
+            <a href="/admin/adminAccessblock/<%=adminData.id %>" class="bg-danger" >UN Access</a>
         <% } %>
 </div>
 </td>
