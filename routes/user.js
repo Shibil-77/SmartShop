@@ -17,4 +17,5 @@ router.get('/editprofile',controller.editProfile)
 router.post('/editprofile/:id',controller.postProfile)  
 router.get('/shopsingle/:id',controller.shopsingle)
 router.get('/otp',controller.otp)
+
 module.exports = router;

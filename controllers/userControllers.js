@@ -49,61 +49,30 @@ module.exports = {
 //   <========== dosignup ========>
 
     doSignup :async(req,res)=>{
-        user = req.body
-        // data des
-        profileEmail =req.body.Email
-        let ouser = await users.find({ Email:user.Email})
-        if(ouser[0]){
-          userError ="user exist"
-          res.redirect('/signup')
+      let  user = req.body
+      console.log(user);
+      let Password =user.Password
+      let confirmPassword = user.confirmPassword
+        if(Password===confirmPassword){
+            let UserData = await users.findOne({ Email:user.Email})
+            console.log("1");
+            if(!UserData){
+                console.log("2"); 
+                req.session.userData = user 
+                req.session.userloggedIn =true
+                res.json({status:true})
+              }else{
+                 console.log("user Exist");
+              }
+        }else{
+          console.log("confirmPassword");
         }
-        else{
-           
-            try {
-                const {
-                 Name,
-                 Email,
-                 Age,
-                 Phone,
-                 Password,
-                 confirmPassword
-                }=user  
-             //    console.log(Password);
-                if(Password===confirmPassword){             
-                 // password bcrypt
-                 bcryptpassword = await bcrypt.hash(Password,10)    
-                 // schema
-                let today = new Date();
-                    let dd = String(today.getDate()).padStart(2, '0');
-                    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                    let yyyy = today.getFullYear();
-                    today = mm + '/' + dd + '/' + yyyy;
-                 const userData = new users({
-                     Name,
-                     Email,
-                     Phone,
-                     Password:bcryptpassword,
-                     Date:today,
-                     Action:true
-                 })
-                 //data Add to  database
-                 userData.save()
-                     .then(data => {
-                        req.session.user =userData
-                        res.redirect('/otp')
-                     })
-                     .catch(err => {
-                         console.log(err);
-                     })
-                }else{
-                userError = "confirm  Password"
-                res.redirect('/signup')
-                }
-             } catch (error) {
-                 console.log("error");
-             }
-         }
-        },
+
+
+
+
+
+    },
     //    <- ========dologin======== ->
 
         dologin:async(req,res)=>{

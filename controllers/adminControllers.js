@@ -151,6 +151,7 @@ Action: false
 })
 res.redirect('/admin/user')
 },
+
 // unblockUser
 
 unblockUser: async (req, res) => {
@@ -161,7 +162,7 @@ await users.findOneAndUpdate(
 res.redirect('/admin/user')
 },
 
-// ============= Category  management ==========
+// < ============= Category  management ========== >
 
 // addCategory 
 
