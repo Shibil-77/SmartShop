@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('../inclueds/head.ejs'); %>
+
+<body>
+
+    <%- include('../inclueds/navbar.ejs'); %>
+
+<div class="breadcrumbs">
+<div class="container">
+<div class="row">
+<div class="col-12">
+<div class="bread-inner">
+<ul class="bread-list">
+<li><a href="/">Home<i class="ti-arrow-right"></i></a></li>
+<li class="active"><a href="#">Cart</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="shopping-cart section">
+<div class="container">
+<div class="row">
+<div class="col-lg-8">
+
+    <!-- catr ================= -->
+
+<div class="shopping-cart-single">
+ <div class="row">
+<div class="col-lg-2">
+<img src="/img/products/p20.png" alt="">
+</div>
+<div class="col-lg-10 my-auto">
+<div class="d-flex justify-content-between cart-title">
+<h6>Modern Electric Bike</h6>
+<a href="#"><i class="fal fa-times"></i></a>
+</div>
+<div class="d-flex justify-content-between mt-4">
+<div class="cart-price my-auto">
+$250.00 x 1 <b>$250.00</b>
+</div>
+<div class="row g-0 cart-qty">
+<div class="col-auto">
+<button type="submit" class="minus cat-qty-btn"> <i class="fal fa-minus "></i></button>
+</div>
+<div class="col-auto">
+<input type="text" name="quant[1]" class="input-number" readonly data-min="1" data-max="1000" value="1">
+</div>
+<div class="col-auto">
+<button type="submit" class="plus cat-qty-btn"><i class="fal fa-plus"></i></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+ 
+<!-- cart end ============ -->
+
+<div class="col-lg-4">
+<div class="coupon-area">
+<form action="#">
+<input type="text" placeholder="Apply your coupon">
+<button class="coupon-apply-btn">Apply Now</button>
+</form>
+</div>
+
+<div class="cart-total-amount">
+<ul>
+<li>Cart Subtotal<span>$250.00</span></li>
+<li>Shipping<span>Free</span></li>
+<li>Discount<span>$10.00</span></li>
+<li>Tax<span>$20.00</span></li>
+<li class="last">You Pay<span>$260.00</span></li>
+</ul>
+<div class="checkout-section">
+<a href="#" class="btn checkout-btn">Checkout</a>
+<a href="#" class="btn">Continue shopping</a>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+<%- include('../inclueds/footer.ejs'); %>
+
+<%- include('../inclueds/end.ejs'); %>
+
+</body>
+</html>

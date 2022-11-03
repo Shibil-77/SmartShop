@@ -47,6 +47,10 @@ let product = await products.findOne({ _id :req.params.id})
 console.log(product);
 res.render('user/shopsingle',{product})
 },
+
+
+
+
 otp :(req,res)=>{
 res.render('user/otp',{OTPincorrect})
 },
@@ -162,5 +166,13 @@ postotp :(req,res)=>{
                     console.log("OTP ERROR");
                 }
       });
-}
+},
+
+cart :async(req,res)=>{
+    console.log(req.params.id);
+   let  productId = req.params.id
+    let product = await products.findOne({_id:productId})
+     res.render('user/cart')
+},
+
 }

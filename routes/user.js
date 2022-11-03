@@ -20,5 +20,7 @@ router.get('/shopsingle/:id',controller.shopsingle)
 router.route('/otp')
       .get(controller.otp)
       .post(controller.postotp)
+router.get("/cart/:id",controller.cart)
+
 
 module.exports = router;

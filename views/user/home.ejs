@@ -80,7 +80,7 @@
 </div>
 </div>
 <div class="product-content">
-<h3><a href="shop-single.html"><%-product.Name %></a></h3>
+<h3><a href="/shopsingle/<%=product.id %>"><%-product.Name %></a></h3>
 <div class="product-rate">
 <i class="fas fa-star"></i>
 <i class="fas fa-star"></i>
@@ -93,7 +93,7 @@
 <span class="old">$150.00</span>
 <span><%-product.Price %></span>
 </div>
-<button class="product-cart-btn" type="button"><i class="fal fa-shopping-cart"></i></button>
+<button class="product-cart-btn"  type="button"><a href="/cart/<%=product.id %>"><i class="fal fa-shopping-cart"></i></a></button>
 </div>
 </div>
 </div>

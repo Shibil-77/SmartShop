@@ -23,8 +23,13 @@ adminlogin :(req,res)=>{
    res.render('admin/adminlogin')
 },
 
+adminlogout:(req,res)=>{
+   req.session.AdminId = null 
+   req.session.adminloggedIn = false
+   res.redirect('/admin/adminlogin')
+},
+
 postadminsignup :async(req,res)=>{
-   console.log(req.body);
    let  AdminData =  req.body
    let  bcryptpassword = await bcrypt.hash(AdminData.Password,10) 
    const adminData = new Admin({
@@ -42,15 +47,15 @@ postadminsignup :async(req,res)=>{
 },
 
 postadminlogin :async(req,res)=>{
-   //   console.log(req.body);
    let AdminData = await Admin.findOne({ Email:req.body.Email})
-     console.log(AdminData);
      if(AdminData){
       if(AdminData.Admin) {
          bcrypt.compare(req.body.Password,AdminData.Password).then((data)=>{
          if(data){
+
           req.session.AdminId = AdminData 
           req.session.adminloggedIn = true
+
          res.json({status:true})
          }else{
             res.json({passworError:true})
@@ -95,7 +100,6 @@ adminAccess:async(req,res)=>{
    let  adminId = req.params.id
    console.log(adminId);
      try {
-      console.log("============3==========");
         await Admin.findOneAndUpdate(
            { _id: mongoose.Types.ObjectId(adminId)},
            {
@@ -110,7 +114,6 @@ adminAccess:async(req,res)=>{
     },
 
 //<- ============= product  management ========== ->
-
 
 // productList
 

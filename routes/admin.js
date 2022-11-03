@@ -45,7 +45,7 @@ router.route('/adminsignup')
 router.get('/adminlist',session,controller.adminList)
 router.get('/adminAccess/:id',session,controller.adminAccess)     
 router.get('/adminAccessblock/:id',session,controller.adminAccessblock) 
-
+router.get('/adminlogonout',controller.adminlogout)
 
 
 module.exports = router;
