@@ -35,10 +35,6 @@ const products = new Schema({
         type:Array,
         required:true
     },
-    type:{
-        type:String,
-        required:true
-    },
     Discription :{
         type:String,
         required:true 

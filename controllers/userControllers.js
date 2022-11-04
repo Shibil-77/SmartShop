@@ -3,9 +3,11 @@ const users = require('../models/shecma/user-schema')
 const products = require('../models/shecma/product-schema')
 const banner = require('../models/shecma/banner-schema')
 const cart = require('../models/shecma/cart')
+const categorys = require('../models/shecma/category')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
+const { request } = require('express')
 let accountSid = twilioDatas.accountSid
 let authToken = twilioDatas.authToken
 let verifySid = twilioDatas.verifySid
@@ -128,6 +130,7 @@ module.exports = {
                 bcrypt.compare(req.body.Password, User.Password).then((data) => {
                     if (data) {
                         req.session.UserId = User.id
+                        req.session.userloggedIn = true
                         res.json({ status: true })
                     } else {
                         res.json({ passworError: true })
@@ -183,60 +186,86 @@ module.exports = {
     },
 
     cart: async (req, res) => {
-        // console.log("hello");
-        // console.log(req.params.id);
-        let productId = req.params.id
-        let product = await products.findOne({ _id: productId })
-        let totalAmount = product.Price
-        // console.log("==========2=========",totalAmount);
-        let userId = req.session.UserId
-        // console.log("=========3=========",userId);
-
-        let cartData = await cart.findOne({ UserId:userId})
-
-        if (cartData) {
-         let productIndex =  cartData.Product.findIndex(p=> p.ProductId == productId)
-         console.log(productIndex)
-         if(productIndex>=0){
-              cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity)+1
-              await cartData.save()
-              res.json({status:true})
-
-         }else{
-            cartData.Product.push({ProductId:productId,quantity:1})
-            await cartData.save()
-            res.json({status:true})
-         }
-        
-        //  cartData.products[productIndex]
-
-        } else {
-
-            // console.log("======5========");
-
-            cart.create({
-                UserId: mongoose.Types.ObjectId(userId),
-                totalBill: totalAmount,
-                Product: [{
-                    ProductId:mongoose.Types.ObjectId(productId),
-                    quantity: 1
-                }]
-
-            }).then((data)=>{
+        if(req.session.userloggedIn){  
+            let productId = req.params.id
+            let product = await products.findOne({ _id: productId })
+            let totalAmount = product.Price
+            console.log("==========2=========");
+            let userId = req.session.UserId
+            console.log("=========3=========");
+    
+            let cartData = await cart.findOne({ UserId:userId})
+    
+            if (cartData) {
+             let productIndex =  cartData.Product.findIndex(p=> p.ProductId == productId)
+             if(productIndex>=0){
+                  cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity)+1
+                  await cartData.save()
+                  res.json({status:true})
+    
+             }else{
+                cartData.Product.push({ProductId:productId,quantity:1})
+                await cartData.save()
                 res.json({status:true})
-                // console.log("====66====",data);
-            })
+             }
+            //  cartData.products[productIndex]
+    
+            } else {
+    
+                console.log("======5========");
+    
+                cart.create({
+                    UserId: mongoose.Types.ObjectId(userId),
+                    totalBill: totalAmount,
+                    Product: [{
+                        ProductId:mongoose.Types.ObjectId(productId),
+                        quantity: 1
+                    }]
+                }).then((data)=>{
+                    res.json({status:true})
+                    console.log("====66====");
+                })
+            }
+    
+        }else{
+            res.json({notUser:true})
         }
 
-    },
+        }
+        // console.log("hello");
+        // console.log(req.params.id);
+       ,
 
     cartList :async(req,res)=>{
         let UserId = req.session.UserId
 
-        let userCartData = await cart.findOne({ UserId: UserId})
+        let userCartData = await cart.findOne({ UserId:UserId})
         
         console.log("===========44======",userCartData);
        res.render('user/cart',{UserId,userCartData})
-    }
+    },
 
+    shop:async(req,res)=>{
+      let UserId = req.session.UserId
+      let category = await categorys.find()
+     if(req.session.categoryData){
+        let product = req.session.categoryData
+        req.session.categoryData = null
+        res.render('user/shop-grid',{UserId,category,product})
+      }else{
+        let product = await products.find({ Delete: false })
+        res.render('user/shop-grid',{UserId,product,category})
+        req.session.categoryData = null
+      }
+     
+    },
+    
+    categoryfilter:async(req,res)=>{
+       console.log(req.params.data);
+       req.session.categoryData = null
+       let categoryData = await products.find({$and:[{Delete:false},{Category:req.params.data}]})
+       console.log(categoryData);
+       req.session.categoryData = categoryData
+       res.redirect('/shop')
+    }
 }

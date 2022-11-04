@@ -3,11 +3,12 @@ const Schema = mongoose.Schema
 
 const productSchema = new Schema({
     ProductId:{
-        type:String,
-        required:true
+        type:mongoose.Schema.Types.ObjectId,
+        ref :'products'
     },
     quantity:{
         type:Number,
+        //  .poluplate('products')
         required:true
     }
 })

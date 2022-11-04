@@ -55,75 +55,70 @@
 <div class="account-content bg-white pt-0">
 <h4 class="account-content-title"><i class="far fa-layer-group"></i> Add Product</h4>
 <div class="edit-profile">
-<form action="/admin/addProduct" method="post" enctype="multipart/form-data">
+<form   action="/admin/addProduct"  method="post"  id="productSubmission"   enctype="multipart/form-data">
 <div class="row">
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="name" class="form-label">Name</label>
- <input type="text" class="form-control" name="Name" id="name">
+ <input type="text" class="form-control"    name="Name" id="name">
 </div>
+<p class="text-danger" id="nameError"></p>
 </div>
 
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="category" class="form-label">Category</label>
-<select name="category" class="form-control" id="category">
-<option value="<%=CATEGORY.category %>">Select Category</option>
+<select name="category" class="form-control"    id="category">
+<option value="<%=CATEGORY.category %>"  >Select Category</option>
 <% CATEGORY.forEach(CATEGORY => { %>
-<option value="<%=CATEGORY.category %>"><%-CATEGORY.category %></option>
+<option value="<%=CATEGORY.category %>"  ><%-CATEGORY.category %></option>
 <% }) %>
 </select>
 </div>
+<p class="text-danger" id="categoryError"></p>
 </div>
 
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="stock" class="form-label">Stock</label>
-<input type="number" class="form-control" name="Stock" id="stock">
+<input type="number" class="form-control" name="Stock"  id="stock">
 </div>
+<p class="text-danger" id="stockError"></p>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="tags" class="form-label">Brand</label>
-<input type="text" class="form-control" name="Brand" id="tags">
+<input type="text" class="form-control"  name="Brand"    id="Brand">
 </div>
+<p class="text-danger" id="BrandError"></p>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="price" class="form-label">Price</label>
-<input type="number" class="form-control" name="Price" id="price">
+<input type="number" class="form-control" name="Price"     id="price">
 </div>
+<p class="text-danger" id="priceError"></p>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="price" class="form-label">Discount Price</label>
-<input type="number" class="form-control" name="DiscountPrice" id="price">
+<input type="number" class="form-control" name="DiscountPrice"    id="DiscountPrice">
 </div>
+<p class="text-danger" id="DiscountPriceError"></p>
 </div>
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="category" class="form-label">ViewsType</label>
-<select name="type" class="form-control"  id="category">
-<option value="<%=viewsType.viewsType %>">Select viewsType</option>
-<% viewsType.forEach(viewsType => { %>      
-<option value="<%=viewsType.viewType %>"><%-viewsType.viewType %></option>
-<% }) %>
-</select>
-</div>
-</div>
-<br>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="moreimage" class="form-label">More Image</label>
-<input type="file" id="moreimage" multiple name="image" onchange="return fileValidation()">
+<input type="file" id="moreimage"  multiple  name="image"  onchange="return fileValidation()">
 </div>
 <p class="text-danger" id="imageError"></p>
 </div>
 <div class="col-lg-12">
 <div class="mb-3">
 <label for="description" class="form-label">Description</label>
-<textarea class="form-control" name="Descreiption"  id="description"  rows="6"></textarea>
+<textarea class="form-control" name="Descreiption"  id="description"    rows="6"></textarea>
 </div>
+<p class="text-danger" id="descriptionError"></p>
 </div>
 </div>
 <button class="btn" type="submit">Save Product</button>
@@ -136,89 +131,8 @@
 </section>
 
 
-<section class="shop-newsletter py-5">
-<div class="container">
-<div class="inner-top">
-<div class="row">
-<div class="col-lg-8 offset-lg-2 col-12">
-
-<div class="inner">
-<h4>Newsletter</h4>
-<p> Subscribe to our newsletter and get <span>30%</span> off your first purchase</p>
-<form action="#" method="get" class="newsletter-inner">
-<input name="email" placeholder="Your email address" required="" type="email">
-<button class="btn">Subscribe <i class="fal fa-paper-plane"></i></button>
-</form>
-</div>
-
-</div>
-</div>
-</div>
-</div>
-</section>
-
 <%- include('../inclueds/footer.ejs'); %>
 
-
-<div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
-<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-<div class="modal-content">
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-<div class="modal-body">
-<div class="row">
-<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-<img src="/img/products/p1.png" alt="#">
-</div>
-<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-<div class="quickview-content">
-<h2>Xbeats Bluetooth Earphones</h2>
-<div class="d-flex mb-3">
-<span>Brand:</span>
-<b>Xbeats</b>
-</div>
-<div class="d-flex mb-3">
-<span>Category:</span>
-<b>Headphones</b>
-</div>
-<div class="d-flex mb-3">
-<span>Tated:</span>
-<div class="quickview-ratting-review">
-<div class="quickview-ratting-wrap">
-<div class="quickview-ratting">
-<i class="fa fa-star"></i>
-<i class="fa fa-star"></i>
-<i class="fa fa-star"></i>
-<i class="fa fa-star"></i>
-<i class="fal fa-star"></i>
-<a href="#"> (50)</a>
-</div>
-</div>
-</div>
-</div>
-<h3>$29.00</h3>
-<div class="quickview-stock">
-<span><i class="fa fa-check-circle-o"></i> Stock Available</span>
-</div>
-<div class="add-to-cart">
-<a href="#" class="btn">Add to cart</a>
-</div>
-<div class="default-social">
-<h4 class="share-now">Share:</h4>
-<ul>
-<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-<li><a href="#"><i class="fab fa-twitter"></i></a></li>
-<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
-<li><a href="#"><i class="fab fa-instagram"></i></a></li>
-<li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
 <%- include('../inclueds/end.ejs'); %>
 
 
@@ -248,7 +162,131 @@
 }
 
 </script>
+
+
+<!-- 
+
+<script>
+    $("#productSubmission").submit((e) => {
+    e.preventDefault()
+
+    let name = document.getElementById('name').value
+    console.log(name);
+    let price = document.getElementById('price').value
+    console.log(price);
+    let DiscountPrice = document.getElementById('DiscountPrice').value
+    console.log(DiscountPrice);
+    let stock = document.getElementById('stock').value
+    console.log(stock);
+    let image = document.getElementById('moreimage').value
+    console.log(image);
+    let description = document.getElementById('description').value
+    console.log(description);
+    let category = document.getElementById('category').value
+    console.log(category);
+    let Brand = document.getElementById('Brand').value
+    console.log(Brand);
     
+    let flag = 0
+    
+    if (name.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+
+    if (price.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+
+    if (DiscountPrice.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+
+    if (stock.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+
+    console.log(image.length);
+    if (image.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+
+    if (description.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+
+    if (category.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+
+    if (Brand.length >= 1) {
+    document.getElementById('nameError').innerHTML = ""
+    //console.log("everything is ok")
+    flag++
+    } else {
+    // console.log('password max length')
+    document.getElementById('nameError').innerHTML = "Pleace Enter a Data"
+    flag = 0
+    }
+    console.log(flag);
+    
+    if (flag == 8) {
+        $.ajax({
+            url: '/admin/addProduct',
+            method: 'post',
+            data: $("#productSubmission").serialize(),
+            success: (response) => {
+                console.log(response);
+                if (response.status) {
+                    location.href = '/admin/product'
+                }
+            }
+        })
+    }
+        })
+    </script>
+     -->
 
 </body>
 </html>

@@ -71,7 +71,7 @@
 <td>
 <div class="product-info">
 <a href="/admin/editProduct/<%=product.id %>" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="/admin/deleteProduct/<%=product.id %>" class="content-action" onclick="return confirm('Are you want delete')"><i class="far fa-trash"></i></a>
+<a  class="content-action" onclick="deleteProduct('<%=product.id %>') "><i class="far fa-trash"></i></a>
 </div>
 </td>
 </tr>
@@ -163,6 +163,38 @@
 </div>
 
 <%- include('../inclueds/end.ejs'); %>
+
+
+<script>
+      const deleteProduct  =(productId)=>{
+Swal.fire({
+  title: 'Do you want to Delete the changes?',
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: 'Delete',
+  denyButtonText: `Don't Delete`,
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+    Swal.fire('Delete!', '', 'success')
+    $.ajax({
+     url:'/admin/deleteProduct/'+productId,
+     method: 'get',
+     success:(response)=>{
+       if(response.status){
+        location.href = '/admin/product'
+       }
+     } 
+    }) 
+  } else if (result.isDenied) {
+    Swal.fire('Changes are not Deleted', '', 'info')
+  }
+})
+      }
+
+   
+ </script>
+
 
 </body>
 </html>

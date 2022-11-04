@@ -149,7 +149,7 @@ try {
       Delete: true
       }
       })
-      res.redirect('/admin/product')
+      res.json({status:true})
 } catch (error) {
    res.redirect('/error')
 }
@@ -158,7 +158,8 @@ try {
 // addProduct 
 
 addProduct: (req, res, next) => {
-const image = req.files
+   try {
+      const image = req.files
 let database_image = image.map((data) => data.filename)
 let productData = new products({
 Name: req.body.Name,
@@ -168,17 +169,17 @@ Brand: req.body.Brand,
 Discount: req.body.DiscountPrice,
 Stock: req.body.Stock,
 moreImage: database_image,
-type: req.body.type,
 Discription: req.body.Descreiption,
 Delete:false
 })
 productData.save()
 .then(data => {
+  
 res.redirect('/admin/product')
 })
-.catch(err => {
-console.log("error");
-})
+   } catch (error) {
+     console.log("====================addproduct Error===================");
+   }
 },
 
 // postEditProduct
