@@ -22,6 +22,8 @@ router.route('/otp')
       .get(controller.otp)
       .post(controller.postotp)
 router.get("/cart/:id",controller.cart)
+router.route('/cartList')
+       .get(controller.cartList)
 
 
 module.exports = router;

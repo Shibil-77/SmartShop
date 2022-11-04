@@ -120,7 +120,7 @@
 
 </div>
 <div class="add-to-cart">
-<a href="/cart/<%=product.id %>" class="btn">Add to cart</a>
+<a  onclick="addToCart('<%=product.id %>')" class="btn">Add to cart</a>
 <a href="#" class="btn min"><i class="far fa-heart"></i></a>
 <a href="#" class="btn min"><i class="far fa-exchange"></i></a>
 </div>
@@ -152,6 +152,26 @@
 
 
 <%- include('../inclueds/end.ejs'); %>
+
+<script>
+    const addToCart  =(productId)=>{
+    $.ajax({
+     url:'/cart/'+productId,
+     method: 'get',
+     success:(response)=>{
+       if(response.status){
+        Swal.fire({
+  position: 'top-end',
+  icon: 'success',
+  title: 'Your work has been saved',
+  showConfirmButton: false,
+  timer: 1500
+})
+       }
+     } 
+    })
+    }
+ </script>
 
 </body>
 </html>

@@ -1,5 +1,5 @@
 
-const users = require('../models/shecma/user-schema')
+const users = require('../models/shecma/user-schema')           
 const products = require('../models/shecma/product-schema')
 const banner = require('../models/shecma/banner-schema')
 const cart = require('../models/shecma/cart')
@@ -119,23 +119,23 @@ module.exports = {
 
     dologin: async (req, res) => {
         let User = await users.findOne({ Email: req.body.Email })
+        console.log(User.Action);
         //   console.log(User);
         if (User.Action) {
             if (User.Email === req.body.Email) {
                 bcrypt.compare(req.body.Password, User.Password).then((data) => {
                     if (data) {
                         req.session.UserId = User.id
-                        console.log("======6======",req.session.UserId);
                         res.json({ status: true })
                     } else {
-                        console.log("password invalied");
+                        res.json({ passworError: true })
                     }
                 })
             } else {
-                console.log("user ex");
+                res.json({ emailError: true })
             }
         } else {
-            console.log("block");
+            res.json({ accessError: true })
         }
     },
 
@@ -198,18 +198,18 @@ module.exports = {
          if(productIndex>=0){
               cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity)+1
               await cartData.save()
-              res.redirect('/cart')
+              res.json({status:true})
 
          }else{
             cartData.Product.push({ProductId:productId,quantity:1})
             await cartData.save()
-
-            console.log("===========hai=========");
+            res.json({status:true})
          }
         
         //  cartData.products[productIndex]
 
         } else {
+
             // console.log("======5========");
 
             cart.create({
@@ -219,13 +219,22 @@ module.exports = {
                     ProductId:mongoose.Types.ObjectId(productId),
                     quantity: 1
                 }]
-            }).then((data)=>{
 
-                 res.redirect('/cart')
+            }).then((data)=>{
+                res.json({status:true})
                 // console.log("====66====",data);
             })
         }
 
     },
+
+    cartList :async(req,res)=>{
+        let UserId = req.session.UserId
+
+        let userCartData = await cart.findOne({ UserId: UserId})
+        
+        console.log("===========44======",userCartData);
+       res.render('user/cart',{UserId,userCartData})
+    }
 
 }

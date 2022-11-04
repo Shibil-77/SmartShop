@@ -93,7 +93,7 @@
 <span class="old">$150.00</span>
 <span><%-product.Price %></span>
 </div>
-<button class="product-cart-btn"  type="button"><a href="/cart/<%=product.id %>"><i class="fal fa-shopping-cart"></i></a></button>
+<button class="product-cart-btn"  type="button"><a onclick="addToCart('<%=product.id %>')"><i class="fal fa-shopping-cart"></i></a></button>
 </div>
 </div>
 </div>
@@ -172,6 +172,27 @@ QuickShopData
 </div>
 
 <%- include('../inclueds/end.ejs'); %>
+
+
+<script>
+    const addToCart  =(productId)=>{
+    $.ajax({
+     url:'/cart/'+productId,
+     method: 'get',
+     success:(response)=>{
+       if(response.status){
+        Swal.fire({
+  position: 'top-end',
+  icon: 'success',
+  title: 'Your work has been saved',
+  showConfirmButton: false,
+  timer: 1500
+})
+       }
+     } 
+    })
+    }
+ </script>
 
 </body>
 </html>

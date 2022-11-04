@@ -111,6 +111,12 @@ id="passwordErr"></p>
                 console.log(response)
                 if (response.status) {
                     location.href = '/'
+                }else if(response.passworError){
+                    document.getElementById('passwordErr').innerHTML = "Password Incorrect"
+                }else if(response.emailError){
+                    document.getElementById('emailErr').innerHTML = "Email Incorrect "
+                }else if(response.accessError){
+                    document.getElementById('passwordErr').innerHTML = "Not Access"
                 }
             }
         })
