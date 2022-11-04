@@ -21,7 +21,7 @@
     <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
 
     <li><i class="ti-user"></i> 
-    <% if (userEmail) { %>
+    <% if (UserId) { %>
         <a href="/profile">My account</a></li>
     <%} else { %>
             <a href="/login">My account</a></li>
@@ -109,7 +109,11 @@
     <a href="#" class="single-icon"><i class="fal fa-heart" aria-hidden="true"></i></a>
     </div>
     <div class="sinlge-bar">
-    <a href="#" class="single-icon"><i class="fal fa-user-circle" aria-hidden="true"></i></a>
+        <% if (UserId) { %>
+            <a href="/Profile" class="single-icon"><i class="fal fa-user-circle" aria-hidden="true"></i></a>
+        <%} else { %>
+            <a href="/login" class="single-icon"><i class="fal fa-user-circle" aria-hidden="true"></i></a>
+        <% } %>
     </div>
     <div class="sinlge-bar shopping">
     <a href="#" class="single-icon"><i class="fal fa-shopping-cart"></i> <span class="total-count">2</span></a>
