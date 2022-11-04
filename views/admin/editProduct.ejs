@@ -98,7 +98,7 @@
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="moreimage" class="form-label">More Image</label>
-<input type="file" id="moreimage" multiple  name="images" >
+<input type="file" id="moreimage" multiple  name="images" onchange="return fileValidation()">
 </div>
 </div>
 <div class="col-lg-6">
@@ -192,6 +192,33 @@
 </div>
 
 <%- include('../inclueds/end.ejs'); %>
+
+
+<script>
+   
+    function fileValidation(){
+     var fileInput = document.getElementById('moreimage');
+     var filePath = fileInput.value;
+     var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+     if(!allowedExtensions.exec(filePath)){
+         // imageError
+         document.getElementById('imageError').innerHTML = "Please upload file having extensions .jpeg/.jpg/.png/.gif only"
+         fileInput.value = '';
+         return false;
+     }else{
+         //Image preview
+         if (fileInput.files && fileInput.files[0]) {
+             var reader = new FileReader();
+             reader.onload = function(e) {
+                 document.getElementById('imageError').innerHTML = ""
+                 document.getElementById('imagePreview').innerHTML = '<img src="'+e.target.result+'"/>';
+             };
+             reader.readAsDataURL(fileInput.files[0]);
+         }
+     }
+ }
+ 
+ </script>
 
 </body>
 </html>

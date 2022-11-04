@@ -204,6 +204,8 @@ if (flag == 4) {
             }
              else if (response.emailExist) {
                 document.getElementById('emailErr').innerHTML = "This Email Already Exist..!"
+            }else if(response.confirmpasswordError){
+                document.getElementById('passwordErr').innerHTML = "Inavliad ConfirmPassword"
             }
         }
     })

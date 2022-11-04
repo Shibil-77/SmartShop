@@ -109,9 +109,11 @@ module.exports = {
                 res.json({ status: true })
 
             } else {
+                res.json({ emailExist: true })
                 console.log("user Exist");
             }
         } else {
+            res.json({ confirmpasswordError: true })
             console.log("confirmPassword");
         }
     },
