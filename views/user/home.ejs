@@ -74,7 +74,7 @@
 <div class="button-head">
 <div class="product-action">
 <a data-bs-toggle="modal" data-bs-target="#staticBackdrop" href="#"><a href="#"><i class="far fa-eye"></i></a><span>Quick Shop</span></a>
-<a href="#"><i class="far fa-heart"></i><span>Add to Wishlist</span></a>
+<a  onclick="wishList('<%=product.id %>')"><i class="far fa-heart"></i><span>Add to Wishlist</span></a>
 <a href="#"><i class="far fa-exchange"></i><span>Add to Compare</span></a>
 </div>
 </div>
@@ -182,7 +182,7 @@ QuickShopData
    success:(response)=>{
      if(response.status){
       Swal.fire({
-position: 'top-end',
+position: 'top-center',
 icon: 'success',
 title: 'Your work has been saved',
 showConfirmButton: false,
@@ -209,6 +209,61 @@ if (result.isConfirmed) {
   })
   }
 </script>
+
+
+
+
+
+
+<script>
+  const wishList  =(productId)=>{
+    console.log('00000000');
+  $.ajax({
+   url:'/wishList/'+productId,
+   method: 'get',
+   success:(response)=>{
+     if(response.status){
+      Swal.fire({
+position: 'top-center',
+icon: 'success',
+title: 'Your work has been saved',
+showConfirmButton: false,
+timer: 3000
+   })
+     }else if(response.notUser){  
+      Swal.fire({
+title: 'Please Login',
+showDenyButton: true,
+showCancelButton: true,
+confirmButtonText: 'Login',
+denyButtonText: `Don't Login`,
+}).then((result) => {
+/* Read more about isConfirmed, isDenied below */
+if (result.isConfirmed) {
+  Swal.fire('Login', '', 'success')
+  location.href = '/login'
+} else if (result.isDenied) {
+  Swal.fire('Do not Login', '', 'info')
+}
+})
+  }else if(response.wishList){
+    Swal.fire({
+    position: 'top-center',
+    icon: 'success ',
+     title: 'All Ready WishList Product',
+showConfirmButton: false,
+timer: 3000
+   })
+  }
+   } 
+  })
+  }
+</script>
+
+
+
+
+
 
 
 

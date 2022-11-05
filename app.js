@@ -8,6 +8,8 @@ const dataBase = require('./server')
 const session = require('express-session')
 const multer =require('multer')
 
+const nocache = require('nocache')
+
 // set the view engine to ejs
 
 app.set('view engine', 'ejs');
@@ -24,6 +26,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge:60000*20}
   }))
+
+app.use(nocache)
 
 // set the roters 
 

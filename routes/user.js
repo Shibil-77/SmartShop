@@ -23,9 +23,11 @@ router.route('/otp')
       .post(controller.postotp)
 router.get("/cart/:id",controller.cart)
 router.route('/cartList')
-       .get(controller.cartList)
+       .get(session,controller.cartList)
 router.get('/shop',controller.shop)
 router.get('/categoryfilter/:data',controller.categoryfilter)
-
+router.get('/wishList/:id',controller.wishList)
+router.get('/Cartquantity/:id',controller.Cartquantity)
+router.get('/lessCartquantity/:id',controller.lessCartquantity)
 
 module.exports = router;

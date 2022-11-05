@@ -1,9 +1,10 @@
 
-const users = require('../models/shecma/user-schema')           
+const users = require('../models/shecma/user-schema')
 const products = require('../models/shecma/product-schema')
 const banner = require('../models/shecma/banner-schema')
 const cart = require('../models/shecma/cart')
 const categorys = require('../models/shecma/category')
+const wishList = require('../models/shecma/wishList_schema')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
@@ -186,86 +187,175 @@ module.exports = {
     },
 
     cart: async (req, res) => {
-        if(req.session.userloggedIn){  
+        if (req.session.userloggedIn) {
             let productId = req.params.id
             let product = await products.findOne({ _id: productId })
             let totalAmount = product.Price
-            console.log("==========2=========");
             let userId = req.session.UserId
-            console.log("=========3=========");
-    
-            let cartData = await cart.findOne({ UserId:userId})
-    
+            let cartData = await cart.findOne({ UserId: userId })
             if (cartData) {
-             let productIndex =  cartData.Product.findIndex(p=> p.ProductId == productId)
-             if(productIndex>=0){
-                  cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity)+1
-                  await cartData.save()
-                  res.json({status:true})
-    
-             }else{
-                cartData.Product.push({ProductId:productId,quantity:1})
-                await cartData.save()
-                res.json({status:true})
-             }
-            //  cartData.products[productIndex]
-    
+                let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
+                if (productIndex >= 0) {
+                    cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity) + 1
+                    await cartData.save()
+                    res.json({ status: true })
+                } else {
+                    console.log(productId);
+                    cartData.Product.push({ProductId:mongoose.Types.ObjectId(productId), quantity: 1 })
+                    await cartData.save()
+                    res.json({ status: true })
+                }
             } else {
-    
-                console.log("======5========");
-    
                 cart.create({
                     UserId: mongoose.Types.ObjectId(userId),
                     totalBill: totalAmount,
                     Product: [{
-                        ProductId:mongoose.Types.ObjectId(productId),
+                        ProductId: mongoose.Types.ObjectId(productId),
                         quantity: 1
                     }]
-                }).then((data)=>{
-                    res.json({status:true})
-                    console.log("====66====");
+                }).then((data) => {
+                    res.json({ status: true })
                 })
             }
-    
-        }else{
-            res.json({notUser:true})
+
+        } else {
+            res.json({ notUser: true })
         }
 
-        }
-        // console.log("hello");
-        // console.log(req.params.id);
-       ,
-
-    cartList :async(req,res)=>{
-        let UserId = req.session.UserId
-
-        let userCartData = await cart.findOne({ UserId:UserId})
-        
-        console.log("===========44======",userCartData);
-       res.render('user/cart',{UserId,userCartData})
-    },
-
-    shop:async(req,res)=>{
-      let UserId = req.session.UserId
-      let category = await categorys.find()
-     if(req.session.categoryData){
-        let product = req.session.categoryData
-        req.session.categoryData = null
-        res.render('user/shop-grid',{UserId,category,product})
-      }else{
-        let product = await products.find({ Delete: false })
-        res.render('user/shop-grid',{UserId,product,category})
-        req.session.categoryData = null
-      }
-     
-    },
-    
-    categoryfilter:async(req,res)=>{
-       console.log(req.params.data);
-       req.session.categoryData = null
-       let categoryData = await products.find({$and:[{Delete:false},{Category:req.params.data}]})
-       console.log(categoryData);
-       req.session.categoryData = categoryData
-       res.redirect('/shop')
     }
+    // console.log("hello");
+    // console.log(req.params.id);
+    ,
+
+    cartList: async (req, res) => {
+        let UserId = req.session.UserId
+        let cartData = await  cart.aggregate([
+            {
+                $match:
+                {
+                    UserId: UserId
+                }
+            },
+            {
+                $project:
+                {
+                    Product: 1
+                }
+            },
+            {
+                $unwind:
+                {
+                    path: "$Product"
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    quantity: '$Product.quantity',
+                    productId: '$Product.ProductId'
+                }
+
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField:"productId",
+                    foreignField: "_id",
+                    as: "productsData"
+                }
+            },
+            {
+                $project :{
+                    productId:1,
+                    quantity:1,
+                    productsData:{$arrayElemAt:["$productsData",0]}
+                }
+            }
+        ])
+        res.render('user/cart',{UserId,cartData})
+    },
+
+    shop: async (req, res) => {
+        let UserId = req.session.UserId
+        let category = await categorys.find()
+        if (req.session.categoryData) {
+            let product = req.session.categoryData
+            req.session.categoryData = null
+            res.render('user/shop-grid', { UserId, category, product })
+        } else {
+            let product = await products.find({ Delete: false })
+            res.render('user/shop-grid', { UserId, product, category })
+            req.session.categoryData = null
+        }
+    },
+
+    categoryfilter: async (req, res) => {
+        console.log(req.params.data);
+        req.session.categoryData = null
+        let categoryData = await products.find({ $and: [{ Delete: false }, { Category: req.params.data }] })
+        console.log(categoryData);
+        req.session.categoryData = categoryData
+        res.redirect('/shop')
+    },
+
+    wishList: async (req, res) => {
+        if (req.session.userloggedIn) {
+            let productId = req.params.id
+            let product = await products.findOne({ _id: productId })
+            let totalAmount = product.Price
+            let userId = req.session.UserId
+            let wishListData = await wishList.findOne({ UserId: userId })
+            if (wishListData) {  
+                let productIndex = wishListData.Product.findIndex(p => p.ProductId == productId)
+                // let productIndex = wishList.Product.findIndex({ProductId :{ $eq :productId}})
+                if (productIndex>=0) {
+                    res.json({ wishList: true })
+                } else {
+                    wishList.Product.push({ ProductId: mongoose.Types.ObjectId(productId)})
+                    await wishList.save()
+                    res.json({ status: true })
+                }
+            } else {
+                wishList.create({
+                    UserId: mongoose.Types.ObjectId(userId),
+                    Product: [{
+                        ProductId: mongoose.Types.ObjectId(productId),
+                    }]
+                }).then((data) => {
+                    res.json({ status: true })
+                })
+            }
+
+        } else {
+            res.json({ notUser: true })
+        }
+    },
+
+
+    Cartquantity:async(req,res)=>{
+      let productId =req.params.id
+      let userId = req.session.UserId
+      let cartData = await cart.findOne({ UserId: userId })
+      let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
+          cartData.Product[productIndex].quantity+=1
+          cartData.save().then((data)=>{
+            res.json({status:true})
+           })
+    },
+
+    lessCartquantity:async(req,res)=>{
+        let productId =req.params.id
+        let userId = req.session.UserId
+        let cartData = await cart.findOne({ UserId: userId })
+        let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
+            cartData.Product[productIndex].quantity-=1
+            cartData.save().then((data)=>{
+            res.json({status:true})
+            })
+      },
+
+
+      
+
+
 }

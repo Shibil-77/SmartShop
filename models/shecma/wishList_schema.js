@@ -5,14 +5,9 @@ const productSchema = new Schema({
     ProductId:{
         type:mongoose.Types.ObjectId,
         required:true
-    },
-    quantity:{
-        type:Number,
-        //  .poluplate('products')
-        required:true
     }
 })
-const cart = new Schema({
+const wishList = new Schema({
     Product:[productSchema],
     UserId:{
         type:String,
@@ -20,4 +15,4 @@ const cart = new Schema({
     }
 })
 
-module.exports = mongoose.model('cart',cart)
+module.exports = mongoose.model('wishList',wishList)

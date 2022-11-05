@@ -22,6 +22,7 @@
 </div>
 </div>
 
+<% cartData.forEach(cartData => { %>
 
 <div class="shopping-cart section">
 <div class="container">
@@ -30,32 +31,35 @@
 
     <!-- catr ================= -->
 
-    <% userCartData.Product.forEach(userCartData.Product => { %>
-
 <div class="shopping-cart-single">
  <div class="row">
 <div class="col-lg-2">
-<img src="/img/products/p20.png" alt="">
+<img src="/img/product/<%-cartData.productsData.moreImage[0] %>" alt="">
 </div>
 <div class="col-lg-10 my-auto">
 <div class="d-flex justify-content-between cart-title">
-<h6>Modern Electric Bike</h6>
+<h6><%-cartData.productsData.Name %></h6>
 <a href="#"><i class="fal fa-times"></i></a>
 </div>
 <div class="d-flex justify-content-between mt-4">
 <div class="cart-price my-auto">
-$250.00 x 1 <b>$250.00</b>
+    <%-cartData.productsData.Price %> <b> <%-cartData.productsData.Discount %></b>
 </div>
 <div class="row g-0 cart-qty">
-<div class="col-auto">
-<button type="submit" class="minus cat-qty-btn"> <i class="fal fa-minus "></i></button>
+<div class="col-auto ">
+<a onclick="lessCartquantity('<%=cartData.productId %>')" >
+<button class=" cat-qty-btn"><i class="fal fa-minus"></i></button>
+</a>
 </div>
 <div class="col-auto">
-<input type="text" name="quant[1]" class="input-number" readonly data-min="1" data-max="1000" value="1">
+<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="1000" value=" <%=cartData.quantity %>">
 </div>
-<div class="col-auto">
-<button type="submit" class="plus cat-qty-btn"><i class="fal fa-plus"></i></button>
+<div class="col-auto ">
+<a onclick="Cartquantity('<%=cartData.productId %>')" >
+<button class=" cat-qty-btn"><i class="fal fa-plus"></i></button>
+</a>
 </div>
+
 </div>
 </div>
 </div>
@@ -88,7 +92,6 @@ $250.00 x 1 <b>$250.00</b>
 </div>
 </div>
 </div>
-
 </div>
 </div>
 </div>
@@ -99,6 +102,41 @@ $250.00 x 1 <b>$250.00</b>
 <%- include('../inclueds/footer.ejs'); %>
 
 <%- include('../inclueds/end.ejs'); %>
+
+<script>
+const Cartquantity=(cartId)=>{
+    console.log(cartId);
+    console.log('hello');
+    $.ajax({
+     url:'/Cartquantity/'+cartId,
+     method: 'get',
+     success:(response)=>{
+         if(response.status){
+           
+         }
+     }
+    })
+
+}
+</script>
+
+
+<script>
+    const lessCartquantity=(cartId)=>{
+        console.log(cartId);
+        console.log('hello');
+        $.ajax({
+         url:'/lessCartquantity/'+cartId,
+         method: 'get',
+         success:(response)=>{
+             if(response.status){
+               
+             }
+         }
+        })
+    
+    }
+    </script>
 
 </body>
 </html>
