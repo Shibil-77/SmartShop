@@ -6,9 +6,7 @@ const userRouter = require('./routes/user')
 const adminRouter = require('./routes/admin')
 const dataBase = require('./server')
 const session = require('express-session')
-const multer =require('multer')
 
-const nocache = require('nocache')
 
 // set the view engine to ejs
 
@@ -27,7 +25,7 @@ app.use(session({
     cookie: { maxAge:60000*20}
   }))
 
-app.use(nocache)
+
 
 // set the roters 
 
@@ -41,4 +39,6 @@ dataBase.database();
 // server coccenting 
 
 app.listen(3000)
+
+
 

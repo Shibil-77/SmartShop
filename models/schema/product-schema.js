@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { array } = require('../../Midlewares/multer')
+const { array } = require('../../Middlewares/multer')
 const Schema = mongoose.Schema
 
 const products = new Schema({
@@ -15,10 +15,6 @@ const products = new Schema({
         type:String,
         required:true
     },
-    // Thumnail :{
-    //     type:String,
-    //     required:true 
-    // },
     Brand :{
         type:String,
         required:true

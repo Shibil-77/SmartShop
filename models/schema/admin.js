@@ -21,3 +21,5 @@ const Admin = new Schema({
 })
 
 module.exports = mongoose.model('Admin',Admin)
+
+

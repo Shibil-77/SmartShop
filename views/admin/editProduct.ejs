@@ -61,13 +61,11 @@
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="category" class="form-label">Category</label>
-<select name="category" class="form-control" id="category">
-<option value="<%=productData.type %>">Select Category</option>
-
+<select name="Category" class="form-control" id="category">
+<option value="<%=productData.Category %>">Select Category</option>
 <% CATEGORY.forEach(CATEGORY => { %>
-<option value="<%=CATEGORY.Category %>"><%-CATEGORY.category %></option>
+<option value="<%=CATEGORY.category %>"><%-CATEGORY.category %></option>
 <% }) %>
-
 </select>
 </div>
 </div>
@@ -92,25 +90,13 @@
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="price" class="form-label">Discount Price</label>
-<input type="text" class="form-control" name="DiscountPrice" value="<%=productData.Discount %>" id="price">
+<input type="text" class="form-control" name="Discount" value="<%=productData.Discount %>" id="price">
 </div>
 </div>
 <div class="col-lg-6">
 <div class="mb-3">
 <label for="moreimage" class="form-label">More Image</label>
 <input type="file" id="moreimage" multiple  name="images" onchange="return fileValidation()">
-</div>
-</div>
-<div class="col-lg-6">
-<div class="mb-3">
-<label for="category" class="form-label">ViewsType</label>
-<select name="type" class="form-control"  id="category">
-<option value="<%=productData.type %>">Select viewsType</option>
-<% viewsType.forEach(viewsType => { %>      
-<option value="<%=viewsType.viewType %>"><%-viewsType.viewType %></option>
-<% }) %>
-
-</select>
 </div>
 </div>
 <div class="col-lg-6">

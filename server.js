@@ -6,15 +6,18 @@ module.exports = {
         useUnifiedTopology:true,
     }  
     try{
-        mongoose.connect("mongodb://localhost:27017/test")
-        connectionParams,
-        console.log("Databse connected");   
+        mongoose.connect("mongodb://localhost:27017/test").then((data)=>{
+            connectionParams,
+            console.log("Databse connected");
+        }).catch((error)=>{
+            throw new Error('Error')
+        })
+        
     }catch(err){
-        console.log("Database Failed");
+        console.log("Database Failedeeee");
     }
 }
 }
-
 // mongodb+srv://Shibil:3SCSNGMjlr4GOIxG@cluster0.fxwwlws.mongodb.net/?retryWrites=true&w=majority
 //password 3SCSNGMjlr4GOIxG
 

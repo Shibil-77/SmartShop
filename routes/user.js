@@ -2,7 +2,7 @@ const express = require('express')
 const { get } = require('mongoose')
 const router = express.Router()
 const controller = require('../controllers/userControllers')
-const session =require('../Midlewares/session')
+const session =require('../Middlewares/session')
 
 router.get('/',controller.home)
 router.route('/login')

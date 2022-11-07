@@ -1,14 +1,13 @@
 
-const users = require('../models/shecma/user-schema')
-const products = require('../models/shecma/product-schema')
-const banner = require('../models/shecma/banner-schema')
-const cart = require('../models/shecma/cart')
-const categorys = require('../models/shecma/category')
-const wishList = require('../models/shecma/wishList_schema')
+const users = require('../models/schema/user-schema')
+const products = require('../models/schema/product-schema')
+const banner = require('../models/schema/banner-schema')
+const cart = require('../models/schema/cart')
+const categorys = require('../models/schema/category')
+const wishList = require('../models/schema/wishList_schema')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
-const { request } = require('express')
 let accountSid = twilioDatas.accountSid
 let authToken = twilioDatas.authToken
 let verifySid = twilioDatas.verifySid
@@ -21,8 +20,6 @@ module.exports = {
         let banner_Data = await banner.find()
         let product = await products.find({ Delete: false })
         let UserId = req.session.UserId
-        let userId = await products.findOne({ _id: UserId })
-        // req.session.userId = userId
         res.render('user/home', { product, banner_Data, UserId })
     },
 
@@ -50,9 +47,9 @@ module.exports = {
     },
 
     editProfile: async (req, res) => {
-        let UserId = req.session.UserId
-        let profileId = req.params.id
-        let Profile = await users.findOne({ _id: profileId })
+        const UserId = req.session.UserId
+        const profileId = req.params.id
+        const Profile = await users.findOne({ _id: profileId })
         res.render('user/editProfile', { Profile, UserId })
     },
 
@@ -84,7 +81,7 @@ module.exports = {
     },
 
     otp: (req, res) => {
-        res.render('user/otp', { OTPincorrect })
+        res.render('user/otp')
     },
     // <- ====================================================== post method ====================================== ->
     //   <========== dosignup ========>
@@ -201,7 +198,7 @@ module.exports = {
                     res.json({ status: true })
                 } else {
                     console.log(productId);
-                    cartData.Product.push({ProductId:mongoose.Types.ObjectId(productId), quantity: 1 })
+                    cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
                     await cartData.save()
                     res.json({ status: true })
                 }
@@ -229,11 +226,11 @@ module.exports = {
 
     cartList: async (req, res) => {
         let UserId = req.session.UserId
-        let cartData = await  cart.aggregate([
+        let cartData = await cart.aggregate([
             {
                 $match:
                 {
-                    UserId: UserId
+                    UserId
                 }
             },
             {
@@ -243,10 +240,7 @@ module.exports = {
                 }
             },
             {
-                $unwind:
-                {
-                    path: "$Product"
-                }
+                $unwind: "$Product"
             },
             {
                 $project: {
@@ -259,20 +253,20 @@ module.exports = {
             {
                 $lookup: {
                     from: "products",
-                    localField:"productId",
+                    localField: "productId",
                     foreignField: "_id",
                     as: "productsData"
                 }
             },
             {
-                $project :{
-                    productId:1,
-                    quantity:1,
-                    productsData:{$arrayElemAt:["$productsData",0]}
+                $project: {
+                    productId: 1,
+                    quantity: 1,
+                    productsData: { $arrayElemAt: ["$productsData", 0] }
                 }
             }
         ])
-        res.render('user/cart',{UserId,cartData})
+        res.render('user/cart', { UserId, cartData })
     },
 
     shop: async (req, res) => {
@@ -305,14 +299,14 @@ module.exports = {
             let totalAmount = product.Price
             let userId = req.session.UserId
             let wishListData = await wishList.findOne({ UserId: userId })
-            if (wishListData) {  
+            if (wishListData) {
                 let productIndex = wishListData.Product.findIndex(p => p.ProductId == productId)
                 // let productIndex = wishList.Product.findIndex({ProductId :{ $eq :productId}})
-                if (productIndex>=0) {
+                if (productIndex >= 0) {
                     res.json({ wishList: true })
                 } else {
-                    wishList.Product.push({ ProductId: mongoose.Types.ObjectId(productId)})
-                    await wishList.save()
+                    wishListData.Product.push({ ProductId: mongoose.Types.ObjectId(productId) })
+                    await wishListData.save()
                     res.json({ status: true })
                 }
             } else {
@@ -332,30 +326,30 @@ module.exports = {
     },
 
 
-    Cartquantity:async(req,res)=>{
-      let productId =req.params.id
-      let userId = req.session.UserId
-      let cartData = await cart.findOne({ UserId: userId })
-      let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
-          cartData.Product[productIndex].quantity+=1
-          cartData.save().then((data)=>{
-            res.json({status:true})
-           })
-    },
-
-    lessCartquantity:async(req,res)=>{
-        let productId =req.params.id
+    Cartquantity: async (req, res) => {
+        let productId = req.params.id
         let userId = req.session.UserId
         let cartData = await cart.findOne({ UserId: userId })
         let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
-            cartData.Product[productIndex].quantity-=1
-            cartData.save().then((data)=>{
-            res.json({status:true})
-            })
-      },
+        cartData.Product[productIndex].quantity += 1
+        cartData.save().then((data) => {
+            res.json({ status: true })
+        })
+    },
+
+    lessCartquantity: async (req, res) => {
+        let productId = req.params.id
+        let userId = req.session.UserId
+        let cartData = await cart.findOne({ UserId: userId })
+        let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
+        cartData.Product[productIndex].quantity -= 1
+        cartData.save().then((data) => {
+            res.json({ status: true })
+        })
+    },
 
 
-      
+
 
 
 }

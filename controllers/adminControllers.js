@@ -1,425 +1,462 @@
-const products = require('../models/shecma/product-schema')
-const users = require('../models/shecma/user-schema')
-const category = require('../models/shecma/category')
-const viewType = require('../models/shecma/viewtype')
-const banner = require('../models/shecma/banner-schema')
-const Admin = require('../models/shecma/admin')
+const products = require('../models/schema/product-schema')
+const users = require('../models/schema/user-schema')
+const category = require('../models/schema/category')
+const banner = require('../models/schema/banner-schema')
+const Admin = require('../models/schema/admin')
 const mongoose = require('mongoose')
-const bcrypt =require('bcrypt')
+const bcrypt = require('bcrypt')
+const dataCheck = require('../Middlewares/data-checking')
 
-let CATEGORY
+
+
+
+
 module.exports = {
-adminError: (req, res) => {
-res.render('admin/error')
-},
-dashboard: (req, res) => {
-res.render('admin/dashboard')
-},
-adminsignup:(req,res)=>{
-  res.render('admin/adminsignup')
-},
-adminlogin :(req,res)=>{
-   res.render('admin/adminlogin')
-},
+   adminError: (req, res) => {
+      res.render('admin/admin-error')
+   },
+   dashboard: (req, res) => {
+      res.render('admin/dashboard')
+   },
+   adminsignup: (req, res) => {
+      res.render('admin/adminsignup')
+   },
+   adminlogin: (req, res) => {
+      res.render('admin/adminlogin')
+   },
 
-adminlogout:(req,res)=>{
-   req.session.AdminId = null 
-   req.session.adminloggedIn = false
-   res.redirect('/admin/adminlogin')
-},
+   adminlogout: (req, res) => {
+      req.session.AdminId = null
+      req.session.adminloggedIn = false
+      res.redirect('/admin/adminlogin')
+   },
 
-postadminsignup :async(req,res)=>{
-   let  AdminData =  req.body
-   let  bcryptpassword = await bcrypt.hash(AdminData.Password,10) 
-   const adminData = new Admin({
-      Name:AdminData.Name,
-      Email:AdminData.Email,
-      Password:bcryptpassword,
-      Admin:false
-  })
-
-  adminData.save()
-  .then(data => {
-      res.json({status:true})
-  }) 
-
-},
-
-postadminlogin :async(req,res)=>{
-   let AdminData = await Admin.findOne({ Email:req.body.Email})
-     if(AdminData){
-      if(AdminData.Admin) {
-         bcrypt.compare(req.body.Password,AdminData.Password).then((data)=>{
-         if(data){
-
-          req.session.AdminId = AdminData 
-          req.session.adminloggedIn = true
-
-         res.json({status:true})
+   postadminsignup: async (req, res) => {
+      try {
+         const AdminData = req.body
+         if(AdminData){
+            const bcryptpassword = await bcrypt.hash(AdminData.Password, 10)
+            if(bcryptpassword){
+               const {Name,Email}=AdminData
+               AdminData.Password = bcryptpassword
+               AdminData.Admin = false
+               console.log(AdminData);
+               const adminData = new Admin(AdminData)
+              await adminData.save()    
+              res.json({ status: true })
+            }else{
+               throw new Error('Error') 
+            } 
          }else{
-            res.json({passworError:true})
-         console.log("password invalied");
+            throw new Error('Error')
          }
-         })
-         }else{
-            res.json({accessError:true})
-         console.log("block");
-         }        
-         }else{
-            console.log("email error");
-            res.json({emailError:true})
-         }
-   }
-,
-
-adminList :async(req,res)=>{
-   let adminData = await Admin.find()
-   res.render('admin/adminList',{adminData})
-},
-
-adminAccess:async(req,res)=>{
- let  adminId = req.params.id
- console.log(adminId);
-   try {
-      console.log("============1==========");
-      await Admin.findOneAndUpdate(
-         { _id: mongoose.Types.ObjectId(adminId)},
-         {
-         $set: {      
-         Admin: false
-         }
-         })
-         res.redirect('/admin/adminList')
-   } catch (error) {
-      res.redirect('/error')
-   }
-  },
-
-  adminAccessblock:async(req,res)=>{
-   let  adminId = req.params.id
-   console.log(adminId);
-     try {
-        await Admin.findOneAndUpdate(
-           { _id: mongoose.Types.ObjectId(adminId)},
-           {
-           $set: {     
-                 Admin: true
-           }
-           })
-           res.redirect('/admin/adminList')
-     } catch (error) {
-        res.redirect('/error')
-     }
-    },
-
-//<- ============= product  management ========== ->
-
-// productList
-
-productList: async (req, res) => {
-let product = await products.find({Delete:false})
-res.render('admin/product', { product })
-},
-// viewProduct
-
-viewProduct: async (req, res) => {
-let CATEGORY = await category.find()
-let viewsType = await viewType.find()
-res.render('admin/addProduct', { CATEGORY, viewsType })
-},
-
-//  editProduct
-
-editProduct: async (req, res) => {
-let productId = req.params.id
-let productData = await products.findOne({ _id: productId })
-let CATEGORY = await category.find()
-let viewsType = await viewType.find()
-res.render('admin/editProduct', { productData, CATEGORY, viewsType })
-},
-// deleteProduct
-
-deleteProduct: async (req, res) => {
-let productId = req.params.id
-try {
-   await products.findOneAndUpdate(
-      { _id: mongoose.Types.ObjectId(productId)},
-      {
-      $set: {      
-      Delete: true
+      } catch (error) {
+         res.redirect('/admin/error')
       }
-      })
-      res.json({status:true})
-} catch (error) {
-   res.redirect('/error')
-}
-},
+     
+   },
 
-// addProduct 
-
-addProduct: (req, res, next) => {
-   try {
-      const image = req.files
-let database_image = image.map((data) => data.filename)
-let productData = new products({
-Name: req.body.Name,
-Price: req.body.Price,
-Category: req.body.category,
-Brand: req.body.Brand,
-Discount: req.body.DiscountPrice,
-Stock: req.body.Stock,
-moreImage: database_image,
-Discription: req.body.Descreiption,
-Delete:false
-})
-productData.save()
-.then(data => {
-  
-res.redirect('/admin/product')
-})
-   } catch (error) {
-     console.log("====================addproduct Error===================");
+   postadminlogin: async (req, res) => {
+      try {
+         let AdminData = await Admin.findOne({ Email: req.body.Email })
+         if (AdminData) {
+            if (AdminData?.Admin) {
+               bcrypt.compare(req.body.Password, AdminData.Password).then((data) => {
+                  if (data) {
+                     req.session.AdminId = AdminData
+                     req.session.adminloggedIn = true
+                     res.json({ status: true })
+                  } else {
+                     res.json({ passworError: true })
+                     // console.log("password invalied");
+                  }
+               })
+            } else {
+               res.json({ accessError: true })
+               // console.log("block");
+            }
+         } else {
+            // console.log("email error");
+            res.json({ emailError: true })
+         }
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+    
    }
+   ,
+
+   adminList: async (req, res) => {
+      try {
+         let adminData = await Admin?.find()
+         res.render('admin/adminList', { adminData })
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+    
+   },
+
+   adminAccess: async (req, res) => {
+      try { 
+         const _id = req.params?.id
+         const success = await dataCheck(_id,products)
+         if(success){
+            const data = await Admin?.findOne({_id,Admin:{$eq:true}})
+            let Action
+                 if(data){
+                  Action =false
+                  }else{
+                  Action =true  
+                  }
+               await Admin.findOneAndUpdate(
+                  { _id: mongoose.Types.ObjectId(_id)},
+                  {
+                     $set:{ Admin:Action}
+                  })
+               res.redirect('/admin/adminList')
+         }else{
+            throw new Error('Error')
+      }  
+      } catch (error) {
+         res.redirect('/admin/error') 
+      }     
+   },
+
+   //<- ============= product  management ========== ->
+
+   // productList
+
+   productList: async (req, res) => {
+      try {
+         const product = await products.find({ Delete: false })
+         if (product) {
+            res.render('admin/product', {product})
+         } else {
+            throw new Error('Error')
+         }
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+   },
+   // viewProduct
+
+   viewProduct: async (req, res) => {
+      try {
+         const CATEGORY = await category.find()
+         if (CATEGORY) {
+            res.render('admin/addProduct', {CATEGORY})
+         } else {
+            throw new Error('Error')
+         }
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+   },
+
+   //  editProduct
+
+   editProduct: async (req, res) => {
+      try {
+         let _id = req.params.id
+         const success = await dataCheck(_id, products)
+         if (success) {
+            Promise.all([products.findOne({ _id }), category.find()])
+               .then((values) => {
+                  const [productData,CATEGORY] = values;
+                  res.render('admin/editProduct', { productData,CATEGORY})
+               }).catch((error) => {
+                  throw new Error('Error')
+               })
+         } else {
+            throw new Error('Error')
+         }
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+   },
+   // deleteProduct
+
+   deleteProduct: async (req, res) => {
+      try {
+      let _id = req.params.id
+      const success = await dataCheck(_id,products)
+      if (success) {
+            await products.findOneAndUpdate(
+               { _id: mongoose.Types.ObjectId(_id)},
+               {
+                  $set: {
+                     Delete: true
+                  }
+               })
+            res.json({ status: true })
+        
+      } else {
+         throw new Error('Error')
+      }
+   } catch (error) {
+      res.redirect('/admin/error')
+   }
+   },
+
+   // addProduct 
+
+   addProduct: async(req, res, next) => {
+      try {
+         if(req.body){
+            if(req.files){
+             const  data = req.body
+             const image = req.files
+               const database_image = image.map((data) => data.filename)
+               data.moreImage =  database_image
+               data.Delete =false
+               if(database_image.length!==0){
+                  let productData = new products(data)  
+                  console.log(productData); 
+                 await productData.save()
+                  res.redirect('/admin/product')
+               }else{
+                console.log("not 3 req.files");
+               }
+            }else{
+               console.log("not req.files");
+            }     
+         }else{
+            console.log("req.body");
+         }
+      } catch (error) {
+         console.log("===============12===========");
+         res.redirect('/admin/error')
+      }
+   },
+
+   // postEditProduct
+
+   postEditProduct: async (req, res) => {
+      try { 
+      const _id = req.params.id
+      const success = await dataCheck(_id,products)
+      if(success){
+            const Data = req.body  
+            const image = req.files
+            if(req.files.length === 3){
+               database_image = image.map((data) => data.filename)
+               Data.moreImage = database_image
+            }
+            await products.findOneAndUpdate(  
+               { _id: mongoose.Types.ObjectId(_id)},
+               {
+                  $set:Data
+               })
+            res.redirect('/admin/product')
+        
+   }else{
+      throw new Error('Error')
+   }
+} catch (error) { 
+   res.redirect('/admin/error')
+} 
 },
 
-// postEditProduct
+   //<- ============= user  management ========== ->
 
-postEditProduct: async (req,res) => {
-let image = req.files
-let ProductId = req.params.id
-if(req.files.length!==0){
-database_image = image.map((data) => data.filename)
-await products.findOneAndUpdate(
-{ _id: mongoose.Types.ObjectId(ProductId) },
-{
-$set: {
-Name: req.body.Name,
-Price: req.body.Price,
-Category: req.body.category,
-Stock: req.body.Stock,
-Discription: req.body.Descreiption,
-type: req.body.type,
-Discount: req.body.DiscountPrice,
-Brand: req.body.Brand,
-moreImage: database_image
-}
-})
-res.redirect('/admin/product')
-}else{
-try {
-await products.findOneAndUpdate(
-{ _id: mongoose.Types.ObjectId(ProductId) },
-{
-$set: {
-Name: req.body.Name,
-Price: req.body.Price,
-Category: req.body.category,
-Stock: req.body.Stock,
-Discription: req.body.Descreiption,
-type: req.body.type,
-Discount: req.body.DiscountPrice,
-Brand: req.body.Brand
-}
-})
-res.redirect('/admin/product')
-}
-catch (e) {
-console.log("e",)
-}
-}
-}
-,
+   //  userList
 
-//<- ============= user  management ========== ->
+   userList: async (req, res) => {
+      try {   
+         const userData = await users?.find()
+         if(userData){
+            res.render('admin/user', {userData})
+         }else{
+            throw new Error('Error')
+         } 
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+       
+   },
 
-//  userList
+   //  blockUser
 
-userList: async (req, res) => {
-let userData = await users.find()
-res.render('admin/user', { userData })
-},
+   blockUser: async (req, res) => {
+      try { 
+         const _id = req.params?.id
+         const success = await dataCheck(_id,products)
+         if(success){
+            const data = await users?.findOne({_id,Action:{$eq:true}})
+            let Action
+                 if(data){
+                  Action =false
+                  }else{
+                  Action =true  
+                  }
+               await users.findOneAndUpdate(
+                  { _id: mongoose.Types.ObjectId(_id)},
+                  {
+                     $set:{ Action:Action}
+                  })
+               res.redirect('/admin/user')
+         }else{
+            throw new Error('Error')
+      }  
+      } catch (error) {
+         res.redirect('/admin/error') 
+      }     
+   },
 
-//  blockUser
+   // < ============= Category  management ========== >
 
-blockUser: async (req, res) => {
-userId = req.params.id
-await users.findOneAndUpdate(
-{ _id: mongoose.Types.ObjectId(userId) },
-{
-$set: {
-Action: false
-}
-})
-res.redirect('/admin/user')
-},
+   // addCategory 
 
-// unblockUser
+   addCategory: (req, res) => {
+      res.render('admin/Category')
+   },
 
-unblockUser: async (req, res) => {
-userId = req.params.id
-await users.findOneAndUpdate(
-{ _id: mongoose.Types.ObjectId(userId) },
-{ $set: { Action: true } })
-res.redirect('/admin/user')
-},
+   // postCategory
 
-// < ============= Category  management ========== >
+   postCategory: async(req, res) => {
+        try {
+         if(req.body){
+            const categoryData = new category({
+               category: req.body.Category,
+            })
+           await categoryData.save()
+           res.redirect('/admin/categoryList')
+         }
+        } catch (error) {
+         res.redirect('/admin/error') 
+        }
+   },
 
-// addCategory 
+   categoryList: async (req, res) => {
+      try {
+      const category_List = await category.find()
+         if(category_List){
+            res.render('admin/categoryList', { category_List }) 
+         }else{
+            throw new Error('Error')
+         }  
+      } catch (error) {
+         res.redirect('/admin/error') 
+      }
+   },
 
-addCategory: (req, res) => {
-res.render('admin/Category')
-},
+   deletecategory: async (req, res) => {
+      try {
+      let categoryId = req.params.id
+      const _id = req.params?.id
+      const success = await dataCheck(_id,category)
+      if(success){
+         await category.deleteOne(
+            { _id: mongoose.Types.ObjectId(_id) })
+             res.redirect('/admin/categoryList')
+      }else{
+         throw new Error('Error')
+      }   
+      }catch (error) {
+         res.redirect('/admin/error') 
+      }
+   },
 
-// postCategory
+   // ========= bannner management =========
 
-postCategory: (req, res) => {
-let categoryData = new category({
-category: req.body.Category,
-})
-categoryData.save()
-.then(async (data) => {
-console.log("success");
-res.redirect('/admin')
-})
-.catch(err => {
-console.log("error");
-})
-},
+   addbanner: (req, res) => {
+      res.render('admin/addbanner')
+   },
 
-categoryList: async (req, res) => {
-let category_List = await category.find()
-res.render('admin/categoryList', { category_List })
-},
+   postaddbanner:async (req, res) => {
+      try {
+         if(req.body){
+            if(req.file){
+               const image = req.file?.filename
+                if(image){
+                  const data =req.body
+                  data.bannerimage = image
+                  const bannerData = new banner(data)
+                await  bannerData.save()
+                res.redirect('/admin/bannerList')
+                }else{
+              console.log("pleace add image");
+                }
+            }else{
+               console.log("pleace add image");
+            }  
+         }else{
+            throw new Error('Error')
+         }
+      } catch (error) { 
+         res.redirect('/admin/error')   
+      }
+   },
 
-deletecategory: async (req, res) => {
-let categoryId = req.params.id
-try {
-await category.deleteOne(
-{ _id: mongoose.Types.ObjectId(categoryId) })
-res.redirect('/admin/categoryList')
-}
-catch (error) {
-console.log("error=", error);
-}
-},
-//  addviewType
+   bannerList: async (req, res) => {
+      try {
+         let banner_List = await banner.find()
+         if(banner_List){
+            res.render('admin/banner_List', { banner_List })
+         }else{
+            throw new Error('Error')
+         }
+      } catch (error) {
+         res.redirect('/admin/error') 
+      } 
+   },
 
-addviewType: (req, res) => {
-res.render('admin/viewType')
-},
-// postviewType
+   editBanner: async (req, res) => {
+      try {
+         const _id = req.params?.id
+         const success = await dataCheck(_id,products)
+       if(success){
+         const bannerData = await banner.findOne({ _id })
+         if(bannerData){
+            res.render('admin/banneredit', { bannerData })
+         }
+       }else{
+         throw new Error('Error')   
+       }
+      } catch (error) {
+         res.redirect('/admin/error') 
+      }  
+   },
 
-postviewType: (req, res) => {
-let viewTypeData = new viewType({
-viewType: req.body.viewType,
-})
-viewTypeData.save()
-.then((data) => {
-console.log("success");
-res.redirect('/admin')
-})
-.catch(err => {
-console.log("errorrr");
-})
-},
+   posteditBanner: async (req, res) => {
+      try { 
+         const _id = req.params.id
+         const success = await dataCheck(_id,banner)
+         if(success){
+               const Data = req.body  
+               const image = req.file
+               if(req.file){
+                  Data.bannerimage = image.filename
+                  console.log(Data);
+               }
+               await banner.findOneAndUpdate(  
+                  { _id: mongoose.Types.ObjectId(_id)},
+                  {
+                     $set:Data
+                  })
+                  res.redirect('/admin/bannerList')
+      }else{
+         throw new Error('Error')
+      }
+   } catch (error) { 
+      res.redirect('/admin/error')
+   } 
+   },
 
-viewTypeList: async (req, res) => {
-let viewType_List = await viewType.find()
-res.render('admin/viewTypeList', { viewType_List })
-},
-
-deleteviewType: async (req, res) => {
-let viewtypeId = req.params.id
-try {
-await viewType.deleteOne(
-{ _id: mongoose.Types.ObjectId(viewtypeId) })
-res.redirect('/admin/viewTypeList')
-}
-catch (error) {
-console.log("error=", error);
-}
-},
-
-// ========= bannner management =========
-
-addbanner: (req, res) => {
-res.render('admin/addbanner')
-},
-
-postaddbanner: (req, res) => {
-const image = req.file.filename
-let bannerData = new banner({
-Heading: req.body.Heading,
-offer: req.body.offer,
-bannerimage: image
-})
-bannerData.save()
-.then(data => {
-res.redirect('/admin/bannerList')
-})
-.catch(err => {
-console.log("error");
-})
-},
-
-bannerList: async(req,res) => {
-let banner_List = await banner.find()
-res.render('admin/banner_List',{banner_List})
-},
-
-editBanner :async(req,res)=>{
-let   bannerId =  req.params.id
-console.log(bannerId);
-let bannerData = await banner.findOne({ _id: bannerId})
-console.log(bannerData);
-res.render('admin/banneredit',{bannerData})
-},
-
-posteditBanner:async(req,res)=>{
-let bannerId = req.params.id
-if(req.file){
-console.log('hello')
-let database_image = req.file.filename
-console.log(database_image)
-await banner.findOneAndUpdate(
-{ _id: mongoose.Types.ObjectId(bannerId) },
-{
-$set: {
-Heading: req.body.Heading,
-offer: req.body.offer,
-bannerimage: database_image
-}
-})
-res.redirect('/admin/bannerList')
-}else{
-try {
-console.log("hai");
-await banner.findOneAndUpdate(
-{ _id: mongoose.Types.ObjectId(bannerId) },
-{
-$set: {
-Heading: req.body.Heading,
-offer: req.body.offer,
-}
-})
-res.redirect('/admin/bannerList')
-}
-catch (e) {
-console.log("e",)
-}
-}
-},
-
-deletebanner :async(req,res)=>{
-let bannerId = req.params.id
-try {
-await banner.deleteOne(
-{ _id: mongoose.Types.ObjectId(bannerId) })
-res.redirect('/admin/bannerList')
-}
-catch (error) {
-console.log("error=", error);
-}
-}
+   deletebanner: async (req, res) => {
+      try {
+      const _id = req.params.id
+      const success = await dataCheck(_id,banner)
+      if(success){
+         await banner.deleteOne(
+            {_id})
+         res.redirect('/admin/bannerList')
+      }else{
+         throw new Error('Error')
+      }     
+      }
+      catch (error) {
+         res.redirect('/admin/error')
+      }
+   }
 }

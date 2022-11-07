@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 const category = new Schema({
     category:{
         type:String,
+        unique: true,
         required:true
     }
 })

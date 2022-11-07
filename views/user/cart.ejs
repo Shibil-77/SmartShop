@@ -52,7 +52,7 @@
 </a>
 </div>
 <div class="col-auto">
-<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="1000" value=" <%=cartData.quantity %>">
+<input type="text" name="quant[1]" class="input-number" id="Cartquantity" data-min="1" data-max="1000" value=" <%=cartData.quantity %>">
 </div>
 <div class="col-auto ">
 <a onclick="Cartquantity('<%=cartData.productId %>')" >
@@ -112,7 +112,9 @@ const Cartquantity=(cartId)=>{
      method: 'get',
      success:(response)=>{
          if(response.status){
-           
+            let cart = document.getElementById('Cartquantity').value
+                cart++
+                document.getElementById('Cartquantity').innerHTML = cart
          }
      }
     })
@@ -130,13 +132,14 @@ const Cartquantity=(cartId)=>{
          method: 'get',
          success:(response)=>{
              if(response.status){
-               
+                let cart = document.getElementById('Cartquantity').value
+                cart--
+                document.getElementById('Cartquantity').innerHTML = cart
              }
          }
         })
-    
     }
-    </script>
+</script>
 
 </body>
 </html>
