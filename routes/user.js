@@ -29,6 +29,9 @@ router.get('/categoryfilter/:data',controller.categoryfilter)
 router.get('/wishList/:id',controller.wishList)
 router.get('/Cartquantity/:id',controller.Cartquantity)
 router.get('/lessCartquantity/:id',controller.lessCartquantity)
-
+router.get('/deletecart/:id',controller.deletecart)
+router.post('/checkout',controller.checkoutpage)
+router.route('/checkoutPage').
+       post(controller.postcheckout)
 
 module.exports = router;

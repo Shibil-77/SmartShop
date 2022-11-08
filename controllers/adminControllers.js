@@ -367,7 +367,7 @@ module.exports = {
       try {
          if(req.body){
             if(req.file){
-               const image = req.file?.filename
+               const image = req.file.filename
                 if(image){
                   const data =req.body
                   data.bannerimage = image

@@ -5,6 +5,7 @@ const banner = require('../models/schema/banner-schema')
 const cart = require('../models/schema/cart')
 const categorys = require('../models/schema/category')
 const wishList = require('../models/schema/wishList_schema')
+const address = require('../models/schema/address')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
@@ -216,7 +217,6 @@ module.exports = {
         } else {
             res.json({ notUser: true })
         }
-
     }
     ,
     cartList: async (req, res) => {
@@ -228,10 +228,12 @@ module.exports = {
                 array.quantity = data.quantity
                 array.ProductId = data.ProductId
                 array.totalAmount = data.ProductId.Price * data.quantity
+                array.arrayId = data.id
                 return array
             })
-            console.log(cartData);
-            res.render('user/cart', {UserId,cartData})
+      let  totalBill =  cartData.reduce((total,value)=>total+value.totalAmount,0)
+            cartData.totalBill =totalBill
+            res.render('user/cart', {UserId,cartData,data})
         } else {
             res.redirect('/user/error')
         }
@@ -254,7 +256,6 @@ module.exports = {
     categoryfilter: async (req, res) => {
         req.session.categoryData = null
         let categoryData = await products.find({ $and: [{ Delete: false }, { Category: req.params.data }] })
-        console.log(categoryData);
         req.session.categoryData = categoryData
         res.redirect('/shop')
     },
@@ -302,13 +303,10 @@ module.exports = {
 
     Cartquantity: async (req, res) => {
         try {
-            const _id = req.params.id
-            const success = await dataCheck(_id, products)
-            if (success) {
+                const _id = req.params.id
                 const UserId = req.session.UserId
                 const cartData = await cart.findOne({ UserId })
                 if (cartData) {
-                    console.log(cartData);
                     let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
                     cartData.Product[productIndex].quantity += 1
                     cartData.save().then((data) => {
@@ -317,9 +315,6 @@ module.exports = {
                 } else {
                     res.redirect('/admin/error')
                 }
-            } else {
-                res.redirect('/admin/error')
-            }
         } catch (error) {
             res.redirect('/admin/error')
         }
@@ -327,9 +322,7 @@ module.exports = {
 
     lessCartquantity: async (req, res) => {
         try {
-            const _id = req.params.id
-            const success = await dataCheck(_id, products)
-            if (success) {
+                const _id = req.params.id
                 const userId = req.session.UserId
                 let cartData = await cart.findOne({ UserId: userId })
                 let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
@@ -341,12 +334,74 @@ module.exports = {
                 } else {
                     res.json({ error: true })
                 }
-            } else {
-                res.redirect('/admin/error')
-            }
+           
         } catch (error) {
             res.redirect('/admin/error')
         }
     },
 
-}
+    deletecart:async(req,res)=>{
+      try {
+       const  ProductId  = req.params.id
+       const UserId = req.session.UserId
+           const data = await cart.updateOne({UserId}, { $pull:{ Product:{_id:mongoose.Types.ObjectId(ProductId)}}})
+       if(data){
+            res.redirect('/cartList')
+         }else{
+        res.redirect('/admin/error')
+       }
+      } catch (error) {
+        res.redirect('/admin/error')
+       }
+    },
+
+    checkoutpage:(req,res)=>{
+         console.log(req.body.totalBill);
+      let  totalBill = req.body.totalBill
+         const UserId = req.session.UserId
+         res.render('user/checkout',{UserId,totalBill})
+    },
+
+    postcheckout:async(req,res)=>{
+         try {
+            console.log(req.body);
+            const UserId = req.session.UserId
+            if(req.body){
+                     const data =req.body
+                     const addressData = new address({
+                             firstName:data.firstName,
+                             lastName:data.lastName,
+                             email:data.email,
+                             countryName:data.countryName,
+                             state:data.state,
+                             arrresLine:data.addresLine,
+                             address:data.address,
+                             postCode:data.postCode,
+                             UserId:UserId,
+                             phoneNumber:data.number
+                     })
+                     console.log(addressData);
+                     await  addressData.save()
+                     res.redirect('success')
+                     let today = new Date();
+                     let dd = String(today.getDate()).padStart(2, '0');
+                     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                     let yyyy = today.getFullYear();
+                     today = mm + '/' + dd + '/' + yyyy;
+                     console.log(today);
+
+                     if(req.body.cash == 'cash'){
+                      
+                     }else{
+
+                     }
+                     }else{
+                     console.log("pleace add image");
+                    }
+           } catch (error) { 
+            console.log("============7======");
+            res.redirect('/admin/error')   
+           }
+      },
+    }
+
