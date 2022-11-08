@@ -3,13 +3,18 @@ const Schema = mongoose.Schema
 
 const productSchema = new Schema({
     ProductId:{
-        type:mongoose.Types.ObjectId,
+        type:String,
+        ref: 'products',
         required:true
+        
     },
     quantity:{
         type:Number,
         //  .poluplate('products')
         required:true
+    },
+    totalPrice:{
+        type:Number
     }
 })
 const cart = new Schema({

@@ -28,8 +28,7 @@ module.exports = {
     },
 
     signup: (req, res) => {
-        res.render('user/register', { userError })
-        userError = null
+        res.render('user/register')
     },
 
     error: (req, res) => {
@@ -214,59 +213,28 @@ module.exports = {
                     res.json({ status: true })
                 })
             }
-
         } else {
             res.json({ notUser: true })
         }
 
     }
-    // console.log("hello");
-    // console.log(req.params.id);
     ,
-
     cartList: async (req, res) => {
-        let UserId = req.session.UserId
-        let cartData = await cart.aggregate([
-            {
-                $match:
-                {
-                    UserId
-                }
-            },
-            {
-                $project:
-                {
-                    Product: 1
-                }
-            },
-            {
-                $unwind: "$Product"
-            },
-            {
-                $project: {
-                    _id: 0,
-                    quantity: '$Product.quantity',
-                    productId: '$Product.ProductId'
-                }
-
-            },
-            {
-                $lookup: {
-                    from: "products",
-                    localField: "productId",
-                    foreignField: "_id",
-                    as: "productsData"
-                }
-            },
-            {
-                $project: {
-                    productId: 1,
-                    quantity: 1,
-                    productsData: { $arrayElemAt: ["$productsData", 0] }
-                }
-            }
-        ])
-        res.render('user/cart', { UserId, cartData })
+        const UserId = req.session.UserId
+        const data = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
+        if (data) {
+            const cartData = data.Product.map((data) => {
+                let array = {}
+                array.quantity = data.quantity
+                array.ProductId = data.ProductId
+                array.totalAmount = data.ProductId.Price * data.quantity
+                return array
+            })
+            console.log(cartData);
+            res.render('user/cart', {UserId,cartData})
+        } else {
+            res.redirect('/user/error')
+        }
     },
 
     shop: async (req, res) => {
@@ -284,7 +252,6 @@ module.exports = {
     },
 
     categoryfilter: async (req, res) => {
-        console.log(req.params.data);
         req.session.categoryData = null
         let categoryData = await products.find({ $and: [{ Delete: false }, { Category: req.params.data }] })
         console.log(categoryData);
@@ -293,63 +260,93 @@ module.exports = {
     },
 
     wishList: async (req, res) => {
-        if (req.session.userloggedIn) {
-            let productId = req.params.id
-            let product = await products.findOne({ _id: productId })
-            let totalAmount = product.Price
-            let userId = req.session.UserId
-            let wishListData = await wishList.findOne({ UserId: userId })
-            if (wishListData) {
-                let productIndex = wishListData.Product.findIndex(p => p.ProductId == productId)
-                // let productIndex = wishList.Product.findIndex({ProductId :{ $eq :productId}})
-                if (productIndex >= 0) {
-                    res.json({ wishList: true })
+        try {
+            if (req.session.userloggedIn) {
+                const _id = req.params.id
+                const success = await dataCheck(_id, products)
+                if (success) {
+                    const product = await products.findOne({ _id: _id })
+                    const userId = req.session.UserId
+                    const wishListData = await wishList.findOne({ UserId: userId })
+                    if (wishListData) {
+                        let productIndex = wishListData.Product.findIndex(p => p.ProductId == _id)
+                        // let productIndex = wishList.Product.findIndex({ProductId :{ $eq :productId}})
+                        if (productIndex >= 0) {
+                            res.json({ wishList: true })
+                        } else {
+                            wishListData.Product.push({ ProductId: mongoose.Types.ObjectId(_id) })
+                            await wishListData.save()
+                            res.json({ status: true })
+                        }
+                    } else {
+                        wishList.create({
+                            UserId: mongoose.Types.ObjectId(userId),
+                            Product: [{
+                                ProductId: mongoose.Types.ObjectId(_id),
+                            }]
+                        }).then((data) => {
+                            res.json({ status: true })
+                        })
+                    }
                 } else {
-                    wishListData.Product.push({ ProductId: mongoose.Types.ObjectId(productId) })
-                    await wishListData.save()
-                    res.json({ status: true })
+                    res.json({ notUser: true })
                 }
             } else {
-                wishList.create({
-                    UserId: mongoose.Types.ObjectId(userId),
-                    Product: [{
-                        ProductId: mongoose.Types.ObjectId(productId),
-                    }]
-                }).then((data) => {
-                    res.json({ status: true })
-                })
+                res.redirect('/admin/error')
             }
-
-        } else {
-            res.json({ notUser: true })
+        } catch (error) {
+            res.redirect('/admin/error')
         }
     },
 
 
     Cartquantity: async (req, res) => {
-        let productId = req.params.id
-        let userId = req.session.UserId
-        let cartData = await cart.findOne({ UserId: userId })
-        let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
-        cartData.Product[productIndex].quantity += 1
-        cartData.save().then((data) => {
-            res.json({ status: true })
-        })
+        try {
+            const _id = req.params.id
+            const success = await dataCheck(_id, products)
+            if (success) {
+                const UserId = req.session.UserId
+                const cartData = await cart.findOne({ UserId })
+                if (cartData) {
+                    console.log(cartData);
+                    let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
+                    cartData.Product[productIndex].quantity += 1
+                    cartData.save().then((data) => {
+                        res.json({ status: true })
+                    })
+                } else {
+                    res.redirect('/admin/error')
+                }
+            } else {
+                res.redirect('/admin/error')
+            }
+        } catch (error) {
+            res.redirect('/admin/error')
+        }
     },
 
     lessCartquantity: async (req, res) => {
-        let productId = req.params.id
-        let userId = req.session.UserId
-        let cartData = await cart.findOne({ UserId: userId })
-        let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
-        cartData.Product[productIndex].quantity -= 1
-        cartData.save().then((data) => {
-            res.json({ status: true })
-        })
+        try {
+            const _id = req.params.id
+            const success = await dataCheck(_id, products)
+            if (success) {
+                const userId = req.session.UserId
+                let cartData = await cart.findOne({ UserId: userId })
+                let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
+                cartData.Product[productIndex].quantity -= 1
+                if (cartData.Product[productIndex].quantity > 0) {
+                    cartData.save().then((data) => {
+                    res.json({ status: true })
+                    })
+                } else {
+                    res.json({ error: true })
+                }
+            } else {
+                res.redirect('/admin/error')
+            }
+        } catch (error) {
+            res.redirect('/admin/error')
+        }
     },
-
-
-
-
 
 }

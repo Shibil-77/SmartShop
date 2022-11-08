@@ -25,20 +25,21 @@ app.use(session({
     cookie: { maxAge:60000*20}
   }))
 
-
-
 // set the roters 
 
 app.use('/',userRouter)
 app.use('/admin',adminRouter)
 
+// server coccenting 
+
+app.listen(3000)
 // data base connecting 
 
 dataBase.database();
 
-// server coccenting 
 
-app.listen(3000)
+
+
 
 
 

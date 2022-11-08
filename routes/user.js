@@ -30,4 +30,5 @@ router.get('/wishList/:id',controller.wishList)
 router.get('/Cartquantity/:id',controller.Cartquantity)
 router.get('/lessCartquantity/:id',controller.lessCartquantity)
 
+
 module.exports = router;

@@ -7,7 +7,6 @@ const Admin = require('../models/schema/admin')
 module.exports =async (data,dataBase)=>{
 
      if(Admin === dataBase){
-
       if(await Admin.findOne({data})){
          return true
       }else{

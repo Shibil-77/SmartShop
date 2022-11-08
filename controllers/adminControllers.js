@@ -45,10 +45,10 @@ module.exports = {
               await adminData.save()    
               res.json({ status: true })
             }else{
-               throw new Error('Error') 
+                res.redirect('/admin/error')  
             } 
          }else{
-            throw new Error('Error')
+             res.redirect('/admin/error') 
          }
       } catch (error) {
          res.redirect('/admin/error')
@@ -98,7 +98,7 @@ module.exports = {
 
    adminAccess: async (req, res) => {
       try { 
-         const _id = req.params?.id
+         const _id = req.params.id
          const success = await dataCheck(_id,products)
          if(success){
             const data = await Admin?.findOne({_id,Admin:{$eq:true}})
@@ -115,7 +115,7 @@ module.exports = {
                   })
                res.redirect('/admin/adminList')
          }else{
-            throw new Error('Error')
+             res.redirect('/admin/error') 
       }  
       } catch (error) {
          res.redirect('/admin/error') 
@@ -132,7 +132,7 @@ module.exports = {
          if (product) {
             res.render('admin/product', {product})
          } else {
-            throw new Error('Error')
+             res.redirect('/admin/error') 
          }
       } catch (error) {
          res.redirect('/admin/error')
@@ -146,7 +146,7 @@ module.exports = {
          if (CATEGORY) {
             res.render('admin/addProduct', {CATEGORY})
          } else {
-            throw new Error('Error')
+             res.redirect('/admin/error') 
          }
       } catch (error) {
          res.redirect('/admin/error')
@@ -165,10 +165,10 @@ module.exports = {
                   const [productData,CATEGORY] = values;
                   res.render('admin/editProduct', { productData,CATEGORY})
                }).catch((error) => {
-                  throw new Error('Error')
+                  res.redirect('/admin/error')
                })
          } else {
-            throw new Error('Error')
+            res.redirect('/admin/error')
          }
       } catch (error) {
          res.redirect('/admin/error')
@@ -191,7 +191,7 @@ module.exports = {
             res.json({ status: true })
         
       } else {
-         throw new Error('Error')
+          res.redirect('/admin/error') 
       }
    } catch (error) {
       res.redirect('/admin/error')
@@ -250,7 +250,7 @@ module.exports = {
             res.redirect('/admin/product')
         
    }else{
-      throw new Error('Error')
+       res.redirect('/admin/error') 
    }
 } catch (error) { 
    res.redirect('/admin/error')
@@ -267,7 +267,7 @@ module.exports = {
          if(userData){
             res.render('admin/user', {userData})
          }else{
-            throw new Error('Error')
+             res.redirect('/admin/error') 
          } 
       } catch (error) {
          res.redirect('/admin/error')
@@ -296,7 +296,7 @@ module.exports = {
                   })
                res.redirect('/admin/user')
          }else{
-            throw new Error('Error')
+             res.redirect('/admin/error') 
       }  
       } catch (error) {
          res.redirect('/admin/error') 
@@ -333,7 +333,7 @@ module.exports = {
          if(category_List){
             res.render('admin/categoryList', { category_List }) 
          }else{
-            throw new Error('Error')
+             res.redirect('/admin/error') 
          }  
       } catch (error) {
          res.redirect('/admin/error') 
@@ -350,7 +350,7 @@ module.exports = {
             { _id: mongoose.Types.ObjectId(_id) })
              res.redirect('/admin/categoryList')
       }else{
-         throw new Error('Error')
+          res.redirect('/admin/error') 
       }   
       }catch (error) {
          res.redirect('/admin/error') 
@@ -381,7 +381,7 @@ module.exports = {
                console.log("pleace add image");
             }  
          }else{
-            throw new Error('Error')
+             res.redirect('/admin/error') 
          }
       } catch (error) { 
          res.redirect('/admin/error')   
@@ -394,7 +394,7 @@ module.exports = {
          if(banner_List){
             res.render('admin/banner_List', { banner_List })
          }else{
-            throw new Error('Error')
+             res.redirect('/admin/error') 
          }
       } catch (error) {
          res.redirect('/admin/error') 
@@ -411,7 +411,7 @@ module.exports = {
             res.render('admin/banneredit', { bannerData })
          }
        }else{
-         throw new Error('Error')   
+          res.redirect('/admin/error')    
        }
       } catch (error) {
          res.redirect('/admin/error') 
@@ -436,7 +436,7 @@ module.exports = {
                   })
                   res.redirect('/admin/bannerList')
       }else{
-         throw new Error('Error')
+          res.redirect('/admin/error') 
       }
    } catch (error) { 
       res.redirect('/admin/error')
@@ -452,7 +452,7 @@ module.exports = {
             {_id})
          res.redirect('/admin/bannerList')
       }else{
-         throw new Error('Error')
+          res.redirect('/admin/error') 
       }     
       }
       catch (error) {
