@@ -38,9 +38,9 @@
 <a href="/deletecart/<%=cartData.arrayId %>"><i class="fal fa-times"></i></a>
 </div>
 <div class="d-flex justify-content-between mt-4">
-<div class="cart-price my-auto">
-   <input type="number" name="quant[1]" class="input-number" readonly id="<%=cartData.ProductId.id %>totalAmount" data-min="1" data-max="1000" value="<%=cartData.totalAmount %>">
-   <b><%-cartData.ProductId.Price %>
+<div class="cart-price my-auto ">
+  <p>Total</p> <input type="number" name="quant[1]" style="color:#32B87D; font-weight:700; border:none; background-color:#F6F7FB;" ; class="input-number" readonly id="<%=cartData.ProductId.id %>totalAmount" data-min="1" data-max="1000" value="<%=cartData.totalAmount %>">
+  <p>Price</p><b><%-cartData.ProductId.Price %>
 </div>
 <div class="row g-0 cart-qty">
 <div class="col-auto ">
@@ -77,14 +77,12 @@
 <ul>
 <li>Cart Subtotal<span><%-cartData.totalBill%></span></li>
 <li>Shipping<span>Free</span></li>
-<li>Discount<span><input type=""></span></li>
 <li>Tax<span>$00.00</span></li>
-<li class="last">You Pay<span><input type="number" name="totalBill" class="input-number"  id="totalBill" data-min="1" readonly data-max="1000" value="<%=cartData.totalBill%>"></span></li>
+<li class="last">You Pay<span><input type="number" name="totalBill" style=" background-color:#F6F7FB;   color:#32B87D; font-weight:700;  border:none;" class="input-number"  id="totalBill" data-min="1" readonly data-max="1000" value="<%=cartData.totalBill%>"></span></li>
 </ul>
 <div class="checkout-section">
-<input type="submit" class="btn checkout-btn">
+<input type="submit" class="btn checkout-btn" value="Continue shopping">
 <!-- <a type="submit" >Checkout</a> -->
-<a href="#"  class="btn">Continue shopping</a>
 </div>
 </form>
 </div>

@@ -504,12 +504,17 @@
 </div>
 <div class="cart-total-amount col-lg-4 mt-5">
 <ul>
-<li>Cart Subtotal<span><%=totalBill %></span></li>
-<li><span><label for="" class="text-danger">Cash on Delivery</label><input type="radio" name="cash" value="cash">
+<li>Cart Subtotal<span style="color:#32B87D; font-weight:700;"><%=totalBill %></span></li>
+<li class="last">You Pay<span><input type="number" name="totalBill" class="input-number" readonly style="color:#32B87D; font-weight:700; border:none; background-color:#F6F7FB;"  id="totalBill" data-min="1" data-max="1000" value="<%=totalBill %>"></span></li>
+<li><span>
+<label for="" class="text-danger" style=" font-weight:700;">Cash on Delivery</label>
+<input type="radio" name="cash" value="cash">
 </span>
-<label for="" class="text-danger">Online Payment</label>
-<input type="radio" name="cash" value="online"></li>
-<li class="last">You Pay<span><input type="number" name="totalBill" class="input-number" readonly  id="totalBill" data-min="1" data-max="1000" value="<%=totalBill %>"></span></li>
+</li>
+<li>
+    <label for="" class="text-danger" style=" font-weight:700;">Online Payment</label>
+    <input type="radio" name="cash" value="online" style="color:red:">
+</li>
 </ul>
 <div class="checkout-section">
 <input type="submit" class="btn checkout-btn" value="shipping">

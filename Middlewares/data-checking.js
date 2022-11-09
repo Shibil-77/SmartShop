@@ -3,6 +3,7 @@ const users = require('../models/schema/user-schema')
 const category = require('../models/schema/category')
 const banner = require('../models/schema/banner-schema')
 const Admin = require('../models/schema/admin')
+const wishList = require('../models/schema/wishList_schema')
 
 module.exports =async (data,dataBase)=>{
 
@@ -42,6 +43,13 @@ module.exports =async (data,dataBase)=>{
      } else if(products === dataBase){
 
       if(await products.findOne({data})){
+        return true
+     }else{
+       return false
+     } 
+     }else if(wishList === dataBase){
+
+      if(await wishList.findOne({data})){
         return true
      }else{
        return false

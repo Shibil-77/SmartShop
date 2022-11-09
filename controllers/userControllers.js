@@ -6,6 +6,7 @@ const cart = require('../models/schema/cart')
 const categorys = require('../models/schema/category')
 const wishList = require('../models/schema/wishList_schema')
 const address = require('../models/schema/address')
+const order = require('../models/schema/orders')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
@@ -185,11 +186,11 @@ module.exports = {
 
     cart: async (req, res) => {
         if (req.session.userloggedIn) {
-            let productId = req.params.id
-            let product = await products.findOne({ _id: productId })
-            let totalAmount = product.Price
-            let userId = req.session.UserId
-            let cartData = await cart.findOne({ UserId: userId })
+            const productId = req.params.id
+            const product = await products.findOne({ _id: productId })
+            const totalAmount = product.Price
+            const userId = req.session.UserId
+            const cartData = await cart.findOne({ UserId: userId })
             if (cartData) {
                 let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
                 if (productIndex >= 0) {
@@ -227,7 +228,7 @@ module.exports = {
                 let array = {}
                 array.quantity = data.quantity
                 array.ProductId = data.ProductId
-                array.totalAmount = data.ProductId.Price * data.quantity
+                array.totalAmount = data.ProductId.Price*data.quantity
                 array.arrayId = data.id
                 return array
             })
@@ -264,8 +265,6 @@ module.exports = {
         try {
             if (req.session.userloggedIn) {
                 const _id = req.params.id
-                const success = await dataCheck(_id, products)
-                if (success) {
                     const product = await products.findOne({ _id: _id })
                     const userId = req.session.UserId
                     const wishListData = await wishList.findOne({ UserId: userId })
@@ -280,7 +279,7 @@ module.exports = {
                             res.json({ status: true })
                         }
                     } else {
-                        wishList.create({
+                        await wishList.create({
                             UserId: mongoose.Types.ObjectId(userId),
                             Product: [{
                                 ProductId: mongoose.Types.ObjectId(_id),
@@ -289,11 +288,8 @@ module.exports = {
                             res.json({ status: true })
                         })
                     }
-                } else {
-                    res.json({ notUser: true })
-                }
             } else {
-                res.redirect('/admin/error')
+                res.json({notUser: true })
             }
         } catch (error) {
             res.redirect('/admin/error')
@@ -344,7 +340,7 @@ module.exports = {
       try {
        const  ProductId  = req.params.id
        const UserId = req.session.UserId
-           const data = await cart.updateOne({UserId}, { $pull:{ Product:{_id:mongoose.Types.ObjectId(ProductId)}}})
+        const data = await cart.updateOne({UserId}, { $pull:{ Product:{_id:mongoose.Types.ObjectId(ProductId)}}})
        if(data){
             res.redirect('/cartList')
          }else{
@@ -364,7 +360,6 @@ module.exports = {
 
     postcheckout:async(req,res)=>{
          try {
-            console.log(req.body);
             const UserId = req.session.UserId
             if(req.body){
                      const data =req.body
@@ -380,27 +375,51 @@ module.exports = {
                              UserId:UserId,
                              phoneNumber:data.number
                      })
-                     console.log(addressData);
                      await  addressData.save()
-                     res.redirect('success')
+                     const addressId = addressData.id
+                     console.log(addressId);
                      let today = new Date();
                      let dd = String(today.getDate()).padStart(2, '0');
                      let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
                      let yyyy = today.getFullYear();
                      today = mm + '/' + dd + '/' + yyyy;
-                     console.log(today);
-
-                     if(req.body.cash == 'cash'){
-                      
+                     const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
+                      console.log(cartData);
+                     if(req.body.cash == 'cash'){ 
+                        const  orderdata = {
+                            paymentMethod:"cash",
+                            paymentAmount:data.totalBill,
+                            orderStatus:"pending",
+                            orderDate:today,
+                            addressId:addressId,
+                            cart:cartData
+                        }
+                        console.log(orderdata);
+                             const orderData = await order.findOne({ userId: UserId })
+                             if (orderData) {
+                             console.log("push");
+                             orderData.orders.push(orderdata)
+                             await orderData.save()
+                             console.log("push");
+                              res.json({ status: true })
+                              }else {
+                            order.create({
+                                userId: mongoose.Types.ObjectId(UserId),
+                                orders:[orderdata]
+                            }).then((data) => {
+                                console.log("creat");
+                                res.json({ status: true })
+                            })
+                           }
                      }else{
-
+                        console.log("+==================================");
                      }
-                     }else{
-                     console.log("pleace add image");
-                    }
-           } catch (error) { 
-            console.log("============7======");
-            res.redirect('/admin/error')   
+
+           } else{
+
+           }
+        }catch (error) { 
+            res.redirect('/')   
            }
       },
     }
