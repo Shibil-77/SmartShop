@@ -1,7 +1,6 @@
 const express = require('express')
 const app =express()
 const path = require ('path')
-const bodyParser =require('body-parser')
 const userRouter = require('./routes/user')
 const adminRouter = require('./routes/admin')
 const dataBase = require('./server')
@@ -16,8 +15,8 @@ app.use(express.static(__dirname + '/public'));
 
 // set the session 
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
@@ -25,10 +24,20 @@ app.use(session({
     cookie: { maxAge:60000*20}
   }))
 
-// set the roters 
+// set the roters
 
-app.use('/',userRouter)
 app.use('/admin',adminRouter)
+app.use('/',userRouter)
+
+app.use(function(req, res, next) {
+  res.status(404);
+
+  // respond with html page
+  if (req.accepts('html')) {
+    res.render('user/error', { url: req.url });
+    return;
+    }
+  });
 
 // server coccenting 
 

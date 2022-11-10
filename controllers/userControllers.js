@@ -12,6 +12,7 @@ const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
 const RazorpayData = require('../Razorpay/razorpay')
+const { AsyncLocalStorage } = require('async_hooks')
 let accountSid = twilioDatas.accountSid
 let authToken = twilioDatas.authToken
 let verifySid = twilioDatas.verifySid
@@ -22,7 +23,7 @@ const instance = new Razorpay({
     key_id: key_id,
     key_secret: key_secret
 })
-
+let orderId
 let userError = null
 module.exports = {
 
@@ -32,6 +33,9 @@ module.exports = {
         let UserId = req.session.UserId
         res.render('user/home', { product, banner_Data, UserId })
     },
+    orderSuccess:(req,res)=>{
+        res.render("user/orderSuccess")
+     },
 
     login: (req, res) => {
         res.render('user/loginPage')
@@ -352,10 +356,12 @@ module.exports = {
         }
     },
 
-    checkoutpage: (req, res) => {
+    checkoutpage: async(req, res) => {
         let totalBill = req.body.totalBill
         const UserId = req.session.UserId
-        res.render('user/checkout', { UserId, totalBill })
+        const addressData = await address.find({UserId}).limit(3);
+        console.log(addressData);
+        res.render('user/checkout', { UserId, totalBill ,addressData})
     },
 
     postcheckout: async (req, res) => {
@@ -363,6 +369,12 @@ module.exports = {
             const UserId = req.session.UserId
             if (req.body) {
                 const data = req.body
+                console.log("sdbjbhjba",data.Address);
+                let addressId 
+                if(data.Address){
+                    addressId = data.Address
+                    console.log("==================",data.Address);
+                }else{
                 const addressData = new address({
                     firstName: data.firstName,
                     lastName: data.lastName,
@@ -376,7 +388,8 @@ module.exports = {
                     phoneNumber: data.number
                 })
                 await addressData.save()
-                const addressId = addressData.id
+                 addressId = addressData.id
+            }
                 let today = new Date();
                 let dd = String(today.getDate()).padStart(2, '0');
                 let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -391,7 +404,7 @@ module.exports = {
                     addressId: addressId,
                     cart: cartData
                 }
-                let orderId 
+            
                 const orderData = await order.findOne({ userId: UserId })
                 if (orderData) {
                     orderData.orders.push(orderdata)
@@ -406,9 +419,10 @@ module.exports = {
                     })
                 }
                 if (req.body.cash == 'cash') {
-                   res.json({paymentSuccess:true})
+                     await cart.deleteOne({UserId})
+                      res.json({paymentSuccess:true})
                 } else {
-                    console.log('orderId',orderId);
+                    console.log('orderId', orderId);
                     const totalBill = data.totalBill
                     let options = {
                         amount: totalBill,  // amount in the smallest currency unit
@@ -417,14 +431,15 @@ module.exports = {
                     };
                     instance.orders.create(options, function (err, order) {
                         console.log(order);
+                        console.log("error",err);
                         res.json(order)
-                    });
+                    });
                 }
             } else {
-
+                res.redirect('/404')
             }
         } catch (error) {
-            res.redirect('/')
+            res.redirect('/404')
         }
     },
 
@@ -441,7 +456,7 @@ module.exports = {
                 })
                 res.render('user/wishlist', { UserId, wishData })
             } else {
-
+                res.redirect('/')
             }
         } else {
             res.redirect('/login')
@@ -463,8 +478,27 @@ module.exports = {
             res.redirect('/admin/error')
         }
     },
-    verifyPayment:(req,res)=>{
-        console.log(req.body);
-    }
+
+    verifyPayment: async(req, res) => {
+        console.log("req.body",req.body);
+        const  details =req.body
+        const crypto = require('crypto')
+        let hmac = crypto.createHmac('sha256','ktvJfYCp7BxR2pAydfHF1Y79')
+        console.log("payId",details.payment.razorpay_payment_id);
+        console.log("ore",details.payment.razorpay_order_id);
+        hmac.update(details.payment.razorpay_payment_id+'|'+details.payment.razorpay_order_id)
+        hmac = hmac.digest('hex')
+        if(hmac==details.payment.razorpay_signature){
+            await order.findOneAndUpdate(
+                { _id: mongoose.Types.ObjectId(orderId)},
+                {
+                   $set:{ orderStatus:'placed'}
+                })
+                res.json({status:true})
+        }else{
+
+        }
+    },
+
 }
 
