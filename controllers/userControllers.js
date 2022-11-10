@@ -7,13 +7,21 @@ const categorys = require('../models/schema/category')
 const wishList = require('../models/schema/wishList_schema')
 const address = require('../models/schema/address')
 const order = require('../models/schema/orders')
+const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
+const RazorpayData = require('../Razorpay/razorpay')
 let accountSid = twilioDatas.accountSid
 let authToken = twilioDatas.authToken
 let verifySid = twilioDatas.verifySid
+const key_id = RazorpayData.key_id
+const key_secret = RazorpayData.key_secret
 const client = require('twilio')(accountSid, authToken);
+const instance = new Razorpay({
+    key_id: key_id,
+    key_secret: key_secret
+})
 
 let userError = null
 module.exports = {
@@ -75,7 +83,6 @@ module.exports = {
     },
 
     shopsingle: async (req, res) => {
-        console.log(req.params.id);
         let product = await products.findOne({ _id: req.params.id })
         let UserId = req.session.UserId
         res.render('user/shopsingle', { product, UserId })
@@ -89,7 +96,6 @@ module.exports = {
 
     doSignup: async (req, res) => {
         let user = req.body
-        console.log(user);
         let Password = user.Password
         let confirmPassword = user.confirmPassword
         if (Password === confirmPassword) {
@@ -122,8 +128,6 @@ module.exports = {
 
     dologin: async (req, res) => {
         let User = await users.findOne({ Email: req.body.Email })
-        console.log(User.Action);
-        //   console.log(User);
         if (User.Action) {
             if (User.Email === req.body.Email) {
                 bcrypt.compare(req.body.Password, User.Password).then((data) => {
@@ -146,8 +150,6 @@ module.exports = {
     //    <- ======== edit profile======== ->
 
     postotp: (req, res) => {
-        console.log(req.body.otp);
-
         client.verify.v2.services(verifySid)
             .verificationChecks
             .create({ to: '+91' + req.session.userData.Phone, code: req.body.otp })
@@ -198,7 +200,6 @@ module.exports = {
                     await cartData.save()
                     res.json({ status: true })
                 } else {
-                    console.log(productId);
                     cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
                     await cartData.save()
                     res.json({ status: true })
@@ -228,13 +229,13 @@ module.exports = {
                 let array = {}
                 array.quantity = data.quantity
                 array.ProductId = data.ProductId
-                array.totalAmount = data.ProductId.Price*data.quantity
+                array.totalAmount = data.ProductId.Price * data.quantity
                 array.arrayId = data.id
                 return array
             })
-      let  totalBill =  cartData.reduce((total,value)=>total+value.totalAmount,0)
-            cartData.totalBill =totalBill
-            res.render('user/cart', {UserId,cartData,data})
+            let totalBill = cartData.reduce((total, value) => total + value.totalAmount, 0)
+            cartData.totalBill = totalBill
+            res.render('user/cart', { UserId, cartData, data })
         } else {
             res.redirect('/user/error')
         }
@@ -265,31 +266,31 @@ module.exports = {
         try {
             if (req.session.userloggedIn) {
                 const _id = req.params.id
-                    const product = await products.findOne({ _id: _id })
-                    const userId = req.session.UserId
-                    const wishListData = await wishList.findOne({ UserId: userId })
-                    if (wishListData) {
-                        let productIndex = wishListData.Product.findIndex(p => p.ProductId == _id)
-                        // let productIndex = wishList.Product.findIndex({ProductId :{ $eq :productId}})
-                        if (productIndex >= 0) {
-                            res.json({ wishList: true })
-                        } else {
-                            wishListData.Product.push({ ProductId: mongoose.Types.ObjectId(_id) })
-                            await wishListData.save()
-                            res.json({ status: true })
-                        }
+                const product = await products.findOne({ _id: _id })
+                const userId = req.session.UserId
+                const wishListData = await wishList.findOne({ UserId: userId })
+                if (wishListData) {
+                    let productIndex = wishListData.Product.findIndex(p => p.ProductId == _id)
+                    // let productIndex = wishList.Product.findIndex({ProductId :{ $eq :productId}})
+                    if (productIndex >= 0) {
+                        res.json({ wishList: true })
                     } else {
-                        await wishList.create({
-                            UserId: mongoose.Types.ObjectId(userId),
-                            Product: [{
-                                ProductId: mongoose.Types.ObjectId(_id),
-                            }]
-                        }).then((data) => {
-                            res.json({ status: true })
-                        })
+                        wishListData.Product.push({ ProductId: mongoose.Types.ObjectId(_id) })
+                        await wishListData.save()
+                        res.json({ status: true })
                     }
+                } else {
+                    await wishList.create({
+                        UserId: mongoose.Types.ObjectId(userId),
+                        Product: [{
+                            ProductId: mongoose.Types.ObjectId(_id),
+                        }]
+                    }).then((data) => {
+                        res.json({ status: true })
+                    })
+                }
             } else {
-                res.json({notUser: true })
+                res.json({ notUser: true })
             }
         } catch (error) {
             res.redirect('/admin/error')
@@ -299,18 +300,18 @@ module.exports = {
 
     Cartquantity: async (req, res) => {
         try {
-                const _id = req.params.id
-                const UserId = req.session.UserId
-                const cartData = await cart.findOne({ UserId })
-                if (cartData) {
-                    let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
-                    cartData.Product[productIndex].quantity += 1
-                    cartData.save().then((data) => {
-                        res.json({ status: true })
-                    })
-                } else {
-                    res.redirect('/admin/error')
-                }
+            const _id = req.params.id
+            const UserId = req.session.UserId
+            const cartData = await cart.findOne({ UserId })
+            if (cartData) {
+                let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
+                cartData.Product[productIndex].quantity += 1
+                cartData.save().then((data) => {
+                    res.json({ status: true })
+                })
+            } else {
+                res.redirect('/admin/error')
+            }
         } catch (error) {
             res.redirect('/admin/error')
         }
@@ -318,109 +319,152 @@ module.exports = {
 
     lessCartquantity: async (req, res) => {
         try {
-                const _id = req.params.id
-                const userId = req.session.UserId
-                let cartData = await cart.findOne({ UserId: userId })
-                let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
-                cartData.Product[productIndex].quantity -= 1
-                if (cartData.Product[productIndex].quantity > 0) {
-                    cartData.save().then((data) => {
+            const _id = req.params.id
+            const userId = req.session.UserId
+            let cartData = await cart.findOne({ UserId: userId })
+            let productIndex = cartData.Product.findIndex(p => p.ProductId == _id)
+            cartData.Product[productIndex].quantity -= 1
+            if (cartData.Product[productIndex].quantity > 0) {
+                cartData.save().then((data) => {
                     res.json({ status: true })
-                    })
-                } else {
-                    res.json({ error: true })
-                }
-           
+                })
+            } else {
+                res.json({ error: true })
+            }
+
         } catch (error) {
             res.redirect('/admin/error')
         }
     },
 
-    deletecart:async(req,res)=>{
-      try {
-       const  ProductId  = req.params.id
-       const UserId = req.session.UserId
-        const data = await cart.updateOne({UserId}, { $pull:{ Product:{_id:mongoose.Types.ObjectId(ProductId)}}})
-       if(data){
-            res.redirect('/cartList')
-         }else{
-        res.redirect('/admin/error')
-       }
-      } catch (error) {
-        res.redirect('/admin/error')
-       }
-    },
-
-    checkoutpage:(req,res)=>{
-         console.log(req.body.totalBill);
-      let  totalBill = req.body.totalBill
-         const UserId = req.session.UserId
-         res.render('user/checkout',{UserId,totalBill})
-    },
-
-    postcheckout:async(req,res)=>{
-         try {
+    deletecart: async (req, res) => {
+        try {
+            const ProductId = req.params.id
             const UserId = req.session.UserId
-            if(req.body){
-                     const data =req.body
-                     const addressData = new address({
-                             firstName:data.firstName,
-                             lastName:data.lastName,
-                             email:data.email,
-                             countryName:data.countryName,
-                             state:data.state,
-                             arrresLine:data.addresLine,
-                             address:data.address,
-                             postCode:data.postCode,
-                             UserId:UserId,
-                             phoneNumber:data.number
-                     })
-                     await  addressData.save()
-                     const addressId = addressData.id
-                     console.log(addressId);
-                     let today = new Date();
-                     let dd = String(today.getDate()).padStart(2, '0');
-                     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                     let yyyy = today.getFullYear();
-                     today = mm + '/' + dd + '/' + yyyy;
-                     const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
-                      console.log(cartData);
-                     if(req.body.cash == 'cash'){ 
-                        const  orderdata = {
-                            paymentMethod:"cash",
-                            paymentAmount:data.totalBill,
-                            orderStatus:"pending",
-                            orderDate:today,
-                            addressId:addressId,
-                            cart:cartData
-                        }
-                        console.log(orderdata);
-                             const orderData = await order.findOne({ userId: UserId })
-                             if (orderData) {
-                             console.log("push");
-                             orderData.orders.push(orderdata)
-                             await orderData.save()
-                             console.log("push");
-                              res.json({ status: true })
-                              }else {
-                            order.create({
-                                userId: mongoose.Types.ObjectId(UserId),
-                                orders:[orderdata]
-                            }).then((data) => {
-                                console.log("creat");
-                                res.json({ status: true })
-                            })
-                           }
-                     }else{
-                        console.log("+==================================");
-                     }
+            const data = await cart.updateOne({ UserId }, { $pull: { Product: { _id: mongoose.Types.ObjectId(ProductId) } } })
+            if (data) {
+                res.redirect('/cartList')
+            } else {
+                res.redirect('/admin/error')
+            }
+        } catch (error) {
+            res.redirect('/admin/error')
+        }
+    },
 
-           } else{
+    checkoutpage: (req, res) => {
+        let totalBill = req.body.totalBill
+        const UserId = req.session.UserId
+        res.render('user/checkout', { UserId, totalBill })
+    },
 
-           }
-        }catch (error) { 
-            res.redirect('/')   
-           }
-      },
+    postcheckout: async (req, res) => {
+        try {
+            const UserId = req.session.UserId
+            if (req.body) {
+                const data = req.body
+                const addressData = new address({
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    countryName: data.countryName,
+                    state: data.state,
+                    arrresLine: data.addresLine,
+                    address: data.address,
+                    postCode: data.postCode,
+                    UserId: UserId,
+                    phoneNumber: data.number
+                })
+                await addressData.save()
+                const addressId = addressData.id
+                let today = new Date();
+                let dd = String(today.getDate()).padStart(2, '0');
+                let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                let yyyy = today.getFullYear();
+                today = mm + '/' + dd + '/' + yyyy;
+                const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
+                const orderdata = {
+                    paymentMethod: "cash",
+                    paymentAmount: data.totalBill,
+                    orderStatus: "pending",
+                    orderDate: today,
+                    addressId: addressId,
+                    cart: cartData
+                }
+                let orderId 
+                const orderData = await order.findOne({ userId: UserId })
+                if (orderData) {
+                    orderData.orders.push(orderdata)
+                    await orderData.save()
+                    orderId = orderData.id
+                } else {
+                    order.create({
+                        userId: mongoose.Types.ObjectId(UserId),
+                        orders: [orderdata]
+                    }).then((data) => {
+                        console.log("creat");
+                    })
+                }
+                if (req.body.cash == 'cash') {
+                   res.json({paymentSuccess:true})
+                } else {
+                    console.log('orderId',orderId);
+                    const totalBill = data.totalBill
+                    let options = {
+                        amount: totalBill,  // amount in the smallest currency unit
+                        currency: "INR",
+                        receipt: "" + orderId
+                    };
+                    instance.orders.create(options, function (err, order) {
+                        console.log(order);
+                        res.json(order)
+                    });
+                }
+            } else {
+
+            }
+        } catch (error) {
+            res.redirect('/')
+        }
+    },
+
+    wishListPage: async (req, res) => {
+        if (req.session.userloggedIn) {
+            const UserId = req.session.UserId
+            const wishlistData = await wishList.findOne({ UserId }).populate('Product.ProductId').exec()
+            if (wishlistData) {
+                const wishData = wishlistData.Product.map((data) => {
+                    let array = {}
+                    array.ProductId = data.ProductId
+                    array.arrayId = data.id
+                    return array
+                })
+                res.render('user/wishlist', { UserId, wishData })
+            } else {
+
+            }
+        } else {
+            res.redirect('/login')
+        }
+    },
+
+
+    deletewishlist: async (req, res) => {
+        try {
+            const ProductId = req.params.id
+            const UserId = req.session.UserId
+            const data = await wishList.updateOne({ UserId }, { $pull: { Product: { _id: mongoose.Types.ObjectId(ProductId) } } })
+            if (data) {
+                res.redirect('/wishListPage')
+            } else {
+                res.redirect('/admin/error')
+            }
+        } catch (error) {
+            res.redirect('/admin/error')
+        }
+    },
+    verifyPayment:(req,res)=>{
+        console.log(req.body);
     }
+}
 

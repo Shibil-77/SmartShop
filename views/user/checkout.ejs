@@ -405,7 +405,7 @@
 <h2>Your Shipping Address</h2>
 <p>It is a long established fact that a reader will be distracted</p>
 
-<form class="form" method="post" action="/checkoutPage">
+<form class="form" id="checkoutSubmission">
 <div class="row">
 <div class="col-lg-6 col-md-6 col-12">
 <div class="form-group">
@@ -513,7 +513,7 @@
 </li>
 <li>
     <label for="" class="text-danger" style=" font-weight:700;">Online Payment</label>
-    <input type="radio" name="cash" value="online" style="color:red:">
+    <input type="radio" name="cash" value="online" style="color:red;">
 </li>
 </ul>
 <div class="checkout-section">
@@ -533,6 +533,87 @@
 <%- include('../inclueds/footer.ejs'); %>
 
 <%- include('../inclueds/end.ejs'); %>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+   
+$("#checkoutSubmission").submit((e) => {
+e.preventDefault()
+$.ajax({
+        url: '/checkoutPage',
+        method: 'post',
+        data: $("#checkoutSubmission").serialize(),
+        success: (response) => {
+            if(response.paymentSuccess){
+                Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: 'Your work has been saved',
+                showConfirmButton: false,
+                timer: 3000
+                })
+                location.href = '/'
+                 }else{
+                    razorpayPayment(response)
+                 }   
+        }})
+})
+
+function razorpayPayment(order) {
+    console.log(order)
+    var options = {
+      "key": "rzp_test_5SiNUSA9uYklWr", // Enter the Key ID generated from the Dashboard
+      "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "HUmen E-CART",
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "handler": function (response) {
+        verifyPayment(response,order)
+      },
+      "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9999999999"
+      },
+      "notes": {
+        "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+        "color": "#3399cc"
+      }
+    };
+    console.log("hello++++++++++++++++");
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+  }
+  function verifyPayment(payment,order) {
+    $.ajax({
+      url: '/verify-payment',
+      data: {
+        payment,
+        order
+      },
+      method: 'post',
+      success: (response) => {
+        if (response.status) {
+          location.href = '/orderConfirmed'
+        } else {
+          Swal.fire({
+             
+          })
+						setTimeout(() => {
+							location.reload()
+						}, 800)
+        }
+
+      }
+    })
+  }
+</script>
+
 
 </body>
 </html>

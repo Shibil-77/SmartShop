@@ -33,5 +33,8 @@ router.get('/deletecart/:id',controller.deletecart)
 router.post('/checkout',controller.checkoutpage)
 router.route('/checkoutPage').
        post(controller.postcheckout)
+router.get('/wishListPage',controller.wishListPage)       
+router.get('/deletewishlist/:id',controller.deletewishlist)
+router.post('/verify-payment',controller.verifyPayment)
 
 module.exports = router;
