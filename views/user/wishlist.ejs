@@ -36,17 +36,14 @@
 <div class="row">
 <div class="col-lg-3 mb-4">
 <div class="account-sidebar">
-<h6 class="sidebar-title">DASHBOARD</h6>
 <div class="sidebar-list">
-<a href="order-list.html" class="active"><i class="far fa-shopping-bag"></i> Orders <span>10</span></a>
-<a href="wishlist.html"><i class="far fa-heart"></i> Wishlist <span>20</span></a>
-<a href="support-ticket.html"><i class="far fa-headset"></i> Support Tickets <span>2</span></a>
+<a href="order-list.html" class="active"><i class="far fa-shopping-bag"></i> Orders <span></span></a>
 </div>
-<h6 class="sidebar-title mt-4">PROFILE SETTINGS</h6>
+<h6 class="/Profile">PROFILE SETTINGS</h6>
 <div class="sidebar-list">
-<a href="profile.html"><i class="far fa-user"></i> Profile Info</a>
-<a href="address-list.html"><i class="far fa-map-marker-alt"></i> Addresses <span>20</span></a>
-<a href="payment-method.html"><i class="far fa-credit-card"></i> Payment Methods <span>2</span></a>
+<a href="/Profile"><i class="far fa-user"></i> Profile Info</a>
+<a href="address-list.html"><i class="far fa-map-marker-alt"></i> Addresses <span></span></a>
+<a href="payment-method.html"><i class="far fa-credit-card"></i> Payment Methods <span></span></a>
 </div>
 </div>
 </div>
@@ -61,33 +58,23 @@
 <div class="single-product bg-white">
 <div class="product-img">
 <a href="/deletewishlist/<%=wishData.arrayId %>"><i class="fal fa-times"></i></a>
-<a href="shop-single.html">
+<a href="/shopsingle/<%=wishData.ProductId.id %>">
 <img class="product-img" src="/img/product/<%=wishData.ProductId.moreImage[0] %>" alt="#">
-<span class="out-of-stock">Hot</span>
+<span class="out-of-stock">New</span>
 </a>
 <div class="button-head">
 <div class="product-action">
-<a data-bs-toggle="modal" data-bs-target="#staticBackdrop" href="#"><i class="far fa-eye"></i><span>Quick Shop</span></a>
-<a href="#"></a>
-<a href="#"><i class="far fa-exchange"></i><span>Add to Compare</span></a>
 </div>
 </div>
 </div>
 <div class="product-content">
-<h3><a href="shop-single.html"><%-wishData.ProductId.Name %></a></h3>
-<div class="product-rate">
-<i class="fas fa-star"></i>
-<i class="fas fa-star"></i>
-<i class="fas fa-star"></i>
-<i class="fas fa-star"></i>
-<i class="far fa-star"></i>
-</div>
+<h3><a href="/shopsingle/<%=wishData.ProductId.id %>"><%-wishData.ProductId.Name %></a></h3>
 <div class="d-flex justify-content-between">
 <div class="product-price">
 <span class="old"><%-wishData.ProductId.Discount %></span>
 <span><%-wishData.ProductId.Price %></span>
 </div>
-<button class="product-cart-btn" type="button"><i class="fal fa-shopping-cart"></i></button>
+<button onclick="addToCart('<%=wishData.ProductId.id %>')" class="product-cart-btn" type="button"><i class="fal fa-shopping-cart"></i></button>
 </div>
 </div>
 </div>

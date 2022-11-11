@@ -9,10 +9,10 @@ const address = require('../models/schema/address')
 const order = require('../models/schema/orders')
 const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt')
+const Swal = require('sweetalert2')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
 const RazorpayData = require('../Razorpay/razorpay')
-const { AsyncLocalStorage } = require('async_hooks')
 let accountSid = twilioDatas.accountSid
 let authToken = twilioDatas.authToken
 let verifySid = twilioDatas.verifySid
@@ -28,10 +28,18 @@ let userError = null
 module.exports = {
 
     home: async (req, res) => {
-        let banner_Data = await banner.find()
-        let product = await products.find({ Delete: false })
-        let UserId = req.session.UserId
-        res.render('user/home', { product, banner_Data, UserId })
+        try {
+            const banner_Data = await banner.find()
+            const product = await products.find({ Delete: false })
+            const UserId = req.session.UserId 
+            if(banner_Data&&product){
+              res.render('user/home', { product, banner_Data, UserId })
+            }else{
+               res.redirect('/404')
+            } 
+        } catch (error) {
+            res.redirect('/404')
+        }
     },
     orderSuccess:(req,res)=>{
         res.render("user/orderSuccess")
@@ -472,10 +480,10 @@ module.exports = {
             if (data) {
                 res.redirect('/wishListPage')
             } else {
-                res.redirect('/admin/error')
+                res.redirect('/404')
             }
         } catch (error) {
-            res.redirect('/admin/error')
+            res.redirect('/404')
         }
     },
 
@@ -488,15 +496,18 @@ module.exports = {
         console.log("ore",details.payment.razorpay_order_id);
         hmac.update(details.payment.razorpay_payment_id+'|'+details.payment.razorpay_order_id)
         hmac = hmac.digest('hex')
+        console.log(hmac);
+        console.log(details.payment.razorpay_signature);
         if(hmac==details.payment.razorpay_signature){
+            console.log("=====online pyment success========");
             await order.findOneAndUpdate(
                 { _id: mongoose.Types.ObjectId(orderId)},
                 {
-                   $set:{ orderStatus:'placed'}
-                })
-                res.json({status:true})
+                   $set:{ orderStatus:'placed',paymentMethod:'online'}
+                 })
+                  res.json({status:true})
         }else{
-
+            console.log("=====online pyment failled========");
         }
     },
 

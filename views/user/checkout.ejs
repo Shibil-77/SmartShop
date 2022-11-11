@@ -680,14 +680,7 @@ function razorpayPayment(order) {
       method: 'post',
       success: (response) => {
         if(response.status){
-          Swal.fire({
-                position: 'top-center',
-                icon: 'success',
-                title: 'Your work has been saved',
-                showConfirmButton: false,
-                timer: 3000
-                })
-                location.href = '/orderSuccess'
+              location.href = '/orderSuccess'
         }else{
          console.log("error");
         }
