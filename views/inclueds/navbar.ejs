@@ -8,8 +8,7 @@
     
     <div class="top-left">
     <ul class="list-main">
-    <li><i class="ti-headphone-alt"></i> +070 (460) 532-654</li>
-    <li><i class="ti-email"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abd8dedbdbc4d9dfebced3cac6dbc7ce85c8c4c6">[email&#160;protected]</a></li>
+    <li><i class="fal fa-shopping-cart"></i> <a href="/cartList" class="__cf_email__" data-cfemail="abd8dedbdbc4d9dfebced3cac6dbc7ce85c8c4c6">Cart List</a></li>
     </ul>
     </div>
     
@@ -18,7 +17,7 @@
     
     <div class="right-content">
     <ul class="list-main">
-    <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
+    <li><i class="fal fa-heart" aria-hidden="true"></i><a href="/wishListPage">WishList</a></li>
 
     <li><i class="ti-user"></i> 
     <% if (UserId) { %>
@@ -26,32 +25,11 @@
     <%} else { %>
             <a href="/login">My account</a></li>
     <% } %>
-    
-    <li><i class="ti-power-off"></i><a href="/login">Login</a></li>
-    <li>
-    <div class="dropdown top-dropdown">
-    <a href="#" id="lang" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="ti-world"></i> EN <i class="fal fa-angle-down"></i>
-    </a>
-    <div class="dropdown-menu" aria-labelledby="lang">
-    <a class="dropdown-item" href="#"><i class="ti-world"></i> EN</a>
-    <a class="dropdown-item" href="#"><i class="ti-world"></i> RU</a>
-    <a class="dropdown-item" href="#"><i class="ti-world"></i> GE</a>
-    <a class="dropdown-item" href="#"><i class="ti-world"></i> HK</a>
-    </div>
-    </div>
-    </li>
-    <li>
-    <div class="dropdown top-dropdown">
-    <a href="#" id="payment" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="fal fa-dollar-sign"></i> USD <i class="fal fa-angle-down"></i>
-    </a>
-    <div class="dropdown-menu" aria-labelledby="payment">
-    <a class="dropdown-item" href="#"><i class="fal fa-dollar-sign"></i> USD</a>
-    <a class="dropdown-item" href="#"><i class="fal fa-euro-sign"></i> EUR</a>
-    </div>
-    </div>
-    </li>
+    <% if (UserId) { %>
+        <li><i class="ti-power-off"></i><a href="/logout">Logout</a></li>
+    <%} else { %>
+        <li><i class="ti-power-off"></i><a href="/login">Login</a></li>
+    <% } %>
     </ul>
     </div>
     </div>
@@ -65,44 +43,13 @@
     <div class="col-lg-3 col-md-3 col-12">
     
     <div class="logo">
-    <a href="index.html"><img src="/img/logo.png" alt="logo"></a>
-    </div>
-    
-    
-    <div class="search-top">
-    <div class="top-search"><a href="#0"><i class="far fa-search"></i></a></div>
-    
-    <div class="search-top">
-    <form class="search-form">
-    <input type="text" placeholder="Search here..." name="search">
-    <button value="search" type="submit"><i class="far fa-search"></i></button>
-    </form>
-    </div>
-    
+    <a href="/"><img src="/img/logo.png" alt="logo"></a>
     </div>
     
     <div class="mobile-nav"></div>
     </div>
-    <div class="col-lg-7 col-md-6 col-12">
-    <div class="search-bar-top">
-    <div class="search-bar">
-    <select>
-    <option selected="selected">All Category</option>
-    <option>Fashion</option>
-    <option>Electronics</option>
-    <option>Bikes</option>
-    <option>Laptop</option>
-    <option>Camera</option>
-    <option>Health & Beauty</option>
-    </select>
-    <form>
-    <input name="search" placeholder="Search Products Here....." type="search">
-    <button class="btnn"><i class="far fa-search"></i></button>
-    </form>
-    </div>
-    </div>
-    </div>
-    <div class="col-lg-2 col-md-3 col-12">
+
+    <div class="col-lg-2 col-md-3 col-12 position-absolute top-10 end-0">
     <div class="right-bar">
     
     <div class="sinlge-bar">
@@ -149,14 +96,8 @@
     <li><a href="order-detail.html">Order Details</a></li>
     <li><a href="add-address.html">Add Address</a></li>
     <li><a href="address-list.html">Address List</a></li>
-    <li><a href="profile.html">Profile</a></li>
     <li><a href="edit-profile.html">Edit Profile</a></li>
-    <li><a href="support-ticket.html">Support Tickets</a></li>
-    <li><a href="ticket-detail.html">Ticket Details</a></li>
     <li><a href="wishlist.html">Wishlist</a></li>
-    <li><a href="track-order.html">Track Order</a></li>
-    <li><a href="payment-method.html">Payment Methods</a></li>
-    <li><a href="add-payment.html">Add Payment</a></li>
     </ul>
     </li>
 

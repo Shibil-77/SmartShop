@@ -1,5 +1,4 @@
 const express = require('express')
-const { get } = require('mongoose')
 const router = express.Router()
 const controller = require('../controllers/userControllers')
 const session =require('../Middlewares/session')

@@ -14,7 +14,7 @@
 <div class="bread-inner">
 <ul class="bread-list">
 <li><a href="/">Home<i class="ti-arrow-right"></i></a></li>
-<li class="active"><a href="#">Cart</a></li>
+<li class="active"><a href="/cartList">Cart</a></li>
 </ul>
 </div>
 </div>
@@ -39,8 +39,8 @@
 </div>
 <div class="d-flex justify-content-between mt-4">
 <div class="cart-price my-auto ">
-  <p>Total</p> <input type="number" name="quant[1]" style="color:#32B87D; font-weight:700; border:none; background-color:#F6F7FB;" ; class="input-number" readonly id="<%=cartData.ProductId.id %>totalAmount" data-min="1" data-max="1000" value="<%=cartData.totalAmount %>">
-  <p>Price</p><b><%-cartData.ProductId.Price %>
+<p>Total</p> <input type="number" name="quant[1]" style="color:#32B87D; font-weight:700; border:none; background-color:#F6F7FB;" ; class="input-number" readonly id="<%=cartData.ProductId.id %>totalAmount" data-min="1" data-max="1000" value="<%=cartData.totalAmount %>">
+<p>Price</p><b><%-cartData.ProductId.Price %>
 </div>
 <div class="row g-0 cart-qty">
 <div class="col-auto ">
@@ -65,13 +65,7 @@
 <% }) %>
 <!-- cart end ============ -->
 
-<div class="col-lg-4">
-<div class="coupon-area">
-<form action="#">
-<input type="text" placeholder="Apply your coupon">
-<button class="coupon-apply-btn">Apply Now</button>
-</form>
-</div>
+<div class="col-lg-3">
 <div class="cart-total-amount">
 <form action="/checkout" method="post">
 <ul>
@@ -87,6 +81,7 @@
 </form>
 </div>
 </div>
+
 </div>
 </div>
 </div>
