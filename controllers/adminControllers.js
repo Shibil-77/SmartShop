@@ -308,7 +308,8 @@ module.exports = {
    // addCategory 
 
    addCategory: (req, res) => {
-      res.render('admin/Category')
+      const categoryError =  req.session.category
+      res.render('admin/Category',{categoryError})
    },
 
    // postCategory
@@ -319,8 +320,12 @@ module.exports = {
             const categoryData = new category({
                category: req.body.Category,
             })
-           await categoryData.save()
-           res.redirect('/admin/categoryList')
+           await categoryData.save().then(()=>{
+               res.redirect('/admin/categoryList')
+               req.session.category = true
+           }).catch(()=>{
+            req.session.category = true
+           })
          }
         } catch (error) {
          res.redirect('/admin/error') 

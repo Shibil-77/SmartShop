@@ -22,7 +22,7 @@
 <div class="bread-inner">
 <ul class="bread-list">
 <li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
-<li class="active"><a href="#">Add Product</a></li>
+<li class="active"><a href="#">Add Category</a></li>
 </ul>
 </div>
 </div>
@@ -57,6 +57,11 @@
 <label for="name" class="form-label">Category</label>
 <input type="text" class="form-control" name="Category" id="name">
 </div>
+<% if (categoryError) { %>
+   <p class="text-danger">Pleace Enter Unique Data</p>
+<%} else { %>
+    <p></p>
+<% } %> 
 </div>
 </div>
 <button class="btn" type="submit">Save Product</button>

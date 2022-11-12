@@ -118,4 +118,52 @@
     })
     }
   </script>
+
+  
+<script>
+  const Cartquantity=(cartId,Price)=>{
+      $.ajax({
+       url:'/Cartquantity/'+cartId,
+       method: 'get',
+       success:(response)=>{
+           if(response.status){
+            let conut = document.getElementById(cartId).value
+              conut++
+              document.getElementById(cartId).value =  conut
+              let totalAmount = parseInt(document.getElementById(cartId+'totalAmount').value)  
+              document.getElementById(cartId+'totalAmount').value = Price*conut
+              let totalBillData=document.getElementById('totalBill').value 
+                  console.log(totalBillData);
+                  document.getElementById('totalBill').value =Number(totalBillData)+Number(Price)
+           }
+       }
+      })
+  }
+  </script>
+  
+  <script>
+      const lessCartquantity=(cartId,Price)=>{
+          $.ajax({
+           url:'/lessCartquantity/'+cartId,
+           method: 'get',
+           success:(response)=>{
+               if(response.status){
+                  let  conut = document.getElementById(cartId).value
+                  if(conut>0){
+                  conut--
+                  document.getElementById(cartId).value =  conut
+                  let totalAmount = document.getElementById(cartId+'totalAmount').value
+                  document.getElementById(cartId+'totalAmount').value = totalAmount-Price
+                  let totalBillData=document.getElementById('totalBill').value 
+                  console.log(totalBillData);
+                  document.getElementById('totalBill').value =totalBillData-Price
+                  }
+                 }else if(response.error){
+                 console.log("hello");  
+                }
+           }
+          })
+      }
+  </script>
+  
   

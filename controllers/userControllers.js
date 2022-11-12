@@ -184,11 +184,11 @@ module.exports = {
                         Date: today,
                         Action: true
                     })
-                    userData.save()
+                  await userData.save()
                         .then(data => {
                             req.session.UserId = data.id
                             req.session.userData = null
-                            req.session.loggedIn = true
+                            req.session.userloggedIn = true
                             res.redirect('/')
                         })
                 } else {
@@ -236,6 +236,8 @@ module.exports = {
     cartList: async (req, res) => {
         const UserId = req.session.UserId
         const data = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
+        const dataLength = data.Product.length
+        console.log(dataLength);
         if (data) {
             const cartData = data.Product.map((data) => {
                 let array = {}
@@ -247,7 +249,7 @@ module.exports = {
             })
             let totalBill = cartData.reduce((total, value) => total + value.totalAmount, 0)
             cartData.totalBill = totalBill
-            res.render('user/cart', { UserId, cartData, data })
+            res.render('user/cart', { UserId, cartData, data,dataLength })
         } else {
             res.redirect('/user/error')
         }
@@ -377,7 +379,7 @@ module.exports = {
             const UserId = req.session.UserId
             if (req.body) {
                 const data = req.body
-                console.log("sdbjbhjba",data.Address);
+                console.log("Address",data.Address);
                 let addressId 
                 if(data.Address){
                     addressId = data.Address
@@ -433,7 +435,7 @@ module.exports = {
                     console.log('orderId', orderId);
                     const totalBill = data.totalBill
                     let options = {
-                        amount: totalBill,  // amount in the smallest currency unit
+                        amount: totalBill*100,  // amount in the smallest currency unit
                         currency: "INR",
                         receipt: "" + orderId
                     };
@@ -493,7 +495,7 @@ module.exports = {
         const crypto = require('crypto')
         let hmac = crypto.createHmac('sha256','ktvJfYCp7BxR2pAydfHF1Y79')
         console.log("payId",details.payment.razorpay_payment_id);
-        console.log("ore",details.payment.razorpay_order_id);
+        console.log("or",details.payment.razorpay_order_id);
         hmac.update(details.payment.razorpay_payment_id+'|'+details.payment.razorpay_order_id)
         hmac = hmac.digest('hex')
         console.log(hmac);
