@@ -80,8 +80,8 @@
 <h3><a href="/shopsingle/<%=product.id %>"><%-product.Name %></a></h3>
 <div class="d-flex justify-content-between">
 <div class="product-price">
-<span class="old">$150.00</span>
-<span><%-product.Price %></span>
+<span class="old">$<%-product.Discount%></span>
+<span>$<%-product.Price %></span>
 </div>
 <button class="product-cart-btn"  type="button"><a onclick="addToCart('<%=product.id %>')"><i class="fal fa-shopping-cart"></i></a></button>
 </div>

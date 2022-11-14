@@ -236,9 +236,9 @@ module.exports = {
     cartList: async (req, res) => {
         const UserId = req.session.UserId
         const data = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
-        const dataLength = data.Product.length
-        console.log(dataLength);
         if (data) {
+            const dataLength = data.Product.length
+            console.log(dataLength);
             const cartData = data.Product.map((data) => {
                 let array = {}
                 array.quantity = data.quantity
@@ -251,7 +251,7 @@ module.exports = {
             cartData.totalBill = totalBill
             res.render('user/cart', { UserId, cartData, data,dataLength })
         } else {
-            res.redirect('/user/error')
+            res.redirect('/')
         }
     },
 
@@ -370,7 +370,6 @@ module.exports = {
         let totalBill = req.body.totalBill
         const UserId = req.session.UserId
         const addressData = await address.find({UserId}).limit(3);
-        console.log(addressData);
         res.render('user/checkout', { UserId, totalBill ,addressData})
     },
 
@@ -379,11 +378,9 @@ module.exports = {
             const UserId = req.session.UserId
             if (req.body) {
                 const data = req.body
-                console.log("Address",data.Address);
                 let addressId 
                 if(data.Address){
                     addressId = data.Address
-                    console.log("==================",data.Address);
                 }else{
                 const addressData = new address({
                     firstName: data.firstName,
@@ -419,13 +416,15 @@ module.exports = {
                 if (orderData) {
                     orderData.orders.push(orderdata)
                     await orderData.save()
-                    orderId = orderData.id
+                      let index = orderData.orders.length
+                        orderId = orderData.orders[index-1].id
                 } else {
                     order.create({
                         userId: mongoose.Types.ObjectId(UserId),
                         orders: [orderdata]
                     }).then((data) => {
-                        console.log("creat");
+                        let index = data.orders.length
+                        orderId = data.orders[index-1].id
                     })
                 }
                 if (req.body.cash == 'cash') {
@@ -490,26 +489,29 @@ module.exports = {
     },
 
     verifyPayment: async(req, res) => {
-        console.log("req.body",req.body);
-        const  details =req.body
+        const UserId = req.session.UserId
         const crypto = require('crypto')
         let hmac = crypto.createHmac('sha256','ktvJfYCp7BxR2pAydfHF1Y79')
-        console.log("payId",details.payment.razorpay_payment_id);
-        console.log("or",details.payment.razorpay_order_id);
-        hmac.update(details.payment.razorpay_payment_id+'|'+details.payment.razorpay_order_id)
+        hmac.update(req.body.payment.razorpay_order_id+'|'+req.body.payment.razorpay_payment_id)
         hmac = hmac.digest('hex')
-        console.log(hmac);
-        console.log(details.payment.razorpay_signature);
-        if(hmac==details.payment.razorpay_signature){
-            console.log("=====online pyment success========");
-            await order.findOneAndUpdate(
-                { _id: mongoose.Types.ObjectId(orderId)},
-                {
-                   $set:{ orderStatus:'placed',paymentMethod:'online'}
-                 })
-                  res.json({status:true})
+        if(hmac==req.body.payment.razorpay_signature){
+            let userOrder = await order.findOne({ UserId: UserId })
+               if(userOrder){  
+                let orderIndex = userOrder.orders.findIndex(p => p._id == orderId)
+                if (orderIndex >= 0) {
+                     let changeStatus = userOrder.orders[orderIndex]
+                     changeStatus.orderStatus = "Placed"
+                     changeStatus.paymentMethod = "online payment"
+                     userOrder.orders[orderIndex] = changeStatus
+                     await userOrder.save()
+                     await cart.deleteOne({UserId})
+                     res.json({status:true})
+                }
+               }else{
+                  
+               }
         }else{
-            console.log("=====online pyment failled========");
+            res.redirect('/checkoutPage')
         }
     },
 
