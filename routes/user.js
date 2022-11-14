@@ -62,8 +62,10 @@ router.get('/orderlist',controller.orderlist)
 
 router.get("/orderdetail/:id",controller.orderdetail)
 
-router.route('/addAddress')
-       .get(controller.addAddress)
-       .post(controller.postaddAddress)
+// router.route('/addAddress')
+//        .get(controller.addAddress)
+//        .post(controller.postaddAddress)
+
+router.get("/addresslist",controller.addresslist)
 
 module.exports = router;

@@ -583,17 +583,39 @@ module.exports = {
         res.redirect('/404') 
     }
     },
-    addAddress:(req,res)=>{
-    const UserId = req.session.UserId
-     res.render("user/add-address",{UserId})
-    },
+    // addAddress:(req,res)=>{
+    // const UserId = req.session.UserId
+    //  res.render("user/add-address",{UserId})
+    // },
 
-    postaddAddress:async(req,res)=>{
-        console.log(req.body)
-        const addressData = new address(req.body)
-        //  addressData.save()
+    // postaddAddress:async(req,res)=>{
+    //     try {
+    //     const UserId = req.session.UserId
+    //     if(req.body){
+    //         req.body.UserId = UserId
+    //         const data = req.body
+    //         console.log(data)
+    //         if(address.length<=5){
+    //             const addressData = new address(data)
+    //             console.log(addressData);
+    //             await addressData.save()
+    //         }else{
+    //          console.log("only 5 address")
+    //         }  
+    //     }else{
+    //         res.redirect('/404') 
+    //     }
+    //     } catch (error) {
+    //         res.redirect('/404')  
+    //     }  
+    // }
+
+    addresslist :async(req,res)=>{
+        const UserId = req.session.UserId
+        const addressData = await address.find({UserId})
+        console.log('=====addressData=======',addressData)
+        res.render('user/address-list',{UserId})
     }
-
-
+     
 }
 
