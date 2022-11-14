@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../inclueds/head.ejs'); %>
+<body>
+
+    <%- include('../inclueds/navbar.ejs'); %>
+
+<div class="breadcrumbs">
+<div class="container">
+<div class="row">
+<div class="col-12">
+<div class="bread-inner">
+<ul class="bread-list">
+<li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
+<li class="active"><a href="#">Orders Details</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<section class="shop section">
+<div class="container">
+<div class="row">
+<div class="col-lg-3 mb-4">
+<div class="account-sidebar">
+<h6 class="sidebar-title">DASHBOARD</h6>
+<div class="sidebar-list">
+<a href="order-list.html" class="active"><i class="far fa-shopping-bag"></i> Orders <span>10</span></a>
+<a href="wishlist.html"><i class="far fa-heart"></i> Wishlist <span>20</span></a>
+<a href="support-ticket.html"><i class="far fa-headset"></i> Support Tickets <span>2</span></a>
+</div>
+<h6 class="sidebar-title mt-4">PROFILE SETTINGS</h6>
+<div class="sidebar-list">
+<a href="profile.html"><i class="far fa-user"></i> Profile Info</a>
+<a href="address-list.html"><i class="far fa-map-marker-alt"></i> Addresses <span>20</span></a>
+<a href="payment-method.html"><i class="far fa-credit-card"></i> Payment Methods <span>2</span></a>
+</div>
+</div>
+</div>
+<div class="col-lg-9">
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-shopping-bag"></i> Order Details (#15498SD)</h4>
+<div class="account-content-table">
+<div class="table-responsive">
+ <table class="table table-borderless">
+<tr>
+<th>Image</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Category</th>
+<th>Total</th>
+</tr>
+
+<% orderdetail.forEach(orderdetail  => { %>
+<tr class="account-order-list order-single-product">
+<td class="product-img"><img src="/img/product/<%-orderdetail.moreImage[0]%>" alt=""></td>
+<td><div class="product-info"><%-orderdetail.Name%></div></td>
+<td><div class="product-info"><%-orderdetail.quantity%></div></td>
+<td><div class="product-info"><%-orderdetail.Category%></div></td>
+<td><div class="product-info"><%-orderdetail.totalAmount %></div></td>
+</tr>
+<% }); %>
+
+</table>
+</div>
+</div>
+</div>
+<div class="row mt-4">
+<div class="col-lg-6 mb-4">
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-map-marker-alt"></i> Shipping Address</h4>
+<div class="account-content-address">
+<p><%-addressData.firstName%>,<%-addressData.address%>,<%-addressData.state%>,<%-addressData.countryName%></p>
+</div>
+</div>
+</div>
+<div class="col-lg-6">
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-calculator"></i> Total Summary</h4>
+<div class="account-content-total">
+<ul>
+<li>Order Date<span><%-orderobj.orderDate%></span></li>
+<li>Order Status<span><%-orderobj.orderStatus%></span></li>
+<li>Payment Method<span><%-orderobj.paymentMethod%></span></li>
+<li class="last">Total<span>$<%-orderobj.paymentAmount %>.</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+ </div>
+</div>
+</div>
+</div>
+</section>
+
+
+<%- include('../inclueds/footer.ejs'); %>
+
+<%- include('../inclueds/end.ejs'); %>
+
+</body>
+</html>

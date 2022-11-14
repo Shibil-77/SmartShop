@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <%- include('../inclueds/head.ejs'); %>
+
+<body>
+    <%- include('../inclueds/navbar.ejs'); %>
+
+
+<div class="breadcrumbs">
+<div class="container">
+<div class="row">
+<div class="col-12">
+<div class="bread-inner">
+<ul class="bread-list">
+<li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
+<li class="active"><a href="#">Orders List</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<section class="shop section">
+<div class="container">
+<div class="row">
+<div class="col-lg-3 mb-4">
+<div class="account-sidebar">
+<h6 class="sidebar-title">DASHBOARD</h6>
+<div class="sidebar-list">
+<a href="order-list.html" class="active"><i class="far fa-shopping-bag"></i> Orders <span>10</span></a>
+<a href="wishlist.html"><i class="far fa-heart"></i> Wishlist <span>20</span></a>
+<a href="support-ticket.html"><i class="far fa-headset"></i> Support Tickets <span>2</span></a>
+</div>
+<h6 class="sidebar-title mt-4">PROFILE SETTINGS</h6>
+<div class="sidebar-list">
+<a href="profile.html"><i class="far fa-user"></i> Profile Info</a>
+<a href="address-list.html"><i class="far fa-map-marker-alt"></i> Addresses <span>20</span></a>
+<a href="payment-method.html"><i class="far fa-credit-card"></i> Payment Methods <span>2</span></a>
+</div>
+</div>
+</div>
+<div class="col-lg-9">
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-shopping-bag"></i> My Orders</h4>
+<div class="account-content-table">
+<div class="table-responsive">
+ <table class="table table-borderless">
+<tr>
+<th>Order #</th>
+<th>Purchased Date</th>
+<th>Total</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+<% orderDatas.forEach(orderDatas  => { %>
+<tr class="account-order-list">
+<td><b>#<%-orderDatas.id%></b></td>
+<td><%-orderDatas.orderDate%></td>
+<td>$<%-orderDatas.paymentAmount%></td>
+<td><span class="badge bg-secondary"><%-orderDatas.orderStatus %></span></td>
+<td class="text-center"><a href="/orderdetail/<%-orderDatas.id%>" class="content-action"><i class="far fa-arrow-right"></i></a></td>
+</tr>
+<% }); %>
+</table>
+</div>
+<div class="col-12">
+
+<div class="pagination center mt-2">
+<ul class="pagination-list">
+<li><a href="#"><i class="ti-arrow-left"></i></a></li>
+<li><a href="#">1</a></li>
+<li class="active"><a href="#">2</a></li>
+<li><a href="#">3</a></li>
+<li><a href="#"><i class="ti-arrow-right"></i></a></li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<%- include('../inclueds/footer.ejs'); %>
+
+<%- include('../inclueds/end.ejs'); %>
+
+</body>
+</html>

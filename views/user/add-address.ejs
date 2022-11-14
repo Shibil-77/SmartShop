@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../inclueds/head.ejs'); %>
+<body>
+    <%- include('../inclueds/navbar.ejs'); %>
+
+
+<div class="breadcrumbs">
+<div class="container">
+<div class="row">
+<div class="col-12">
+<div class="bread-inner">
+<ul class="bread-list">
+<li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
+<li class="active"><a href="#">Add Address</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<section class="shop section">
+<div class="container">
+<div class="row">
+<div class="col-lg-3 mb-4">
+<div class="account-sidebar">
+<h6 class="sidebar-title">DASHBOARD</h6>
+<div class="sidebar-list">
+<a href="order-list.html" class="active"><i class="far fa-shopping-bag"></i> Orders <span>10</span></a>
+<a href="wishlist.html"><i class="far fa-heart"></i> Wishlist <span>20</span></a>
+<a href="support-ticket.html"><i class="far fa-headset"></i> Support Tickets <span>2</span></a>
+</div>
+<h6 class="sidebar-title mt-4">PROFILE SETTINGS</h6>
+<div class="sidebar-list">
+<a href="profile.html"><i class="far fa-user"></i> Profile Info</a>
+<a href="address-list.html"><i class="far fa-map-marker-alt"></i> Addresses <span>20</span></a>
+<a href="payment-method.html"><i class="far fa-credit-card"></i> Payment Methods <span>2</span></a>
+</div>
+</div>
+</div>
+<div class="col-lg-9">
+<div class="account-content bg-white pt-0">
+<h4 class="account-content-title"><i class="far fa-map-marker-alt"></i> Add Address</h4>
+<div class="edit-profile">
+<form action="/addAddress"  method="post"  >
+ <div class="row">
+<div class="col-lg-6">
+<div class="mb-3">
+<label for="name" class="form-label">Name</label>
+<input type="text" name="Name" class="form-control" id="name">
+</div>
+</div>
+<div class="col-lg-6">
+<div class="mb-3">
+<label for="phone" class="form-label">Phone</label>
+<input type="number" name="Phone" class="form-control" id="phone">
+</div>
+</div>
+<div class="col-lg-6">
+<div class="mb-3">
+<label  class="form-label" >Address Line 1</label>
+<input type="text" class="form-control" name="AddressLine1" id="address">
+</div>
+</div>
+<div class="col-lg-6">
+<div class="mb-3">
+<label  class="form-label">Address Line 2</label>
+<input type="text" class="form-control" name="AddressLine2" id="address">
+</div>
+</div>
+
+
+<div class="col-lg-6 col-md-6 col-12">
+    <div class="form-group">
+      <label>Country<span>*</span></label>
+      <select name="countryName" id="country-2">
+        <option value="India">India</option>
+        <option value="Afghanistan">Afghanistan</option>
+        <option value="Åland Islands">Åland Islands</option>
+        <option value="Albania">Albania</option>
+        <option value="Algeria">Algeria</option>
+        <option value="American Samoa">American Samoa</option>
+        <option value="Andorra">Andorra</option>
+        <option value="Angola">Angola</option>
+        <option value="Anguilla">Anguilla</option>
+        <option value="Cayman Islands">Cayman Islands</option>
+        <option value="Central African Republic">Central African Republic</option>
+        <option value="Chad">Chad</option>
+        <option value="Chile">Chile</option>
+        <option value="CR">Costa Rica</option>
+      </select>
+    </div>
+  </div>
+
+
+  <div class="col-lg-6 col-md-6 col-12">
+    <div class="form-group">
+      <label>State / Divition<span>*</span></label>
+      <select name="state">
+        <option value="divition" selected="selected">Kerala</option>
+        <option>New Yourk<option>
+        <option>Chicago</option>
+        <option>Houston</option>
+        <option>San Diego</option>
+        <option>Dallas</option>
+        <option>Charlotte</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="mb-3">
+    <label for="address" class="form-label">Postal Code</label>
+    <input type="number" name="Postalcode" class="form-control" id="address">
+    </div>
+    </div>
+
+</div>
+<button class="btn" type="submit">Save Address</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<%- include('../inclueds/footer.ejs'); %>
+
+<%- include('../inclueds/end.ejs'); %>
+
+
+</body>
+</html>

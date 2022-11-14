@@ -13,6 +13,7 @@ const Swal = require('sweetalert2')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
 const RazorpayData = require('../Razorpay/razorpay')
+const { AuthRegistrationsCredentialListMappingContext } = require('twilio/lib/rest/api/v2010/account/sip/domain/authTypes/authRegistrationsMapping/authRegistrationsCredentialListMapping')
 let accountSid = twilioDatas.accountSid
 let authToken = twilioDatas.authToken
 let verifySid = twilioDatas.verifySid
@@ -402,14 +403,27 @@ module.exports = {
                 let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
                 let yyyy = today.getFullYear();
                 today = mm + '/' + dd + '/' + yyyy;
-                const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
+                const cartData = await cart.findOne({UserId}).populate('Product.ProductId').exec()
+                const cartDatas = cartData.Product.map((data) => {
+                    let array = {}
+                    array.quantity = data.quantity
+                    array.ProductId = data.ProductId
+                    array.totalAmount = data.ProductId.Price * data.quantity
+                    array.Name = data.ProductId.Name
+                    array.moreImage = data.ProductId.moreImage
+                    array.Category = data.ProductId.Category
+                    array.Brand = data.ProductId.Brand
+                    return array
+                })
+                console.log('cartDatas ',cartDatas)
+                // cartDataquantity = cartData
                 const orderdata = {
                     paymentMethod: "cash",
                     paymentAmount: data.totalBill,
                     orderStatus: "pending",
                     orderDate: today,
                     addressId: addressId,
-                    cart: cartData
+                    cart: cartDatas
                 }
             
                 const orderData = await order.findOne({ userId: UserId })
@@ -514,6 +528,72 @@ module.exports = {
             res.redirect('/checkoutPage')
         }
     },
+
+    orderlist:async(req,res)=>{
+      const UserId = req.session.UserId
+            try {
+                const data = await order.findOne({ UserId }).populate('orders.cart').exec()
+                if(data){
+                    const orderData = data.orders
+                    if(orderData){
+                        const orderDatas = orderData.filter((data)=>data.cart)
+                        res.render('user/order-list',{UserId,orderDatas})
+                    }else{
+                        res.redirect('/404')
+                    }
+                }else{
+                    res.redirect('/404')
+                }     
+            } catch (error) {
+                res.redirect('/404') 
+            }
+    },
+    orderdetail:async(req,res)=>{
+    const UserId = req.session.UserId
+    try {
+        console.log('req.params.id',req.params.id);
+        const data = await order.findOne({ UserId }).populate('orders.cart').exec()
+        if(data){
+            const  orderData  =data.orders
+            const order = orderData.find((data)=>data.id == req.params.id )
+             if(order){
+                 const orderdetail = order.cart
+                 console.log(orderdetail);
+                 if(orderdetail){
+                  const  addressId =  order.addressId
+                   const addressData = await address.findOne({addressId:addressId})
+                        const  orderobj = {}
+                        orderobj.orderDate = order.orderDate
+                        orderobj.paymentAmount = order. paymentAmount
+                        orderobj.paymentMethod = order.paymentMethod
+                        orderobj.orderStatus = order.orderStatus
+                   if(addressData){
+                    res.render('user/order-detail',{UserId,orderdetail,addressData,orderobj})
+                   } 
+                 }else{
+                    res.redirect('/404')
+                 }   
+             }else{
+                res.redirect('/404')
+             }    
+        }else{
+            res.redirect('/404')
+        }
+    } catch (error) {
+        res.redirect('/404') 
+    }
+    },
+    addAddress:(req,res)=>{
+    const UserId = req.session.UserId
+     res.render("user/add-address",{UserId})
+    },
+
+    postaddAddress:async(req,res)=>{
+        console.log(req.body)
+        const addressData = new address(req.body)
+        //  addressData.save()
+    }
+
 
 }
 
