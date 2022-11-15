@@ -53,51 +53,17 @@
 <th>Phone</th>
 <th>Action</th>
 </tr>
+<% addressData.forEach(addressData=> { %>
 <tr class="account-order-list">
-<td><b>Nelson</b></td>
-<td>3029 Stonecoal Road,Grover Hill</td>
-<td>(+1)1234567891</td>
+<td><b><%=addressData.lastName %></b></td>
+<td><%=addressData.arrresLine %></td>
+<td><%=addressData.phoneNumber %></td>
 <td>
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
+<a href="/editaddress/<%=addressData.id %>" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
+<a onclick="deleteAddress('<%=addressData.id %>') " class="content-action"><i class="far fa-trash"></i></a>
 </td>
 </tr>
-<tr class="account-order-list">
-<td><b>Nelson</b></td>
-<td>3029 Stonecoal Road,Grover Hill</td>
-<td>(+1)1234567891</td>
-<td>
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
-</td>
-</tr>
-<tr class="account-order-list">
-<td><b>Nelson</b></td>
-<td>3029 Stonecoal Road,Grover Hill</td>
-<td>(+1)1234567891</td>
-<td>
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
-</td>
-</tr>
-<tr class="account-order-list">
-<td><b>Nelson</b></td>
-<td>3029 Stonecoal Road,Grover Hill</td>
-<td>(+1)1234567891</td>
-<td>
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
-</td>
-</tr>
-<tr class="account-order-list">
-<td><b>Nelson</b></td>
-<td>3029 Stonecoal Road,Grover Hill</td>
-<td>(+1)1234567891</td>
-<td>
-<a href="#" class="content-action content-action-mr"><i class="far fa-pen"></i></a>
-<a href="#" class="content-action"><i class="far fa-trash"></i></a>
-</td>
-</tr>
+<% }) %>
 </table>
 </div>
 <div class="col-12">
@@ -123,5 +89,35 @@
 <%- include('../inclueds/footer.ejs'); %>
 
 <%- include('../inclueds/end.ejs'); %>
+
+<script>
+    const deleteAddress  =(addressId)=>{
+                    Swal.fire({
+                    title: 'Do you want to Delete the changes?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete',
+                    denyButtonText: `Don't Delete`,
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                    Swal.fire('Delete!', '', 'success')
+                    $.ajax({
+                    url:'/deleteAddress/'+addressId,
+                    method: 'get',
+                    success:(response)=>{
+                        if(response.status){
+                        location.href = '/addresslist'
+                        }
+                    } 
+                    }) 
+                    } else if (result.isDenied) {
+                    Swal.fire('Changes are not Deleted', '', 'info')
+                    }
+                    })
+                    }
+
+</script>
+
+
 </body>
 </html>

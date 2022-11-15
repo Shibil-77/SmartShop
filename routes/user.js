@@ -20,15 +20,15 @@ router.get('/forgotPassword',controller.forgotPassword)
 router.get('/Profile',session,controller.Profile)
 
 router.route('/editprofile/:id')
-       .get(controller.editProfile)
-       .post(controller.postProfile)  
+       .get(session,controller.editProfile)
+       .post(session,controller.postProfile)  
 
 router.get('/shopsingle/:id',controller.shopsingle)
 
 router.route('/otp')
-      .get(controller.otp)
-      .post(controller.postotp)
-router.get("/cart/:id",controller.cart)
+      .get(session,controller.otp)
+      .post(session,controller.postotp)
+router.get("/cart/:id",session,controller.cart)
 
 router.route('/cartList')
        .get(session,controller.cartList)
@@ -37,35 +37,41 @@ router.get('/shop',controller.shop)
 
 router.get('/categoryfilter/:data',controller.categoryfilter)
 
-router.get('/wishList/:id',controller.wishList)
+router.get('/wishList/:id',session,controller.wishList)
 
-router.get('/Cartquantity/:id',controller.Cartquantity)
+router.get('/Cartquantity/:id',session,controller.Cartquantity)
 
-router.get('/lessCartquantity/:id',controller.lessCartquantity)
+router.get('/lessCartquantity/:id',session,controller.lessCartquantity)
 
-router.get('/deletecart/:id',controller.deletecart)
+router.get('/deletecart/:id',session,controller.deletecart)
 
-router.post('/checkout',controller.checkoutpage)
+router.post('/checkout',session,controller.checkoutpage)
 
 router.route('/checkoutPage').
-       post(controller.postcheckout)
+       post(session,controller.postcheckout)
 
-router.get('/wishListPage',controller.wishListPage)  
+router.get('/wishListPage',session,controller.wishListPage)  
 
-router.get('/deletewishlist/:id',controller.deletewishlist)
+router.get('/deletewishlist/:id',session,controller.deletewishlist)
 
-router.post('/verifyPayment',controller.verifyPayment)
+router.post('/verifyPayment',session,controller.verifyPayment)
 
-router.get('/orderSuccess',controller.orderSuccess)
+router.get('/orderSuccess',session,controller.orderSuccess)
 
-router.get('/orderlist',controller.orderlist)
+router.get('/orderlist',session,controller.orderlist)
 
-router.get("/orderdetail/:id",controller.orderdetail)
+router.get("/orderdetail/:id",session,controller.orderdetail)
 
 // router.route('/addAddress')
 //        .get(controller.addAddress)
 //        .post(controller.postaddAddress)
 
-router.get("/addresslist",controller.addresslist)
+router.get("/addresslist",session,controller.addresslist)
+
+router.get("/deleteAddress/:id",session,controller.deleteAddress)
+
+router.route('/editaddress/:id')
+      .get(session,controller.editAddress)
+      .post(session,controller.postEditAddress)
 
 module.exports = router;

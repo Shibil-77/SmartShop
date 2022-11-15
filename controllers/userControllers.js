@@ -9,11 +9,11 @@ const address = require('../models/schema/address')
 const order = require('../models/schema/orders')
 const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt')
-const Swal = require('sweetalert2')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
 const RazorpayData = require('../Razorpay/razorpay')
-const { AuthRegistrationsCredentialListMappingContext } = require('twilio/lib/rest/api/v2010/account/sip/domain/authTypes/authRegistrationsMapping/authRegistrationsCredentialListMapping')
+const dataCheck = require('../Middlewares/data-checking')
+
 let accountSid = twilioDatas.accountSid
 let authToken = twilioDatas.authToken
 let verifySid = twilioDatas.verifySid
@@ -346,7 +346,6 @@ module.exports = {
             } else {
                 res.json({ error: true })
             }
-
         } catch (error) {
             res.redirect('/admin/error')
         }
@@ -611,11 +610,68 @@ module.exports = {
     // }
 
     addresslist :async(req,res)=>{
+            try {
+            const UserId = req.session.UserId
+            const addressData = await address.find({UserId})
+             if(addressData){
+                res.render('user/address-list',{UserId,addressData})
+             }else{
+         
+             }
+         } catch (error) {
+            res.redirect('/404') 
+         }   
+    },
+
+    deleteAddress:async(req,res)=>{
+         try {
+            const  addressId =req.params.id
+            const addressData = await address.findOne({_id : req.params.id })
+              if(addressData){
+                 await address.deleteOne(
+                     { _id: mongoose.Types.ObjectId(addressId)})
+                     res.json({status:true})
+              }else{
+                 res.redirect('/404') 
+              }
+         } catch (error) {
+            res.redirect('/404') 
+         }
+     },
+
+    editAddress:async(req,res)=>{
+     try {
+        const addressId = req.params.id
         const UserId = req.session.UserId
-        const addressData = await address.find({UserId})
-        console.log('=====addressData=======',addressData)
-        res.render('user/address-list',{UserId})
-    }
-     
+        const addressData = await address.findOne({_id : req.params.id })
+        if(addressData){
+             res.render("user/editaddress",{addressData,UserId})
+        }else{
+            res.redirect('/404') 
+        }
+     } catch (error) {
+        res.redirect('/404') 
+     }
+    },
+
+    postEditAddress:async(req,res)=>{
+      try {
+      const  addressId = req.params.id
+      const addressData = req.body 
+      const userAddress = await address.findOne({_id:mongoose.Types.ObjectId(addressId)})
+      if(userAddress){
+        await address.findOneAndUpdate(  
+            { _id: mongoose.Types.ObjectId(addressId)},
+            {
+               $set:addressData
+            })
+            res.redirect("/addresslist")
+            }else{
+                res.redirect('/404')
+            }
+            }catch (error) {
+            res.redirect('/404')
+            }    
+     } , 
 }
 
