@@ -3,12 +3,10 @@ const users = require('../models/schema/user-schema')
 const category = require('../models/schema/category')
 const banner = require('../models/schema/banner-schema')
 const Admin = require('../models/schema/admin')
+const order = require('../models/schema/orders')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const dataCheck = require('../Middlewares/data-checking')
-
-
-
 
 
 module.exports = {
@@ -463,5 +461,9 @@ module.exports = {
       catch (error) {
          res.redirect('/admin/error')
       }
+   },
+
+   adminAllOrder:(req,res)=>{
+    
    }
 }

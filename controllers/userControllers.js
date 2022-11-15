@@ -141,23 +141,28 @@ module.exports = {
 
     dologin: async (req, res) => {
         let User = await users.findOne({ Email: req.body.Email })
-        if (User.Action) {
-            if (User.Email === req.body.Email) {
-                bcrypt.compare(req.body.Password, User.Password).then((data) => {
-                    if (data) {
-                        req.session.UserId = User.id
-                        req.session.userloggedIn = true
-                        res.json({ status: true })
-                    } else {
-                        res.json({ passworError: true })
-                    }
-                })
+        if(User){
+            if (User.Action){
+                if (User.Email === req.body.Email) {
+                    bcrypt.compare(req.body.Password, User.Password).then((data) => {
+                        if (data) {
+                            req.session.UserId = User.id
+                            req.session.userloggedIn = true
+                            res.json({ status: true })
+                        } else {
+                            res.json({ passworError: true })
+                        }
+                    })
+                } else {
+                    res.json({ emailError: true })
+                }
             } else {
-                res.json({ emailError: true })
+                res.json({ accessError: true })
             }
-        } else {
-            res.json({ accessError: true })
+        }else{
+            res.json({ emailError: true })
         }
+        
     },
 
     //    <- ======== edit profile======== ->
@@ -547,6 +552,7 @@ module.exports = {
                 res.redirect('/404') 
             }
     },
+
     orderdetail:async(req,res)=>{
     const UserId = req.session.UserId
     try {
@@ -664,14 +670,16 @@ module.exports = {
             { _id: mongoose.Types.ObjectId(addressId)},
             {
                $set:addressData
-            })
+        })
             res.redirect("/addresslist")
-            }else{
+           }else{
                 res.redirect('/404')
             }
-            }catch (error) {
+         }catch (error) {
             res.redirect('/404')
-            }    
-     } , 
+         }    
+     } ,
+     
+     
 }
 
