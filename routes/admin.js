@@ -59,6 +59,6 @@ router.get('/adminAccess/:id',session,controller.adminAccess)
 
 router.get('/adminlogonout',controller.adminlogout)
 
-router.get('/adminAllOrder')
+router.get('/adminAllOrder',controller.adminAllOrder)
 
 module.exports = router;

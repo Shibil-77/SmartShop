@@ -32,19 +32,19 @@ module.exports = {
         try {
             const banner_Data = await banner.find()
             const product = await products.find({ Delete: false })
-            const UserId = req.session.UserId 
-            if(banner_Data&&product){
-              res.render('user/home', { product, banner_Data, UserId })
-            }else{
-               res.redirect('/404')
-            } 
+            const UserId = req.session.UserId
+            if (banner_Data && product) {
+                res.render('user/home', { product, banner_Data, UserId })
+            } else {
+                res.redirect('/404')
+            }
         } catch (error) {
             res.redirect('/404')
         }
     },
-    orderSuccess:(req,res)=>{
+    orderSuccess: (req, res) => {
         res.render("user/orderSuccess")
-     },
+    },
 
     login: (req, res) => {
         res.render('user/loginPage')
@@ -141,8 +141,8 @@ module.exports = {
 
     dologin: async (req, res) => {
         let User = await users.findOne({ Email: req.body.Email })
-        if(User){
-            if (User.Action){
+        if (User) {
+            if (User.Action) {
                 if (User.Email === req.body.Email) {
                     bcrypt.compare(req.body.Password, User.Password).then((data) => {
                         if (data) {
@@ -159,10 +159,10 @@ module.exports = {
             } else {
                 res.json({ accessError: true })
             }
-        }else{
+        } else {
             res.json({ emailError: true })
         }
-        
+
     },
 
     //    <- ======== edit profile======== ->
@@ -190,7 +190,7 @@ module.exports = {
                         Date: today,
                         Action: true
                     })
-                  await userData.save()
+                    await userData.save()
                         .then(data => {
                             req.session.UserId = data.id
                             req.session.userData = null
@@ -255,7 +255,7 @@ module.exports = {
             })
             let totalBill = cartData.reduce((total, value) => total + value.totalAmount, 0)
             cartData.totalBill = totalBill
-            res.render('user/cart', { UserId, cartData, data,dataLength })
+            res.render('user/cart', { UserId, cartData, data, dataLength })
         } else {
             res.redirect('/')
         }
@@ -371,11 +371,11 @@ module.exports = {
         }
     },
 
-    checkoutpage: async(req, res) => {
+    checkoutpage: async (req, res) => {
         let totalBill = req.body.totalBill
         const UserId = req.session.UserId
-        const addressData = await address.find({UserId}).limit(3);
-        res.render('user/checkout', { UserId, totalBill ,addressData})
+        const addressData = await address.find({ UserId }).limit(3);
+        res.render('user/checkout', { UserId, totalBill, addressData })
     },
 
     postcheckout: async (req, res) => {
@@ -383,31 +383,31 @@ module.exports = {
             const UserId = req.session.UserId
             if (req.body) {
                 const data = req.body
-                let addressId 
-                if(data.Address){
+                let addressId
+                if (data.Address) {
                     addressId = data.Address
-                }else{
-                const addressData = new address({
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    email: data.email,
-                    countryName: data.countryName,
-                    state: data.state,
-                    arrresLine: data.addresLine,
-                    address: data.address,
-                    postCode: data.postCode,
-                    UserId: UserId,
-                    phoneNumber: data.number
-                })
-                await addressData.save()
-                 addressId = addressData.id
-            }
+                } else {
+                    const addressData = new address({
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        email: data.email,
+                        countryName: data.countryName,
+                        state: data.state,
+                        arrresLine: data.addresLine,
+                        address: data.address,
+                        postCode: data.postCode,
+                        UserId: UserId,
+                        phoneNumber: data.number
+                    })
+                    await addressData.save()
+                    addressId = addressData.id
+                }
                 let today = new Date();
                 let dd = String(today.getDate()).padStart(2, '0');
                 let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
                 let yyyy = today.getFullYear();
                 today = mm + '/' + dd + '/' + yyyy;
-                const cartData = await cart.findOne({UserId}).populate('Product.ProductId').exec()
+                const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
                 const cartDatas = cartData.Product.map((data) => {
                     let array = {}
                     array.quantity = data.quantity
@@ -419,7 +419,7 @@ module.exports = {
                     array.Brand = data.ProductId.Brand
                     return array
                 })
-                console.log('cartDatas ',cartDatas)
+                console.log('cartDatas ', cartDatas)
                 // cartDataquantity = cartData
                 const orderdata = {
                     paymentMethod: "cash",
@@ -429,36 +429,36 @@ module.exports = {
                     addressId: addressId,
                     cart: cartDatas
                 }
-            
+
                 const orderData = await order.findOne({ userId: UserId })
                 if (orderData) {
                     orderData.orders.push(orderdata)
                     await orderData.save()
-                      let index = orderData.orders.length
-                        orderId = orderData.orders[index-1].id
+                    let index = orderData.orders.length
+                    orderId = orderData.orders[index - 1].id
                 } else {
                     order.create({
                         userId: mongoose.Types.ObjectId(UserId),
                         orders: [orderdata]
                     }).then((data) => {
                         let index = data.orders.length
-                        orderId = data.orders[index-1].id
+                        orderId = data.orders[index - 1].id
                     })
                 }
                 if (req.body.cash == 'cash') {
-                     await cart.deleteOne({UserId})
-                      res.json({paymentSuccess:true})
+                    await cart.deleteOne({ UserId })
+                    res.json({ paymentSuccess: true })
                 } else {
                     console.log('orderId', orderId);
                     const totalBill = data.totalBill
                     let options = {
-                        amount: totalBill*100,  // amount in the smallest currency unit
+                        amount: totalBill * 100,  // amount in the smallest currency unit
                         currency: "INR",
                         receipt: "" + orderId
                     };
                     instance.orders.create(options, function (err, order) {
                         console.log(order);
-                        console.log("error",err);
+                        console.log("error", err);
                         res.json(order)
                     });
                 }
@@ -506,88 +506,99 @@ module.exports = {
         }
     },
 
-    verifyPayment: async(req, res) => {
-        const UserId = req.session.UserId
-        const crypto = require('crypto')
-        let hmac = crypto.createHmac('sha256','ktvJfYCp7BxR2pAydfHF1Y79')
-        hmac.update(req.body.payment.razorpay_order_id+'|'+req.body.payment.razorpay_payment_id)
-        hmac = hmac.digest('hex')
-        if(hmac==req.body.payment.razorpay_signature){
-            let userOrder = await order.findOne({ UserId: UserId })
-               if(userOrder){  
-                let orderIndex = userOrder.orders.findIndex(p => p._id == orderId)
-                if (orderIndex >= 0) {
-                     let changeStatus = userOrder.orders[orderIndex]
-                     changeStatus.orderStatus = "Placed"
-                     changeStatus.paymentMethod = "online payment"
-                     userOrder.orders[orderIndex] = changeStatus
-                     await userOrder.save()
-                     await cart.deleteOne({UserId})
-                     res.json({status:true})
-                }
-               }else{
-                  
-               }
-        }else{
-            res.redirect('/checkoutPage')
-        }
-    },
-
-    orderlist:async(req,res)=>{
-      const UserId = req.session.UserId
-            try {
-                const data = await order.findOne({ UserId }).populate('orders.cart').exec()
-                if(data){
-                    const orderData = data.orders
-                    if(orderData){
-                        const orderDatas = orderData.filter((data)=>data.cart)
-                        res.render('user/order-list',{UserId,orderDatas})
-                    }else{
-                        res.redirect('/404')
+    verifyPayment: async (req, res) => {
+        try {
+            const UserId = req.session.UserId
+            console.log(UserId)
+            const crypto = require('crypto')
+            let hmac = crypto.createHmac('sha256', 'ktvJfYCp7BxR2pAydfHF1Y79')
+            hmac.update(req.body.payment.razorpay_order_id + '|' + req.body.payment.razorpay_payment_id)
+            hmac = hmac.digest('hex')
+            if (hmac == req.body.payment.razorpay_signature) {
+                let userOrder = await order.findOne({userId:UserId})
+                console.log(userOrder,"====================================")
+                if (userOrder) {
+                    let index = userOrder.orders.length
+                    orderId = userOrder.orders[index - 1].id
+                    let orderIndex = userOrder.orders.findIndex(p => p._id == orderId)
+                    if (orderIndex >= 0) {
+                        let changeStatus = userOrder.orders[orderIndex]
+                        console.log(changeStatus);
+                        changeStatus.orderStatus = "Placed"
+                        changeStatus.paymentMethod = "online payment"
+                        userOrder.orders[orderIndex] = changeStatus
+                        await userOrder.save()
+                        await cart.deleteOne({ UserId })
+                        res.json({ status: true })
                     }
-                }else{
-                    res.redirect('/404')
-                }     
-            } catch (error) {
-                res.redirect('/404') 
-            }
-    },
+                } else {
 
-    orderdetail:async(req,res)=>{
-    const UserId = req.session.UserId
-    try {
-        console.log('req.params.id',req.params.id);
-        const data = await order.findOne({ UserId }).populate('orders.cart').exec()
-        if(data){
-            const  orderData  =data.orders
-            const order = orderData.find((data)=>data.id == req.params.id )
-             if(order){
-                 const orderdetail = order.cart
-                 console.log(orderdetail);
-                 if(orderdetail){
-                  const  addressId =  order.addressId
-                   const addressData = await address.findOne({addressId:addressId})
-                        const  orderobj = {}
-                        orderobj.orderDate = order.orderDate
-                        orderobj.paymentAmount = order. paymentAmount
-                        orderobj.paymentMethod = order.paymentMethod
-                        orderobj.orderStatus = order.orderStatus
-                   if(addressData){
-                    res.render('user/order-detail',{UserId,orderdetail,addressData,orderobj})
-                   } 
-                 }else{
-                    res.redirect('/404')
-                 }   
-             }else{
-                res.redirect('/404')
-             }    
-        }else{
+                }
+            } else {
+                res.redirect('/checkoutPage')
+            }
+        } catch (error) {
             res.redirect('/404')
         }
-    } catch (error) {
-        res.redirect('/404') 
-    }
     },
+
+    orderlist: async (req, res) => {
+        const UserId = req.session.UserId
+        try {
+            const data = await order.findOne({ UserId }).populate('orders.cart').exec()
+            if (data) {
+                const orderData = data.orders
+                if (orderData) {
+                    const orderDatas = orderData.filter((data) => data.cart)
+                    res.render('user/order-list', { UserId, orderDatas })
+                } else {
+                    res.redirect('/404')
+                }
+            } else {
+                res.redirect('/404')
+            }
+        } catch (error) {
+            res.redirect('/404')
+        }
+    },
+
+    orderdetail: async (req, res) => {
+        const UserId = req.session.UserId
+        try {
+            console.log('req.params.id', req.params.id);
+            const data = await order.findOne({ UserId }).populate('orders.cart').exec()
+            if (data) {
+                const orderData = data.orders
+                const order = orderData.find((data) => data.id == req.params.id)
+                if (order) {
+                    const orderdetail = order.cart
+                    console.log(orderdetail);
+                    if (orderdetail) {
+                        const addressId = order.addressId
+                        const addressData = await address.findOne({ addressId: addressId })
+                        const orderobj = {}
+                        orderobj.orderDate = order.orderDate
+                        orderobj.paymentAmount = order.paymentAmount
+                        orderobj.paymentMethod = order.paymentMethod
+                        orderobj.orderStatus = order.orderStatus
+                        if (addressData) {
+                            res.render('user/order-detail', { UserId, orderdetail, addressData, orderobj })
+                        }
+                    } else {
+                        res.redirect('/404')
+                    }
+                } else {
+                    res.redirect('/404')
+                }
+            } else {
+                res.redirect('/404')
+            }
+        } catch (error) {
+            res.redirect('/404')
+        }
+    },
+
+
     // addAddress:(req,res)=>{
     // const UserId = req.session.UserId
     //  res.render("user/add-address",{UserId})
@@ -615,71 +626,71 @@ module.exports = {
     //     }  
     // }
 
-    addresslist :async(req,res)=>{
-            try {
+    addresslist: async (req, res) => {
+        try {
             const UserId = req.session.UserId
-            const addressData = await address.find({UserId})
-             if(addressData){
-                res.render('user/address-list',{UserId,addressData})
-             }else{
-         
-             }
-         } catch (error) {
-            res.redirect('/404') 
-         }   
-    },
+            const addressData = await address.find({ UserId })
+            if (addressData) {
+                res.render('user/address-list', { UserId, addressData })
+            } else {
 
-    deleteAddress:async(req,res)=>{
-         try {
-            const  addressId =req.params.id
-            const addressData = await address.findOne({_id : req.params.id })
-              if(addressData){
-                 await address.deleteOne(
-                     { _id: mongoose.Types.ObjectId(addressId)})
-                     res.json({status:true})
-              }else{
-                 res.redirect('/404') 
-              }
-         } catch (error) {
-            res.redirect('/404') 
-         }
-     },
-
-    editAddress:async(req,res)=>{
-     try {
-        const addressId = req.params.id
-        const UserId = req.session.UserId
-        const addressData = await address.findOne({_id : req.params.id })
-        if(addressData){
-             res.render("user/editaddress",{addressData,UserId})
-        }else{
-            res.redirect('/404') 
+            }
+        } catch (error) {
+            res.redirect('/404')
         }
-     } catch (error) {
-        res.redirect('/404') 
-     }
     },
 
-    postEditAddress:async(req,res)=>{
-      try {
-      const  addressId = req.params.id
-      const addressData = req.body 
-      const userAddress = await address.findOne({_id:mongoose.Types.ObjectId(addressId)})
-      if(userAddress){
-        await address.findOneAndUpdate(  
-            { _id: mongoose.Types.ObjectId(addressId)},
-            {
-               $set:addressData
-        })
-            res.redirect("/addresslist")
-           }else{
+    deleteAddress: async (req, res) => {
+        try {
+            const addressId = req.params.id
+            const addressData = await address.findOne({ _id: req.params.id })
+            if (addressData) {
+                await address.deleteOne(
+                    { _id: mongoose.Types.ObjectId(addressId) })
+                res.json({ status: true })
+            } else {
                 res.redirect('/404')
             }
-         }catch (error) {
+        } catch (error) {
             res.redirect('/404')
-         }    
-     } ,
-     
-     
+        }
+    },
+
+    editAddress: async (req, res) => {
+        try {
+            const addressId = req.params.id
+            const UserId = req.session.UserId
+            const addressData = await address.findOne({ _id: req.params.id })
+            if (addressData) {
+                res.render("user/editaddress", { addressData, UserId })
+            } else {
+                res.redirect('/404')
+            }
+        } catch (error) {
+            res.redirect('/404')
+        }
+    },
+
+    postEditAddress: async (req, res) => {
+        try {
+            const addressId = req.params.id
+            const addressData = req.body
+            const userAddress = await address.findOne({ _id: mongoose.Types.ObjectId(addressId) })
+            if (userAddress) {
+                await address.findOneAndUpdate(
+                    { _id: mongoose.Types.ObjectId(addressId) },
+                    {
+                        $set: addressData
+                    })
+                res.redirect("/addresslist")
+            } else {
+                res.redirect('/404')
+            }
+        } catch (error) {
+            res.redirect('/404')
+        }
+    },
+
+
 }
 

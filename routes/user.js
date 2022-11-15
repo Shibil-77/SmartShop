@@ -54,9 +54,9 @@ router.get('/wishListPage',session,controller.wishListPage)
 
 router.get('/deletewishlist/:id',session,controller.deletewishlist)
 
-router.post('/verifyPayment',session,controller.verifyPayment)
+router.post('/verifyPayment',controller.verifyPayment)
 
-router.get('/orderSuccess',session,controller.orderSuccess)
+router.get('/orderSuccess',controller.orderSuccess)
 
 router.get('/orderlist',session,controller.orderlist)
 
