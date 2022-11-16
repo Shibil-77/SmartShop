@@ -584,6 +584,44 @@ module.exports = {
               }else{
                res.redirect('/admin/error')
          }
+   },
+
+   salesReport:async(req,res)=>{
+     const data = await order.aggregate([
+
+         {
+             $project: {
+                 orders: 1
+             }
+         },
+         {
+             $unwind: "$orders"
+         },
+         {
+             $group: {
+                 _id: {
+                     date: "$orders.orderDate",
+                 },
+                 totalPrice: {
+                     $sum: "$orders.paymentAmount"
+                 },
+                 count: { $sum: 1 },
+             }
+         },
+         {
+             $sort: {
+                 "_id.date": -1
+             }
+         },
+     ]).limit(7)
+   
+     for (let i = 0; i < data.length; i++) {
+      data[i].profit = Number(data[i].totalPrice) * 20 / 100
+      data[i].proggress = Number(data[i].totalPrice) - Number(data[i].profit)
+  }
+  let salesReport = data
+  console.log(salesReport);
+   res.render("admin/sales",{salesReport})
    }
 }
 

@@ -73,4 +73,6 @@ router.get("/coupon",controller.couponList)
 
 router.get("/deletecoupon/:id",controller.deleteCoupon)
 
+router.get("/salesReport",controller.salesReport)
+
 module.exports = router;

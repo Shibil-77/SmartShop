@@ -403,7 +403,7 @@ module.exports = {
                     await addressData.save()
                     addressId = addressData.id
                 }
-                let today = new Date();
+                let today = new Date().toJSON().slice(0,10)
                 const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
                 const cartDatas = cartData.Product.map((data) => {
                     let array = {}
