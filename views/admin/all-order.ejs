@@ -56,7 +56,7 @@
 <% orderdetail.forEach(orderdetail => { %>
 <tr class="account-order-list">
 <td><b>#<%-orderdetail.orders._id %></b></td>
-<td><%-orderdetail.orders.orderDate %></td>
+<td><%-orderdetail.orders.orderDate.toJSON().slice(0,10) %></td>
 <td><%-orderdetail.orders.paymentAmount %></td>
 <td><%-orderdetail.orders.paymentMethod %></td>
 <td><a href="/admin/paymentStatusChange/<%-orderdetail._id %>/<%-orderdetail.orders._id %>"><span class="badge bg-secondary"><%-orderdetail.orders.orderStatus %></span></a></td>

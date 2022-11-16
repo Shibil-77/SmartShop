@@ -23,12 +23,11 @@
 </div>
 <div class="shopping-cart section">
 <div class="container">
-    
     <% if (dataLength == 0) { %>
         <h1 class="text-danger ms-4 mb-5">Pleace Add Cart</h1>
     <%} else { %>
         <h1 class="text-danger"></h1>
-    <% } %> 
+     <% } %> 
 <div class="row">
     <% cartData.forEach(cartData => { %>
 <div class="col-lg-8">
@@ -86,20 +85,12 @@
     </ul>
     <div class="checkout-section">
     <input type="submit" class="btn checkout-btn" value="Continue shopping">
-    <!-- <a type="submit" >Checkout</a> -->
     </div>
     </form>
     </div>
     </div>
 <% } %> 
-
-
-
-<!-- cart end ============ -->
 </div>
-
-
-
 </div>
 </div>
 </div>

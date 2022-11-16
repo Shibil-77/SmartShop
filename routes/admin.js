@@ -65,6 +65,12 @@ router.get('/adminOrderDetail/:id/:orderId',controller.adminOrderDetail)
 
 router.get("/paymentStatusChange/:id/:orderId",controller.paymentStatusChange)
 
+router.route("/addcoupon")
+       .get(controller.addCoupon)
+       .post(controller.postAddCoupon)
 
+router.get("/coupon",controller.couponList)
+
+router.get("/deletecoupon/:id",controller.deleteCoupon)
 
 module.exports = router;

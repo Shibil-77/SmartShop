@@ -7,6 +7,7 @@ const categorys = require('../models/schema/category')
 const wishList = require('../models/schema/wishList_schema')
 const address = require('../models/schema/address')
 const order = require('../models/schema/orders')
+const coupon = require("../models/schema/coupon")
 const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
@@ -403,10 +404,6 @@ module.exports = {
                     addressId = addressData.id
                 }
                 let today = new Date();
-                let dd = String(today.getDate()).padStart(2, '0');
-                let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                let yyyy = today.getFullYear();
-                today = mm + '/' + dd + '/' + yyyy;
                 const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
                 const cartDatas = cartData.Product.map((data) => {
                     let array = {}
@@ -516,7 +513,6 @@ module.exports = {
             hmac = hmac.digest('hex')
             if (hmac == req.body.payment.razorpay_signature) {
                 let userOrder = await order.findOne({userId:UserId})
-                console.log(userOrder,"====================================")
                 if (userOrder) {
                     let index = userOrder.orders.length
                     orderId = userOrder.orders[index - 1].id
@@ -597,33 +593,6 @@ module.exports = {
         }
     },
 
-
-    // addAddress:(req,res)=>{
-    // const UserId = req.session.UserId
-    //  res.render("user/add-address",{UserId})
-    // },
-
-    // postaddAddress:async(req,res)=>{
-    //     try {
-    //     const UserId = req.session.UserId
-    //     if(req.body){
-    //         req.body.UserId = UserId
-    //         const data = req.body
-    //         console.log(data)
-    //         if(address.length<=5){
-    //             const addressData = new address(data)
-    //             console.log(addressData);
-    //             await addressData.save()
-    //         }else{
-    //          console.log("only 5 address")
-    //         }  
-    //     }else{
-    //         res.redirect('/404') 
-    //     }
-    //     } catch (error) {
-    //         res.redirect('/404')  
-    //     }  
-    // }
 
     addresslist: async (req, res) => {
         try {
@@ -708,6 +677,30 @@ module.exports = {
           }else{
             res.redirect('/404')
           }
+        },
+
+        applyCoupon:async(req,res)=>{
+            const UserId = req.session.UserId
+            const couponData = await coupon.findOne({couponId:req.body.couponId})
+            if(couponData){
+                const couponExist = couponData.userData.findIndex(p => p.userId == UserId)
+                if(couponExist == -1){
+                    const currentDate = new Date()
+                    if(currentDate <= couponData.couponExpiredDate){
+                       await coupon.updateOne(
+                            {couponId:req.body.couponId}, 
+                            { $push: { userData: {userId:UserId}}}
+                        )
+                        res.json({status:true,couponData:couponData})
+                    }else{
+                        res.json({couponExpiredDateError:true})
+                    }
+                }else{
+                    res.json({couponExistError:true})
+                }
+            }else{
+                res.json({couponDataError:true})
+            }
         }
     
 }

@@ -82,7 +82,7 @@
 <h4 class="account-content-title"><i class="far fa-calculator"></i>Total Summary</h4>
 <div class="account-content-total">
 <ul>
-<li>Order Date<span><%-orderobj.orderDate%></span></li>
+<li>Order Date<span><%-orderobj.orderDate.toJSON().slice(0,10) %></span></li>
 <li>Order Status<span><%-orderobj.orderStatus%></span></li>
 <li>Payment Method<span><%-orderobj.paymentMethod%></span></li>
 <li class="last">Total<span>$<%-orderobj.paymentAmount %>.</span></li>

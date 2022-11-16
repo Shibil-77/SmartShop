@@ -19,14 +19,16 @@
           </div>
         </div>
       </div>
-
       <section class="shop checkout section">
+
+       
+
         <div class="container">
           <form class="form" id="checkoutSubmission">     
-<div class="container" >
-  <div class="row">
-     <% addressData.forEach(addressData=> { %>
-        <div class="cart-total-amount col-lg-3 col-6 ms-5">
+         <div class="container" >
+            <div class="row">
+          <% addressData.forEach(addressData=> { %>
+               <div class="cart-total-amount col-lg-3 col-6 ms-5">
           <h6 class="mb-2">Pleace Choose Address</h6>
            <input type="radio" name="Address" value="<%=addressData.id %>">
                 <ul>
@@ -39,7 +41,6 @@
           <% }) %>
       </div>
    </div>
-      
           <div class="row">
             <div class="col-lg-8 col-12">
               <div class="checkout-form">
@@ -141,25 +142,22 @@
                   </div>
                 </div>
               </div>
-
-
               <div class="cart-total-amount col-lg-4 h-auto mt-5">
                 <ul>
-                  <li>Cart Subtotal<span style="color:#32B87D;
+                  <li>Cart Subtotal <P id="total"><span  style="color:#32B87D;
                       font-weight:700;"><%=totalBill
-                        %></span></li>
+                        %></span></P></li>
                     <li class="last">You Pay<span><input type="number"
                           name="totalBill" class="input-number" readonly
                           style="color:#32B87D; font-weight:700; border:none;
                           background-color:#F6F7FB;" id="totalBill" data-min="1"
                           data-max="1000" value="<%=totalBill %>"></span></li>
-                    <li class="col-12"><span>
+                       <li class="col-12"><span>
                         <label for="" class="text-danger" style="
                           font-weight:700;">Cash on Delivery</label>
                         <input type="radio" name="cash" value="cash">
                       </span>
                     </li>
-
                     <li>
                       <label for="" class="text-danger" style="
                         font-weight:700;">Online
@@ -172,24 +170,33 @@
                     <input type="submit" class="btn checkout-btn"
                       value="shipping">
                   </div>
+                </form>
+
+                <div class="col-lg-12">
+                  <div class="coupon-area">
+                  <form  id="couponSubmission">
+                  <input type="text" placeholder="Apply your coupon" name="couponId">
+                  <button class="coupon-apply-btn" type="submit">Apply Now</button>
+                  </form>
+                  </div>
+                  </div>
+
                 </div>
-              </div>
             </div>
           </div>
         </section>
-</form>
 
 
-              
 
 
-                        <%- include('../inclueds/footer.ejs'); %>
 
-                          <%- include('../inclueds/end.ejs'); %>
+<%- include('../inclueds/footer.ejs'); %>
+
+  <%- include('../inclueds/end.ejs'); %>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
-   
 $("#checkoutSubmission").submit((e) => {
 e.preventDefault()
 $.ajax({
@@ -209,10 +216,9 @@ $.ajax({
                  }
                  else{
                     razorpayPayment(response)
-                  }   
-        }})
-})
-
+               }   
+           }})
+        })
 function razorpayPayment(order) {
     console.log(order)
     var options = {
@@ -270,6 +276,51 @@ function razorpayPayment(order) {
   }
 </script>
 
+<script>
+$("#couponSubmission").submit((e) => {
+e.preventDefault()
+$.ajax({
+        url: '/applyCoupon',
+        method: 'post',
+        data: $("#couponSubmission").serialize(),
+        success: (response) => {
+              if(response.status){
+                 let totalBills = document.getElementById("totalBill").value
+                 const disconut =  response.couponData.couponDiscount
+                 const  disconutAmounts = totalBills*disconut/100
+                 let  disconutAmount= Math.round(disconutAmounts);
+                 let Price
+                if(disconutAmount <= 200){
+                 Price = totalBills - disconutAmount
+                }else{
+                  Price = totalBills - 200
+                }
+                document.getElementById('totalBill').value = Price
+                document.getElementById('total').value = Price
 
-                          </body>
-                        </html>
+           }else if(response.couponExpiredDateError){
+               Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'already completed Expired Date',
+               })
+           }else if(response.couponExistError){
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'already used this coupon',
+               })
+             
+           }else if(response.couponDataError){
+            Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Not this coupon',
+               })
+           }
+        }
+})
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../inclueds/head.ejs'); %>
+
+<body>
+
+<div class="preloader">
+<div class="preloader-inner">
+<div class="preloader-icon">
+<span></span>
+<span></span>
+</div>
+</div>
+</div>
+
+<%- include('../inclueds/adminNavbar.ejs'); %>
+
+
+
+<div class="breadcrumbs">
+<div class="container">
+<div class="row">
+<div class="col-12">
+<div class="bread-inner">
+<ul class="bread-list">
+<li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
+<li class="active"><a href="#">Add Coupon</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<section class="shop section">
+<div class="container">
+<div class="row">
+<div class="col-lg-3 mb-4">
+<div class="account-sidebar">
+<div class="sidebar-list">
+<a href="/admin" class="active"><i class="far fa-th-large"></i> Dashboard</a>
+<a href="/admin/product"><i class="far fa-layer-group"></i> Products <span>20</span></a>
+<a href="/admin/addProduct"><i class="far fa-upload"></i> Add New Product</a>
+<a href="/admin/category"><i class="far fa-upload"></i> Add New Catagory</a>
+<a href="/admin/viewType"><i class="far fa-upload"></i> Add New ViewType</a>
+<a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
+<a href="/admin/user"><i class="fa fa-user-o"></i>Users</a>
+<a href="#"><i class="far fa-lock"></i> Logout</a>
+</div>
+</div>
+</div>
+<div class="col-lg-9">
+<div class="account-content bg-white pt-0">
+<h4 class="account-content-title"><i class="far fa-layer-group"></i> Add Coupon</h4>
+<div class="edit-profile">
+<form   id="couponSubmission" >
+<div class="row">
+<div class="col-lg-6">
+<div class="mb-3">
+<label for="name" class="form-label">Coupon Name</label>
+<input type="text" class="form-control" required   name="couponName" id="name">
+</div>
+</div>
+<div class="col-lg-6">
+<div class="mb-3">
+<label for="name" class="form-label">Coupon ID</label>
+ <input type="text" class="form-control" required   name="couponId" id="name">
+</div>
+</div>
+<div class="col-lg-6">
+<div class="mb-3">
+<label for="stock" class="form-label">Discount</label>
+<input type="number" class="form-control" required  name="couponDiscount"  id="stock">
+</div>
+</div>
+<div class="col-lg-6">
+<div class="mb-3">
+<label for="price" class="form-label">Expired Date</label>
+<input type="date" class="form-control" name="couponExpiredDate"  required    id="price">
+</div>
+</div>
+</div>
+<button class="btn" type="submit">Save Coupon</button>
+ </form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<%- include('../inclueds/footer.ejs'); %>
+
+<%- include('../inclueds/end.ejs'); %>
+
+<script>
+    $("#couponSubmission").submit((e) => {
+    e.preventDefault()
+    $.ajax({
+            url: '/admin/addcoupon',
+            method: 'post',
+            data: $("#couponSubmission").serialize(),
+            success: (response) => {
+                if(response.status){
+                    location.href = '/admin/coupon'
+                }
+            }
+    })
+})
+</script>
+</body>
+</html>

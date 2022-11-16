@@ -6,9 +6,9 @@ const Admin = require('../models/schema/admin')
 const order = require('../models/schema/orders')
 const mongoose = require('mongoose')
 const address = require('../models/schema/address')
+const coupon = require("../models/schema/coupon")
 const bcrypt = require('bcrypt')
 const dataCheck = require('../Middlewares/data-checking')
-const { orderdetail } = require('./userControllers')
 
 
 module.exports = {
@@ -348,7 +348,7 @@ module.exports = {
    deletecategory: async (req, res) => {
       try {
       let categoryId = req.params.id
-      const _id = req.params?.id
+      const _id = req.params.id
       const success = await dataCheck(_id,category)
       if(success){
          await category.deleteOne(
@@ -521,7 +521,7 @@ module.exports = {
       const data = await order.findOne({_id:req.params.id}).populate('orders.cart').exec()
                   if(data){
                   let orderIndex = data.orders.findIndex(p => p._id == req.params.orderId)
-                  if (orderIndex >= 0) {
+                    if (orderIndex >= 0) {
                    let changeStatusOrder = data.orders[orderIndex]
                    console.log(changeStatusOrder)
                     if(changeStatusOrder.orderStatus == "pending" ){
@@ -546,31 +546,45 @@ module.exports = {
       } catch (error) {
          res.redirect('/admin/error')
       }
-   }
+   },
+    
+   addCoupon:(req,res)=>{
+      res.render('admin/addcoupon')
+   },
 
+   postAddCoupon:async(req,res)=>{
+      const couponData = new coupon(req.body)
+      console.log(couponData)
+       await couponData.save()
+       res.json({status:true})
+   },
+
+   couponList:async(req,res)=>{
+      try {
+       const couponData =await coupon.find()
+       if(couponData){
+         console.log(couponData)
+           res.render('admin/coupon-list',{couponData})
+       }else{
+
+       }
+       }catch (error) {
+         res.redirect('/admin/error')
+      }  
+   },
+
+   deleteCoupon:async(req,res)=>{
+          const _id = req.params.id
+          console.log(_id)
+          const success = await dataCheck(_id,banner)
+              if(success){
+               await coupon.deleteOne(
+                  { _id: mongoose.Types.ObjectId(_id) })
+                  res.json({status:true})
+              }else{
+               res.redirect('/admin/error')
+         }
+   }
 }
 
 
-// try { 
-//    const _id = req.params?.id
-//    const success = await dataCheck(_id,products)
-//    if(success){
-//       const data = await users?.findOne({_id,Action:{$eq:true}})
-//       let Action
-//            if(data){
-//             Action =false
-//             }else{
-//             Action =true  
-//             }
-//          await users.findOneAndUpdate(
-//             { _id: mongoose.Types.ObjectId(_id)},
-//             {
-//                $set:{ Action:Action}
-//             })
-//          res.redirect('/admin/user')
-//    }else{
-//        res.redirect('/admin/error') 
-// }  
-// } catch (error) {
-//    res.redirect('/admin/error') 
-// }  
