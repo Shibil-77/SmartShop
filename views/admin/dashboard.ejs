@@ -1,18 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('../inclueds/head.ejs'); %>
+</head>
 <body>
-
-<div class="preloader">
-<div class="preloader-inner">
-<div class="preloader-icon">
-<span></span>
-<span></span>
-</div>
-</div>
-</div>
-
-<%- include('../inclueds/adminNavbar.ejs'); %>
+    <%- include('../inclueds/adminNavbar.ejs'); %>
 
 <div class="breadcrumbs">
 <div class="container">
@@ -34,18 +25,25 @@
 <div class="container">
 <div class="row">
 <div class="col-lg-3 mb-4">
+
 <div class="account-sidebar">
 <div class="sidebar-list">
 <a href="/admin" class="active"><i class="far fa-th-large"></i> Dashboard</a>
-<a href="/admin/product"><i class="far fa-layer-group"></i> Products <span>20</span></a>
+<a href="/admin/product"><i class="far fa-layer-group"></i> Products</a>
 <a href="/admin/addProduct"><i class="far fa-upload"></i> Add New Product</a>
-<a href="/admin/category"><i class="far fa-upload"></i> Add New Catagory</a>
-<a href="/admin/viewType"><i class="far fa-upload"></i> Add New ViewType</a>
-<a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
-<a href="/admin/user"><i class="fa fa-user-o"></i>Users</a>
-<a href="#"><i class="far fa-lock"></i> Logout</a>
+<a href="/admin/addbanner"><i class="far fa-upload"></i> Add New Banner</a>
+<a href="/admin/Category"><i class="far fa-upload"></i> Add New Category</a>
+<a href="/admin/addcoupon"><i class="far fa-upload"></i> Add New Coupon</a>
+<a href="/admin/adminAllOrder"><i class="far fa-shopping-bag"></i> All Orders</a>
+<a href="/admin/user"><i class="far fa-shopping-bag"></i> All User</a>
+<a href="/admin/adminlist"><i class="far fa-shopping-bag"></i> All Admin</a>
+<a href="/admin/bannerList"><i class="far fa-shopping-bag"></i> All Banner</a>
+<a href="/admin/categoryList"><i class="far fa-shopping-bag"></i> All Category</a>
+<a href="/admin/coupon"><i class="far fa-shopping-bag"></i> All Coupon</a>
+<a href="/admin/adminlogout"><i class="far fa-lock"></i> Logout</a>
 </div>
 </div>
+
 </div>
 <div class="col-lg-9">
 <div class="account-content bg-white pt-0">
@@ -56,25 +54,13 @@
 <div class="row">
 <div class="col-lg-3 mb-4">
 <div class="profile-widget py-4">
-<b>$400.00</b>
+<b>$<%=orderdetail.TotalEarnings %></b>
  <p>Total Earnings</p>
 </div>
 </div>
 <div class="col-lg-3 mb-4">
 <div class="profile-widget py-4">
-<b>$300.00</b>
-<p>Your Balance</p>
-</div>
-</div>
-<div class="col-lg-3 mb-4">
-<div class="profile-widget py-4">
-<b>20</b>
-<p>Pending Orders</p>
-</div>
-</div>
-<div class="col-lg-3 mb-4">
-<div class="profile-widget py-4">
-<b>10</b>
+<b><%=orderdetail.totalSales %></b>
 <p>Total Sales</p>
 </div>
 </div>
@@ -82,116 +68,87 @@
 </div>
 </div>
 </div>
-<div class="col-12 mt-4 mb-4">
-<a href="edit-profile.html" class="profile-btn">Edit Profile</a>
-</div>
 <div class="profile-details">
 <div class="row">
 <div class="col-lg-2">
 <p>First Name</p>
-<h6>Nelson </h6>
-</div>
-<div class="col-lg-2">
-<p>Last Name</p>
-<h6>Kelsey</h6>
+<h6><%=AdminData.Name %></h6>
 </div>
 <div class="col-lg-3">
 <p>Email</p>
-<h6><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="365b537652595b575f581855595b">[email&#160;protected]</a></h6>
-</div>
-<div class="col-lg-3">
-<p>Pohne</p>
-<h6>+1 123 456 6547</h6>
-</div>
-<div class="col-lg-2">
-<p>Join Date</p>
-<h6>May 21, 2021</h6>
+<h6><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="365b537652595b575f581855595b"><%=AdminData.Email %></a></h6>
 </div>
 </div>
 </div>
-<div class="account-content mt-4">
-<h4 class="account-content-title"><i class="far fa-th-large"></i> Sales</h4>
-<canvas id="myChart" width="400" height="200"></canvas>
 </div>
+<div class="account-content mt-4 col-12">
+    <h4 class="account-content-title"><i class="far fa-th-large"></i>This Week Total Sales Amount </h4>
+    <canvas id="myChart" width="400" height="200"></canvas>
+    </div>
 </div>
+
+
+
+
+<div class="account-content mt-4 ms-5 col-5">
+<h4 class="account-content-title"><i class="far fa-th-large"></i>Payment Method</h4>
+<canvas id="myChartsale" width="200" height="200" ></canvas>
 </div>
+
+<div class="account-content mt-4 ms-5 col-6">
+<h4 class="account-content-title"><i class="far fa-th-large"></i>This Week Profit</h4>
+<canvas id="orderCancel" width="200" height="200" ></canvas>
+</div>
+
 </div>
 </div>
 </section>
 
 <%- include('../inclueds/footer.ejs'); %>
 
-<div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
-<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-<div class="modal-content">
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-<div class="modal-body">
-<div class="row">
-<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-<img src="/img/products/p1.png" alt="#">
-</div>
-<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-<div class="quickview-content">
-<h2>Xbeats Bluetooth Earphones</h2>
-<div class="d-flex mb-3">
-<span>Brand:</span>
-<b>Xbeats</b>
-</div>
-<div class="d-flex mb-3">
-<span>Category:</span>
-<b>Headphones</b>
-</div>
-<div class="d-flex mb-3">
-<span>Tated:</span>
-<div class="quickview-ratting-review">
-<div class="quickview-ratting-wrap">
-<div class="quickview-ratting">
-<i class="fa fa-star"></i>
-<i class="fa fa-star"></i>
-<i class="fa fa-star"></i>
-<i class="fa fa-star"></i>
-<i class="fal fa-star"></i>
-<a href="#"> (50)</a>
-</div>
-</div>
-</div>
-</div>
-<h3>$29.00</h3>
-<div class="quickview-stock">
-<span><i class="fa fa-check-circle-o"></i> Stock Available</span>
-</div>
-<div class="add-to-cart">
-<a href="#" class="btn">Add to cart</a>
-</div>
-<div class="default-social">
-<h4 class="share-now">Share:</h4>
-<ul>
-<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-<li><a href="#"><i class="fab fa-twitter"></i></a></li>
-<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
-<li><a href="#"><i class="fab fa-instagram"></i></a></li>
-<li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="/js/jquery-3.6.0.min.js"></script>
 
-<%- include('../inclueds/end.ejs'); %>
+<script src="/js/jquery-ui.min.js"></script>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+
+<script src="/js/slicknav.min.js"></script>
+
+<script src="/js/owl-carousel.js"></script>
+
+<script src="/js/magnific-popup.js"></script>
+
+<script src="/js/facnybox.min.js"></script>
+
+<script src="/js/waypoints.min.js"></script>
+
+<script src="/js/finalcountdown.min.js"></script>
+
+<script src="/js/nicesellect.js"></script>
+
+<script src="/js/ytplayer.min.js"></script>
+
+<script src="/js/flex-slider.js"></script>
+
+<script src="/js/scrollup.js"></script>
+
+<script src="/js/onepage-nav.min.js"></script>
+
+<script src="/js/easing.js"></script>
+
+<script src="/js/chart.min.js"></script>
+
+<script src="/js/main.js"></script>
 
 <script>
      var ctx = document.getElementById('myChart').getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    labels:["<%= dateData[0] %>","<%= dateData[1] %>","<%= dateData[2] %>","<%= dateData[3] %>","<%= dateData[4] %>","<%= dateData[5] %>","<%= dateData[6] %>" ],
                     datasets: [{
-                        label: 'sales',
-                        data: [6, 5, 3, 5, 2, 3],
+                        label: 'Total Sales Amount',
+                        data: ["<%= totalPriceData[0] %>","<%= totalPriceData[1] %>","<%= totalPriceData[2] %>","<%= totalPriceData[3] %>","<%= totalPriceData[4] %>","<%= totalPriceData[5] %>","<%= totalPriceData[6] %>" ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -212,10 +169,83 @@
                         fill:'start',
                         tension:0.4
                     }]
-                },
-                
-
-            });
+                },          
+            });      
         </script>
+
+<script>
+    var ctx = document.getElementById('myChartsale').getContext('2d');
+           var myChart = new Chart(ctx, {
+               type: 'pie',
+               data: {
+                   labels: ['COD', 'Online Payment'],
+                   datasets: [{
+                       label: 'sales',
+                       data: ["<%= paymentDataCod[0] %>","<%= paymentDataOnline[0] %>"],
+                       backgroundColor: [
+                           'rgba(255, 99, 132, 0.2)',
+                           'rgba(54, 162, 235, 0.2)',
+                           'rgba(255, 206, 86, 0.2)',
+                           'rgba(75, 192, 192, 0.2)',
+                           'rgba(153, 102, 255, 0.2)',
+                           'rgba(255, 159, 64, 0.2)'
+                       ],
+                       borderColor: [
+                           'rgba(255, 99, 132, 1)',
+                           'rgba(54, 162, 235, 1)',
+                           'rgba(255, 206, 86, 1)',
+                           'rgba(75, 192, 192, 1)',
+                           'rgba(153, 102, 255, 1)',
+                           'rgba(255, 159, 64, 1)'
+                       ],
+                       borderWidth: 3,
+                       fill:'start',
+                       tension:0.4
+                   }]
+               },
+               
+
+           });
+
+           
+       </script>
+
+       
+<script>
+    var ctx = document.getElementById('orderCancel').getContext('2d');
+           var myChart = new Chart(ctx, {
+               type: 'bar',
+               data: {
+                   labels: ["<%= dateData[0] %>","<%= dateData[1] %>","<%= dateData[2] %>","<%= dateData[3] %>","<%= dateData[4] %>","<%= dateData[5] %>","<%= dateData[6] %>" ],
+                   datasets: [{
+                       label: 'Profit',
+                       data: ["<%= ProfitData[0] %>","<%= ProfitData[1] %>","<%= ProfitData[2] %>","<%= ProfitData[3] %>","<%= ProfitData[4] %>","<%= ProfitData[5] %>","<%= ProfitData[6] %>" ],
+                       backgroundColor: [
+                           'rgba(255, 99, 132, 0.2)',
+                           'rgba(54, 162, 235, 0.2)',
+                           'rgba(255, 206, 86, 0.2)',
+                           'rgba(75, 192, 192, 0.2)',
+                           'rgba(153, 102, 255, 0.2)',
+                           'rgba(255, 159, 64, 0.2)'
+                       ],
+                       borderColor: [
+                           'rgba(255, 99, 132, 1)',
+                           'rgba(54, 162, 235, 1)',
+                           'rgba(255, 206, 86, 1)',
+                           'rgba(75, 192, 192, 1)',
+                           'rgba(153, 102, 255, 1)',
+                           'rgba(255, 159, 64, 1)'
+                       ],
+                       borderWidth: 3,
+                       fill:'start',
+                       tension:0.4
+                   }]
+               },
+               
+
+           });
+
+           
+       </script>
 </body>
 </html>

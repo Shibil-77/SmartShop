@@ -73,7 +73,17 @@ module.exports = {
         const UserId = req.session.UserId
         const profileId = req.params.id
         const Profile = await users.findOne({ _id: profileId })
-        res.render('user/editProfile', { Profile, UserId })
+        if(Profile){
+            res.render('user/editProfile', { Profile,UserId})
+        }else{
+            res.redirect('/404')
+        }
+    },
+
+    logout:(req,res)=>{
+        req.session.userloggedIn = false
+        req.session.UserId =null
+        res.redirect('/')
     },
 
     postProfile: async (req, res) => {

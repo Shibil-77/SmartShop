@@ -9,14 +9,36 @@ const address = require('../models/schema/address')
 const coupon = require("../models/schema/coupon")
 const bcrypt = require('bcrypt')
 const dataCheck = require('../Middlewares/data-checking')
+const Middlewares = require("../Middlewares/dashboard")
+const admin = require('../models/schema/admin')
 
 
 module.exports = {
    adminError: (req, res) => {
       res.render('admin/admin-error')
    },
-   dashboard: (req, res) => {
-      res.render('admin/dashboard')
+   dashboard:async(req, res) => {
+     const salesData =await Middlewares.sales()
+     const totalPriceData = salesData.map((data)=>data.totalPrice)
+     const dateData = salesData.map((data)=>data._id.date)
+     const ProfitData = salesData.map((value)=>{
+        let  profitvalue = value.totalPrice*70/100 
+         let Profit = value.totalPrice - profitvalue
+         return Profit
+        })  
+     const paymentDataOnline =await Middlewares.orderPaymentMethodOnline()
+     const paymentDataCod =await Middlewares.orderPaymentMethodCod()
+     const TotalEarning= salesData.reduce((data,total)=>data.totalPrice+total)
+     const TotalEarnings =TotalEarning.totalPrice
+     console.log(TotalEarnings)
+     const totalSales = Number(paymentDataOnline)+Number(paymentDataCod)
+     const orderdetail = {}
+     orderdetail.TotalEarnings = TotalEarnings
+     orderdetail.totalSales = totalSales
+     const AdminId = req.session.AdminId
+     const AdminData = await admin.findById(AdminId)
+     console.log(AdminData)
+     res.render('admin/dashboard',{totalPriceData,dateData,paymentDataOnline,paymentDataCod,ProfitData,orderdetail,AdminData})
    },
    adminsignup: (req, res) => {
       res.render('admin/adminsignup')
@@ -616,7 +638,7 @@ module.exports = {
      ]).limit(7)
    
      for (let i = 0; i < data.length; i++) {
-      data[i].profit = Number(data[i].totalPrice) * 20 / 100
+      data[i].profit = Number(data[i].totalPrice) * 70 / 100
       data[i].proggress = Number(data[i].totalPrice) - Number(data[i].profit)
   }
   let salesReport = data

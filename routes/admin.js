@@ -57,7 +57,7 @@ router.get('/adminlist',session,controller.adminList)
 
 router.get('/adminAccess/:id',session,controller.adminAccess)    
 
-router.get('/adminlogonout',controller.adminlogout)
+router.get('/adminlogout',controller.adminlogout)
 
 router.get('/adminAllOrder',controller.adminAllOrder)
 
@@ -74,5 +74,7 @@ router.get("/coupon",controller.couponList)
 router.get("/deletecoupon/:id",controller.deleteCoupon)
 
 router.get("/salesReport",controller.salesReport)
+
+
 
 module.exports = router;

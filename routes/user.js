@@ -78,4 +78,6 @@ router.get("/orderCancel/:id",controller.orderCancel)
 
 router.post('/applyCoupon',controller.applyCoupon)
 
+router.get('/logout',controller.logout)
+
 module.exports = router;

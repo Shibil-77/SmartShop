@@ -44,14 +44,14 @@
         <a href="/admin/viewType"><i class="far fa-upload"></i> Add New ViewType</a>
         <a href="all-order.html"><i class="far fa-shopping-bag"></i> All Orders <span>2</span></a>
         <a href="/admin/user"><i class="far fa-cog"></i>Users </a>
-        <a href="#"><i class="far fa-lock"></i> Logout</a>
         </div>
         </div>
         </div>
 <div class="col-lg-9">
 <div class="account-content">
 <h4 class="account-content-title"><i class="far fa-map-marker-alt"></i>Sales Report</h4>
-<div class="account-content-table">
+<button class="btn btn-inverse-warning btn-icon" onclick="printDiv('pdf','Title')" >Print</button>
+<div class="account-content-table" id="pdf">
 <div class="table-responsive">
 <table class="table table-borderless">
 <tr>
@@ -97,6 +97,29 @@
 <%- include('../inclueds/footer.ejs'); %>
 
 <%- include('../inclueds/end.ejs'); %>
+
+
+<script>
+    var doc = new jsPDF();
+    function printDiv(divId,
+      title) {
+      let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+  
+      mywindow.document.write(`<html><head><title>${title}</title>`);
+      mywindow.document.write('</head><body >');
+      mywindow.document.write(document.getElementById(divId).innerHTML);
+      mywindow.document.write('</body></html>');
+  
+      mywindow.document.close(); // necessary for IE >= 10
+      mywindow.focus(); // necessary for IE >= 10*/
+  
+      mywindow.print();
+      mywindow.close();
+  
+      return true;
+    }
+  </script>
+
 
 </body>
 </html>
