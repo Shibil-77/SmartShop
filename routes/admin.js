@@ -7,7 +7,7 @@ const session =require('../Middlewares/adminSession')
 
 router.get('/product',session,controller.productList)
 
-router.get('/error',session,controller.adminError)
+router.get('/error',controller.adminError)
 
 router.route('/addproduct')
        .get(session,controller.viewProduct)
@@ -60,5 +60,11 @@ router.get('/adminAccess/:id',session,controller.adminAccess)
 router.get('/adminlogonout',controller.adminlogout)
 
 router.get('/adminAllOrder',controller.adminAllOrder)
+
+router.get('/adminOrderDetail/:id/:orderId',controller.adminOrderDetail)
+
+router.get("/paymentStatusChange/:id/:orderId",controller.paymentStatusChange)
+
+
 
 module.exports = router;

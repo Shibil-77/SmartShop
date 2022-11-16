@@ -45,20 +45,24 @@
 <div class="table-responsive">
 <table class="table table-borderless">
 <tr>
+
 <th>Order #</th>
 <th>Purchased Date</th>
 <th>Total</th>
+<th>Payment Method</th>
  <th>Status</th>
 <th>Action</th>
 </tr>
+<% orderdetail.forEach(orderdetail => { %>
 <tr class="account-order-list">
-<td><b>#15498SD</b></td>
-<td>May 21, 2021</td>
-<td>$400.00</td>
-<td><span class="badge bg-secondary">Pending</span></td>
-<td class="text-center"><a href="order-detail.html" class="content-action"><i class="far fa-arrow-right"></i></a></td>
+<td><b>#<%-orderdetail.orders._id %></b></td>
+<td><%-orderdetail.orders.orderDate %></td>
+<td><%-orderdetail.orders.paymentAmount %></td>
+<td><%-orderdetail.orders.paymentMethod %></td>
+<td><a href="/admin/paymentStatusChange/<%-orderdetail._id %>/<%-orderdetail.orders._id %>"><span class="badge bg-secondary"><%-orderdetail.orders.orderStatus %></span></a></td>
+<td class="text-center"><a href="/admin/adminOrderDetail/<%-orderdetail._id %>/<%-orderdetail.orders._id %>" class="content-action"><i class="far fa-arrow-right"></i></a></td>
 </tr>
-
+<% }) %>
 </table>
 </div>
 <div class="col-12">
@@ -85,5 +89,18 @@
 <%- include('../inclueds/footer.ejs'); %>
 
 <%- include('../inclueds/end.ejs'); %>
+<!-- <script>
+function PaymentStatus(payment,order) {
+    $.ajax({
+      url: '/paymentstatus',
+      data: {
+        payment,
+        order
+      },
+      method: 'post',
+      success: (response) => {}
+    })
+}
+    </script> -->
 </body>
 </html>

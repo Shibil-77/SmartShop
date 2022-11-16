@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-    
     <%- include('../inclueds/head.ejs'); %>
-
 <body>
-    <%- include('../inclueds/navbar.ejs'); %>
 
+    <%- include('../inclueds/adminNavbar.ejs'); %>
 
 <div class="breadcrumbs">
 <div class="container">
@@ -14,7 +12,7 @@
 <div class="bread-inner">
 <ul class="bread-list">
 <li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
-<li class="active"><a href="#">Orders List</a></li>
+<li class="active"><a href="#">Orders Details</a></li>
 </ul>
 </div>
 </div>
@@ -44,45 +42,56 @@
 </div>
 <div class="col-lg-9">
 <div class="account-content">
-<h4 class="account-content-title"><i class="far fa-shopping-bag"></i> My Orders</h4>
+<h4 class="account-content-title"><i class="far fa-shopping-bag"></i> Order Details#</h4>
 <div class="account-content-table">
 <div class="table-responsive">
  <table class="table table-borderless">
 <tr>
-<th>Order #</th>
-<th>Purchased Date</th>
+<th>Image</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Category</th>
 <th>Total</th>
-<th>Status</th>
-<th>cancel</th>
-<th>Action</th>
 </tr>
-<% orderDatas.forEach(orderDatas  => { %>
-<tr class="account-order-list">
-<td><b>#<%-orderDatas.id%></b></td>
-<td><%-orderDatas.orderDate%></td>
-<td>$<%-orderDatas.paymentAmount%></td>
-<td><span class="badge bg-secondary"><%-orderDatas.orderStatus %></span></td>
-<td><a href="/orderCancel/<%-orderDatas.id%>" class="btn btn-danger" style="width: 20px ; height: 10px;"></a></td>
-<td class="text-center"><a href="/orderdetail/<%-orderDatas.id%>" class="content-action"><i class="far fa-arrow-right"></i></a></td>
+
+<% orderdetail.forEach(orderdetail  => { %>
+<tr class="account-order-list order-single-product">
+<td class="product-img"><img src="/img/product/<%-orderdetail.moreImage[0]%>" alt=""></td>
+<td><div class="product-info"><%-orderdetail.Name%></div></td>
+<td><div class="product-info"><%-orderdetail.quantity%></div></td>
+<td><div class="product-info"><%-orderdetail.Category%></div></td>
+<td><div class="product-info"><%-orderdetail.totalAmount %></div></td>
 </tr>
 <% }); %>
+
 </table>
 </div>
-<div class="col-12">
-
-<div class="pagination center mt-2">
-<ul class="pagination-list">
-<li><a href="#"><i class="ti-arrow-left"></i></a></li>
-<li><a href="#">1</a></li>
-<li class="active"><a href="#">2</a></li>
-<li><a href="#">3</a></li>
-<li><a href="#"><i class="ti-arrow-right"></i></a></li>
+</div>
+</div>
+<div class="row mt-4">
+<div class="col-lg-6 mb-4">
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-map-marker-alt"></i> Shipping Address</h4>
+<div class="account-content-address">
+<p><%-addressData.firstName%>,<%-addressData.address%>,<%-addressData.state%>,<%-addressData.countryName%></p>
+</div>
+</div>
+</div>
+<div class="col-lg-6">
+<div class="account-content">
+<h4 class="account-content-title"><i class="far fa-calculator"></i>Total Summary</h4>
+<div class="account-content-total">
+<ul>
+<li>Order Date<span><%-orderobj.orderDate%></span></li>
+<li>Order Status<span><%-orderobj.orderStatus%></span></li>
+<li>Payment Method<span><%-orderobj.paymentMethod%></span></li>
+<li class="last">Total<span>$<%-orderobj.paymentAmount %>.</span></li>
 </ul>
 </div>
-
 </div>
 </div>
 </div>
+ </div>
 </div>
 </div>
 </div>

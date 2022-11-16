@@ -74,4 +74,6 @@ router.route('/editaddress/:id')
       .get(session,controller.editAddress)
       .post(session,controller.postEditAddress)
 
+router.get("/orderCancel/:id",controller.orderCancel)      
+
 module.exports = router;

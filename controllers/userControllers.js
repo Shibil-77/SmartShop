@@ -572,7 +572,6 @@ module.exports = {
                 const order = orderData.find((data) => data.id == req.params.id)
                 if (order) {
                     const orderdetail = order.cart
-                    console.log(orderdetail);
                     if (orderdetail) {
                         const addressId = order.addressId
                         const addressData = await address.findOne({ addressId: addressId })
@@ -675,7 +674,7 @@ module.exports = {
         try {
             const addressId = req.params.id
             const addressData = req.body
-            const userAddress = await address.findOne({ _id: mongoose.Types.ObjectId(addressId) })
+            const userAddress = await address.findOne({ _id:mongoose.Types.ObjectId(addressId) })
             if (userAddress) {
                 await address.findOneAndUpdate(
                     { _id: mongoose.Types.ObjectId(addressId) },
@@ -691,6 +690,25 @@ module.exports = {
         }
     },
 
-
+    orderCancel:async(req,res)=>{
+          const UserId = req.session.UserId
+          console.log(req.params.id);
+          const data = await order.findOne({userId:UserId}).populate('orders.cart').exec()
+          if(data){
+          const orderIndex  = data.orders.findIndex(p => p._id == req.params.id)
+            if(orderIndex >=0){
+                let changeStatusOrder = data.orders[orderIndex]
+                changeStatusOrder.orderStatus = "cancel"
+                  data.orders[orderIndex] = changeStatusOrder
+                  await data.save()
+                  res.redirect('/orderlist')
+            }else{
+                res.redirect('/404')
+            }
+          }else{
+            res.redirect('/404')
+          }
+        }
+    
 }
 

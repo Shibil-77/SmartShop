@@ -5,8 +5,10 @@ const banner = require('../models/schema/banner-schema')
 const Admin = require('../models/schema/admin')
 const order = require('../models/schema/orders')
 const mongoose = require('mongoose')
+const address = require('../models/schema/address')
 const bcrypt = require('bcrypt')
 const dataCheck = require('../Middlewares/data-checking')
+const { orderdetail } = require('./userControllers')
 
 
 module.exports = {
@@ -463,7 +465,112 @@ module.exports = {
       }
    },
 
-   adminAllOrder:(req,res)=>{
-    
+    adminAllOrder:async(req,res)=>{
+       try {
+         const orderdetail = await order.aggregate([
+            {
+                $unwind: "$orders"
+            },
+            {
+                $project: { orders: 1 }
+            },
+            {
+                $sort: { "orders.date": -1 }
+            }
+        ])
+        if(orderdetail){
+           res.render('admin/all-order',{orderdetail})
+        }else{
+         res.redirect('/admin/error')
+        }
+       } catch (error) {
+         res.redirect('/admin/error')
+       }
+   },
+
+   adminOrderDetail:async(req,res)=>{
+     try {
+       const data = await order.findOne({_id:req.params.id}).populate('orders.cart').exec()
+          if(data){
+            const orderData = data.orders
+            const Dataorders = orderData.find((data) => data.id == req.params.orderId)
+            console.log(Dataorders)
+            if(Dataorders){
+               const orderdetail = Dataorders.cart
+               const addressId = order.addressId
+               const addressData = await address.findOne({ addressId: addressId })
+               const orderobj = {}
+               orderobj.orderDate = Dataorders.orderDate
+               orderobj.paymentAmount = Dataorders.paymentAmount
+               orderobj.paymentMethod = Dataorders.paymentMethod
+               orderobj.orderStatus = Dataorders.orderStatus
+               res.render("admin/orderdetail",{orderdetail,addressData,orderobj})
+            }else{
+               res.redirect('/admin/error')
+            } 
+          }else{
+            res.redirect('/admin/error')
+          }
+     } catch (error) {
+      res.redirect('/admin/error')
+     }     
+   },
+
+   paymentStatusChange:async(req,res)=>{
+      try {
+      const data = await order.findOne({_id:req.params.id}).populate('orders.cart').exec()
+                  if(data){
+                  let orderIndex = data.orders.findIndex(p => p._id == req.params.orderId)
+                  if (orderIndex >= 0) {
+                   let changeStatusOrder = data.orders[orderIndex]
+                   console.log(changeStatusOrder)
+                    if(changeStatusOrder.orderStatus == "pending" ){
+                     changeStatusOrder.orderStatus = "shipped"
+                    }else if(changeStatusOrder.orderStatus == "shipped"){
+                     changeStatusOrder.orderStatus = "packed"
+                    }else if(changeStatusOrder.orderStatus == "packed"){
+                     changeStatusOrder.orderStatus ="placed"
+                    }else if(changeStatusOrder.orderStatus == "cancel"){
+                     changeStatusOrder.orderStatus = "cancel"
+                    }
+                    else{
+                     changeStatusOrder.orderStatus = "placed"
+                    }
+                   data.orders[orderIndex] = changeStatusOrder
+                  await data.save()
+                  res.redirect('/admin/adminAllOrder')
+               }
+            }else{
+               res.redirect('/admin/error')
+            }
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
    }
+
 }
+
+
+// try { 
+//    const _id = req.params?.id
+//    const success = await dataCheck(_id,products)
+//    if(success){
+//       const data = await users?.findOne({_id,Action:{$eq:true}})
+//       let Action
+//            if(data){
+//             Action =false
+//             }else{
+//             Action =true  
+//             }
+//          await users.findOneAndUpdate(
+//             { _id: mongoose.Types.ObjectId(_id)},
+//             {
+//                $set:{ Action:Action}
+//             })
+//          res.redirect('/admin/user')
+//    }else{
+//        res.redirect('/admin/error') 
+// }  
+// } catch (error) {
+//    res.redirect('/admin/error') 
+// }  
