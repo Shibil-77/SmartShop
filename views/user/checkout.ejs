@@ -20,27 +20,33 @@
         </div>
       </div>
       <section class="shop checkout section">
-
-       
-
         <div class="container">
           <form class="form" id="checkoutSubmission">     
-         <div class="container" >
-            <div class="row">
-          <% addressData.forEach(addressData=> { %>
-               <div class="cart-total-amount col-lg-3 col-6 ms-5">
-          <h6 class="mb-2">Pleace Choose Address</h6>
-           <input type="radio" name="Address" value="<%=addressData.id %>">
-                <ul>
-                    <li>Name<span><%=addressData.firstName %></span></li>
-                    <li>Phone<span><%=addressData.phoneNumber %></span></li>
-                    <li>Address<span><%=addressData.arrresLine %></span></li>
-                    <li>Pin Code<span><%=addressData.postCode %></li>
-                </ul>
+            <div class="accordion accordion-flush" id="accordionFlushExample"> 
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                  <button class="accordion-button collapsed text-white"  style="background-color:#8493ca;" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Pleace Choose Address
+                  </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                  <div class="row">
+                  <% addressData.forEach(addressData=> { %>
+                    <div class="cart-total-amount col-lg-3 col-6 ms-5">
+                      <h6 class="mb-2">Pleace Choose Address</h6>
+                       <input type="radio" name="Address" value="<%=addressData.id %>">
+                            <ul>
+                                <li>Name<span><%=addressData.firstName %></span></li>
+                                <li>Phone<span><%=addressData.phoneNumber %></span></li>
+                                <li>Address<span><%=addressData.arrresLine %></span></li>
+                                <li>Pin Code<span><%=addressData.postCode %></li>
+                            </ul>
+                        </div>
+                      <% }) %>
+                    </div>
+                </div>
+              </div>
             </div>
-          <% }) %>
-      </div>
-   </div>
           <div class="row">
             <div class="col-lg-8 col-12">
               <div class="checkout-form">
