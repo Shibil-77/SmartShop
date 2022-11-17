@@ -57,24 +57,23 @@ router.get('/adminlist',session,controller.adminList)
 
 router.get('/adminAccess/:id',session,controller.adminAccess)    
 
-router.get('/adminlogout',controller.adminlogout)
+router.get('/adminlogout',session,controller.adminlogout)
 
-router.get('/adminAllOrder',controller.adminAllOrder)
+router.get('/adminAllOrder',session,controller.adminAllOrder)
 
-router.get('/adminOrderDetail/:id/:orderId',controller.adminOrderDetail)
+router.get('/adminOrderDetail/:id/:orderId',session,controller.adminOrderDetail)
 
-router.get("/paymentStatusChange/:id/:orderId",controller.paymentStatusChange)
+router.get("/paymentStatusChange/:id/:orderId",session,controller.paymentStatusChange)
 
 router.route("/addcoupon")
-       .get(controller.addCoupon)
-       .post(controller.postAddCoupon)
+       .get(session,controller.addCoupon)
+       .post(session,controller.postAddCoupon)
 
 router.get("/coupon",controller.couponList)
 
 router.get("/deletecoupon/:id",controller.deleteCoupon)
 
 router.get("/salesReport",controller.salesReport)
-
 
 
 module.exports = router;

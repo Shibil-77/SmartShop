@@ -30,11 +30,11 @@ module.exports = {
      const paymentDataCod =await Middlewares.orderPaymentMethodCod()
      const TotalEarning= salesData.reduce((data,total)=>data.totalPrice+total)
      const TotalEarnings =TotalEarning.totalPrice
-     console.log(TotalEarnings)
      const totalSales = Number(paymentDataOnline)+Number(paymentDataCod)
      const orderdetail = {}
      orderdetail.TotalEarnings = TotalEarnings
      orderdetail.totalSales = totalSales
+     console.log(orderdetail)
      const AdminId = req.session.AdminId
      const AdminData = await admin.findById(AdminId)
      console.log(AdminData)

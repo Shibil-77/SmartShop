@@ -66,18 +66,27 @@ module.exports = {
     Profile: async (req, res) => {
         let UserId = req.session.UserId
         let profile = await users.findOne({ _id: UserId })
-        res.render('user/profile', { profile, UserId })
-    },
-
-    editProfile: async (req, res) => {
-        const UserId = req.session.UserId
-        const profileId = req.params.id
-        const Profile = await users.findOne({ _id: profileId })
-        if(Profile){
-            res.render('user/editProfile', { Profile,UserId})
+        if(profile){
+            res.render('user/profile', { profile, UserId })
         }else{
             res.redirect('/404')
         }
+       
+    },
+
+    editProfile: async (req, res) => {
+        try {
+            const UserId = req.session.UserId
+            const profileId = req.params.id
+            const Profile = await users.findOne({ _id: profileId })
+            if(Profile){
+                res.render('user/editProfile', { Profile,UserId})
+            }else{
+                res.redirect('/404')
+            }
+        } catch (error) {
+            res.redirect('/404')
+        } 
     },
 
     logout:(req,res)=>{
@@ -102,14 +111,22 @@ module.exports = {
             res.redirect('/profile')
         }
         catch (e) {
-            console.log("e",)
+            res.redirect('/404')
         }
     },
 
     shopsingle: async (req, res) => {
-        let product = await products.findOne({ _id: req.params.id })
-        let UserId = req.session.UserId
-        res.render('user/shopsingle', { product, UserId })
+        try {
+            let product = await products.findOne({ _id: req.params.id })
+            if(product){
+                let UserId = req.session.UserId
+                res.render('user/shopsingle', { product, UserId })
+            }else{
+                res.redirect('/404')
+            } 
+        } catch (error) {
+            res.redirect('/404')
+        }  
     },
 
     otp: (req, res) => {
@@ -124,7 +141,8 @@ module.exports = {
         let confirmPassword = user.confirmPassword
         if (Password === confirmPassword) {
             let UserData = await users.findOne({ Email: user.Email })
-            if (!UserData) {
+            let UserPhone = await users.findOne({Phone:user.Phone})
+            if (!UserData||!UserPhone) {
                 req.session.userData = user
                 // Download the helper library from https://www.twilio.com/docs/node/install
                 // Find your Account SID and Auth Token at twilio.com/console
@@ -135,13 +153,10 @@ module.exports = {
                     .verifications
                     .create({ to: '+91' + user.Phone, channel: 'sms' })
                     .then(verification => console.log(verification.status));
-
-
                 res.json({ status: true })
 
             } else {
                 res.json({ emailExist: true })
-                console.log("user Exist");
             }
         } else {
             res.json({ confirmpasswordError: true })
@@ -179,75 +194,84 @@ module.exports = {
     //    <- ======== edit profile======== ->
 
     postotp: (req, res) => {
+    try {
         client.verify.v2.services(verifySid)
-            .verificationChecks
-            .create({ to: '+91' + req.session.userData.Phone, code: req.body.otp })
-            .then(async (verification_check) => {
+        .verificationChecks
+        .create({ to: '+91' + req.session.userData.Phone, code: req.body.otp })
+        .then(async (verification_check) => {
 
-                if (verification_check.status == "approved") {
-                    let UserData = req.session.userData
-                    let bcryptpassword = await bcrypt.hash(UserData.Password, 10)
-                    let today = new Date();
-                    let dd = String(today.getDate()).padStart(2, '0');
-                    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                    let yyyy = today.getFullYear();
-                    today = mm + '/' + dd + '/' + yyyy;
+            if (verification_check.status == "approved") {
+                let UserData = req.session.userData
+                let bcryptpassword = await bcrypt.hash(UserData.Password, 10)
+                let today = new Date();
+                let dd = String(today.getDate()).padStart(2, '0');
+                let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                let yyyy = today.getFullYear();
+                today = mm + '/' + dd + '/' + yyyy;
 
-                    const userData = new users({
-                        Name: UserData.Name,
-                        Email: UserData.Email,
-                        Phone: UserData.Phone,
-                        Password: bcryptpassword,
-                        Date: today,
-                        Action: true
+                const userData = new users({
+                    Name: UserData.Name,
+                    Email: UserData.Email,
+                    Phone: UserData.Phone,
+                    Password: bcryptpassword,
+                    Date: today,
+                    Action: true
+                })
+                await userData.save()
+                    .then(data => {
+                        req.session.UserId = data.id
+                        req.session.userData = null
+                        req.session.userloggedIn = true
+                        res.redirect('/')
                     })
-                    await userData.save()
-                        .then(data => {
-                            req.session.UserId = data.id
-                            req.session.userData = null
-                            req.session.userloggedIn = true
-                            res.redirect('/')
-                        })
-                } else {
-                    req.session.userData = null
-                    console.log("OTP ERROR");
-                }
-            });
+            } else {
+                req.session.userData = null
+                console.log("OTP ERROR");
+            }
+        });
+    } catch (error) {
+        res.redirect('/404')
+    }  
     },
 
     cart: async (req, res) => {
+        
         if (req.session.userloggedIn) {
             const productId = req.params.id
             const product = await products.findOne({ _id: productId })
-            const totalAmount = product.Price
-            const userId = req.session.UserId
-            const cartData = await cart.findOne({ UserId: userId })
-            if (cartData) {
-                let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
-                if (productIndex >= 0) {
-                    cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity) + 1
-                    await cartData.save()
-                    res.json({ status: true })
+            if(product){
+                const totalAmount = product.Price
+                const userId = req.session.UserId
+                const cartData = await cart.findOne({ UserId: userId })
+                if (cartData) {
+                    let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
+                    if (productIndex >= 0) {
+                        cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity) + 1
+                        await cartData.save()
+                        res.json({ status: true })
+                    } else {
+                        cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
+                        await cartData.save()
+                        res.json({ status: true })
+                    }
                 } else {
-                    cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
-                    await cartData.save()
-                    res.json({ status: true })
+                    cart.create({
+                        UserId: mongoose.Types.ObjectId(userId),
+                        totalBill: totalAmount,
+                        Product: [{
+                            ProductId: mongoose.Types.ObjectId(productId),
+                            quantity: 1
+                        }]
+                    }).then((data) => {
+                        res.json({ status: true })
+                    })
                 }
             } else {
-                cart.create({
-                    UserId: mongoose.Types.ObjectId(userId),
-                    totalBill: totalAmount,
-                    Product: [{
-                        ProductId: mongoose.Types.ObjectId(productId),
-                        quantity: 1
-                    }]
-                }).then((data) => {
-                    res.json({ status: true })
-                })
+                res.json({ notUser: true })
             }
-        } else {
-            res.json({ notUser: true })
-        }
+            }else{
+                res.redirect('/404')
+            }    
     }
     ,
     cartList: async (req, res) => {
@@ -289,8 +313,12 @@ module.exports = {
     categoryfilter: async (req, res) => {
         req.session.categoryData = null
         let categoryData = await products.find({ $and: [{ Delete: false }, { Category: req.params.data }] })
-        req.session.categoryData = categoryData
-        res.redirect('/shop')
+        if(categoryData){
+            req.session.categoryData = categoryData
+            res.redirect('/shop')
+        }else{
+            res.redirect('/404')
+        }    
     },
 
     wishList: async (req, res) => {
@@ -324,7 +352,7 @@ module.exports = {
                 res.json({ notUser: true })
             }
         } catch (error) {
-            res.redirect('/admin/error')
+            res.redirect('/404')
         }
     },
 
@@ -341,10 +369,10 @@ module.exports = {
                     res.json({ status: true })
                 })
             } else {
-                res.redirect('/admin/error')
+                res.redirect('/404')
             }
         } catch (error) {
-            res.redirect('/admin/error')
+            res.redirect('/404')
         }
     },
 
@@ -363,7 +391,7 @@ module.exports = {
                 res.json({ error: true })
             }
         } catch (error) {
-            res.redirect('/admin/error')
+            res.redirect('/404')
         }
     },
 
@@ -375,18 +403,22 @@ module.exports = {
             if (data) {
                 res.redirect('/cartList')
             } else {
-                res.redirect('/admin/error')
+                res.redirect('/404')
             }
         } catch (error) {
-            res.redirect('/admin/error')
+            res.redirect('/404')
         }
     },
 
     checkoutpage: async (req, res) => {
-        let totalBill = req.body.totalBill
+        try {
+            let totalBill = req.body.totalBill
         const UserId = req.session.UserId
         const addressData = await address.find({ UserId }).limit(3);
         res.render('user/checkout', { UserId, totalBill, addressData })
+        } catch (error) {
+           res,redirect('/404') 
+        }
     },
 
     postcheckout: async (req, res) => {
@@ -478,23 +510,27 @@ module.exports = {
     },
 
     wishListPage: async (req, res) => {
-        if (req.session.userloggedIn) {
-            const UserId = req.session.UserId
-            const wishlistData = await wishList.findOne({ UserId }).populate('Product.ProductId').exec()
-            if (wishlistData) {
-                const wishData = wishlistData.Product.map((data) => {
-                    let array = {}
-                    array.ProductId = data.ProductId
-                    array.arrayId = data.id
-                    return array
-                })
-                res.render('user/wishlist', { UserId, wishData })
+        try {
+            if (req.session.userloggedIn) {
+                const UserId = req.session.UserId
+                const wishlistData = await wishList.findOne({ UserId }).populate('Product.ProductId').exec()
+                if (wishlistData) {
+                    const wishData = wishlistData.Product.map((data) => {
+                        let array = {}
+                        array.ProductId = data.ProductId
+                        array.arrayId = data.id
+                        return array
+                    })
+                    res.render('user/wishlist', { UserId, wishData })
+                } else {
+                    res.redirect('/')
+                }
             } else {
-                res.redirect('/')
-            }
-        } else {
-            res.redirect('/login')
-        }
+                res.redirect('/login')
+            }  
+        } catch (error) {
+            res.redirect('/404')
+        } 
     },
 
 
@@ -611,7 +647,7 @@ module.exports = {
             if (addressData) {
                 res.render('user/address-list', { UserId, addressData })
             } else {
-
+                res.redirect('/login')
             }
         } catch (error) {
             res.redirect('/404')
@@ -690,28 +726,31 @@ module.exports = {
         },
 
         applyCoupon:async(req,res)=>{
-            const UserId = req.session.UserId
-            const couponData = await coupon.findOne({couponId:req.body.couponId})
-            if(couponData){
-                const couponExist = couponData.userData.findIndex(p => p.userId == UserId)
-                if(couponExist == -1){
-                    const currentDate = new Date()
-                    if(currentDate <= couponData.couponExpiredDate){
-                       await coupon.updateOne(
-                            {couponId:req.body.couponId}, 
-                            { $push: { userData: {userId:UserId}}}
-                        )
-                        res.json({status:true,couponData:couponData})
+            try {
+                const UserId = req.session.UserId
+                const couponData = await coupon.findOne({couponId:req.body.couponId})
+                if(couponData){
+                    const couponExist = couponData.userData.findIndex(p => p.userId == UserId)
+                    if(couponExist == -1){
+                        const currentDate = new Date()
+                        if(currentDate <= couponData.couponExpiredDate){
+                           await coupon.updateOne(
+                                {couponId:req.body.couponId}, 
+                                { $push: { userData: {userId:UserId}}}
+                            )
+                            res.json({status:true,couponData:couponData})
+                        }else{
+                            res.json({couponExpiredDateError:true})
+                        }
                     }else{
-                        res.json({couponExpiredDateError:true})
+                        res.json({couponExistError:true})
                     }
                 }else{
-                    res.json({couponExistError:true})
+                    res.json({couponDataError:true})
                 }
-            }else{
-                res.json({couponDataError:true})
-            }
+            } catch (error) {
+                res.redirect('/404')
+            } 
         }
-    
 }
 
