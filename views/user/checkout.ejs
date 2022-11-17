@@ -150,9 +150,9 @@
               </div>
               <div class="cart-total-amount col-lg-4 h-auto mt-5">
                 <ul>
-                  <li>Cart Subtotal <P id="total"><span  style="color:#32B87D;
+                  <li>Cart Subtotal <span  style="color:#32B87D;
                       font-weight:700;"><%=totalBill
-                        %></span></P></li>
+                        %></span></li>
                     <li class="last">You Pay<span><input type="number"
                           name="totalBill" class="input-number" readonly
                           style="color:#32B87D; font-weight:700; border:none;
@@ -296,10 +296,10 @@ $.ajax({
                  const  disconutAmounts = totalBills*disconut/100
                  let  disconutAmount= Math.round(disconutAmounts);
                  let Price
-                if(disconutAmount <= 200){
+                if(disconutAmount <= 1000){
                  Price = totalBills - disconutAmount
                 }else{
-                  Price = totalBills - 200
+                  Price = totalBills - 1000
                 }
                 document.getElementById('totalBill').value = Price
                 document.getElementById('total').value = Price

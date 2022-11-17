@@ -98,7 +98,7 @@ module.exports = {
     postProfile: async (req, res) => {
         try {
             ProfileId = req.params.id
-            console.log(ProfileId);
+            // console.log(ProfileId);
             await users.findOneAndUpdate(
                 { _id: mongoose.Types.ObjectId(ProfileId) },
                 {
@@ -152,7 +152,7 @@ module.exports = {
                 client.verify.v2.services(verifySid)
                     .verifications
                     .create({ to: '+91' + user.Phone, channel: 'sms' })
-                    .then(verification => console.log(verification.status));
+                    // .then(verification => console.log(verification.status));
                 res.json({ status: true })
 
             } else {
@@ -160,7 +160,7 @@ module.exports = {
             }
         } else {
             res.json({ confirmpasswordError: true })
-            console.log("confirmPassword");
+            // console.log("confirmPassword");
         }
     },
     //    <- ========dologin======== ->
@@ -226,7 +226,7 @@ module.exports = {
                     })
             } else {
                 req.session.userData = null
-                console.log("OTP ERROR");
+                // console.log("OTP ERROR");
             }
         });
     } catch (error) {
@@ -279,7 +279,7 @@ module.exports = {
         const data = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
         if (data) {
             const dataLength = data.Product.length
-            console.log(dataLength);
+            // console.log(dataLength);
             const cartData = data.Product.map((data) => {
                 let array = {}
                 array.quantity = data.quantity
@@ -458,7 +458,7 @@ module.exports = {
                     array.Brand = data.ProductId.Brand
                     return array
                 })
-                console.log('cartDatas ', cartDatas)
+                // console.log('cartDatas ', cartDatas)
                 // cartDataquantity = cartData
                 const orderdata = {
                     paymentMethod: "cash",
@@ -488,7 +488,7 @@ module.exports = {
                     await cart.deleteOne({ UserId })
                     res.json({ paymentSuccess: true })
                 } else {
-                    console.log('orderId', orderId);
+                    // console.log('orderId', orderId);
                     const totalBill = data.totalBill
                     let options = {
                         amount: totalBill * 100,  // amount in the smallest currency unit
@@ -496,8 +496,8 @@ module.exports = {
                         receipt: "" + orderId
                     };
                     instance.orders.create(options, function (err, order) {
-                        console.log(order);
-                        console.log("error", err);
+                        // console.log(order);
+                        // console.log("error", err);
                         res.json(order)
                     });
                 }
@@ -552,7 +552,7 @@ module.exports = {
     verifyPayment: async (req, res) => {
         try {
             const UserId = req.session.UserId
-            console.log(UserId)
+            // console.log(UserId)
             const crypto = require('crypto')
             let hmac = crypto.createHmac('sha256', 'ktvJfYCp7BxR2pAydfHF1Y79')
             hmac.update(req.body.payment.razorpay_order_id + '|' + req.body.payment.razorpay_payment_id)
@@ -565,7 +565,7 @@ module.exports = {
                     let orderIndex = userOrder.orders.findIndex(p => p._id == orderId)
                     if (orderIndex >= 0) {
                         let changeStatus = userOrder.orders[orderIndex]
-                        console.log(changeStatus);
+                        // console.log(changeStatus);
                         changeStatus.orderStatus = "Placed"
                         changeStatus.paymentMethod = "online payment"
                         userOrder.orders[orderIndex] = changeStatus
@@ -607,7 +607,7 @@ module.exports = {
     orderdetail: async (req, res) => {
         const UserId = req.session.UserId
         try {
-            console.log('req.params.id', req.params.id);
+            // console.log('req.params.id', req.params.id);
             const data = await order.findOne({ UserId }).populate('orders.cart').exec()
             if (data) {
                 const orderData = data.orders
@@ -707,7 +707,7 @@ module.exports = {
 
     orderCancel:async(req,res)=>{
           const UserId = req.session.UserId
-          console.log(req.params.id);
+        //   console.log(req.params.id);
           const data = await order.findOne({userId:UserId}).populate('orders.cart').exec()
           if(data){
           const orderIndex  = data.orders.findIndex(p => p._id == req.params.id)

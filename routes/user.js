@@ -26,8 +26,8 @@ router.route('/editprofile/:id')
 router.get('/shopsingle/:id',controller.shopsingle)
 
 router.route('/otp')
-      .get(session,controller.otp)
-      .post(session,controller.postotp)
+      .get(controller.otp)
+      .post(controller.postotp)
 router.get("/cart/:id",session,controller.cart)
 
 router.route('/cartList')
@@ -54,9 +54,9 @@ router.get('/wishListPage',session,controller.wishListPage)
 
 router.get('/deletewishlist/:id',session,controller.deletewishlist)
 
-router.post('/verifyPayment',controller.verifyPayment)
+router.post('/verifyPayment',session,controller.verifyPayment)
 
-router.get('/orderSuccess',controller.orderSuccess)
+router.get('/orderSuccess',session,controller.orderSuccess)
 
 router.get('/orderlist',session,controller.orderlist)
 
@@ -74,10 +74,10 @@ router.route('/editaddress/:id')
       .get(session,controller.editAddress)
       .post(session,controller.postEditAddress)
 
-router.get("/orderCancel/:id",controller.orderCancel)  
+router.get("/orderCancel/:id",session,controller.orderCancel)  
 
-router.post('/applyCoupon',controller.applyCoupon)
+router.post('/applyCoupon',session,controller.applyCoupon)
 
-router.get('/logout',controller.logout)
+router.get('/logout',session,controller.logout)
 
 module.exports = router;
