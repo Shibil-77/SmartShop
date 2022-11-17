@@ -34,10 +34,10 @@ module.exports = {
      const orderdetail = {}
      orderdetail.TotalEarnings = TotalEarnings
      orderdetail.totalSales = totalSales
-     console.log(orderdetail)
+   //   console.log(orderdetail)
      const AdminId = req.session.AdminId
      const AdminData = await admin.findById(AdminId)
-     console.log(AdminData)
+   //   console.log(AdminData)
      res.render('admin/dashboard',{totalPriceData,dateData,paymentDataOnline,paymentDataCod,ProfitData,orderdetail,AdminData})
    },
    adminsignup: (req, res) => {
@@ -62,7 +62,7 @@ module.exports = {
                const {Name,Email}=AdminData
                AdminData.Password = bcryptpassword
                AdminData.Admin = false
-               console.log(AdminData);
+               // console.log(AdminData);
                const adminData = new Admin(AdminData)
               await adminData.save()    
               res.json({ status: true })
@@ -90,15 +90,15 @@ module.exports = {
                      res.json({ status: true })
                   } else {
                      res.json({ passworError: true })
-                     // console.log("password invalied");
+                     console.log("password invalied");
                   }
                })
             } else {
                res.json({ accessError: true })
-               // console.log("block");
+               console.log("block");
             }
          } else {
-            // console.log("email error");
+            console.log("email error");
             res.json({ emailError: true })
          }
       } catch (error) {
@@ -233,20 +233,20 @@ module.exports = {
                data.Delete =false
                if(database_image.length!==0){
                   let productData = new products(data)  
-                  console.log(productData); 
+                  // console.log(productData); 
                  await productData.save()
                   res.redirect('/admin/product')
                }else{
-                console.log("not 3 req.files");
+               //  console.log("not 3 req.files");
                }
             }else{
-               console.log("not req.files");
+               // console.log("not req.files");
             }     
          }else{
-            console.log("req.body");
+            // console.log("req.body");
          }
       } catch (error) {
-         console.log("===============12===========");
+         // console.log("===============12===========");
          res.redirect('/admin/error')
       }
    },
@@ -402,10 +402,10 @@ module.exports = {
                 await  bannerData.save()
                 res.redirect('/admin/bannerList')
                 }else{
-              console.log("pleace add image");
+            //   console.log("pleace add image");
                 }
             }else{
-               console.log("pleace add image");
+               // console.log("pleace add image");
             }  
          }else{
              res.redirect('/admin/error') 
@@ -454,7 +454,7 @@ module.exports = {
                const image = req.file
                if(req.file){
                   Data.bannerimage = image.filename
-                  console.log(Data);
+                  // console.log(Data);
                }
                await banner.findOneAndUpdate(  
                   { _id: mongoose.Types.ObjectId(_id)},
@@ -516,7 +516,7 @@ module.exports = {
           if(data){
             const orderData = data.orders
             const Dataorders = orderData.find((data) => data.id == req.params.orderId)
-            console.log(Dataorders)
+            // console.log(Dataorders)
             if(Dataorders){
                const orderdetail = Dataorders.cart
                const addressId = order.addressId
@@ -545,7 +545,7 @@ module.exports = {
                   let orderIndex = data.orders.findIndex(p => p._id == req.params.orderId)
                     if (orderIndex >= 0) {
                    let changeStatusOrder = data.orders[orderIndex]
-                   console.log(changeStatusOrder)
+                  //  console.log(changeStatusOrder)
                     if(changeStatusOrder.orderStatus == "pending" ){
                      changeStatusOrder.orderStatus = "shipped"
                     }else if(changeStatusOrder.orderStatus == "shipped"){
@@ -576,7 +576,7 @@ module.exports = {
 
    postAddCoupon:async(req,res)=>{
       const couponData = new coupon(req.body)
-      console.log(couponData)
+      // console.log(couponData)
        await couponData.save()
        res.json({status:true})
    },
@@ -585,7 +585,7 @@ module.exports = {
       try {
        const couponData =await coupon.find()
        if(couponData){
-         console.log(couponData)
+         // console.log(couponData)
            res.render('admin/coupon-list',{couponData})
        }else{
 
@@ -597,7 +597,7 @@ module.exports = {
 
    deleteCoupon:async(req,res)=>{
           const _id = req.params.id
-          console.log(_id)
+         //  console.log(_id)
           const success = await dataCheck(_id,banner)
               if(success){
                await coupon.deleteOne(
@@ -642,7 +642,7 @@ module.exports = {
       data[i].proggress = Number(data[i].totalPrice) - Number(data[i].profit)
   }
   let salesReport = data
-  console.log(salesReport);
+//   console.log(salesReport);
    res.render("admin/sales",{salesReport})
    }
 }

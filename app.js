@@ -5,6 +5,7 @@ const userRouter = require('./routes/user')
 const adminRouter = require('./routes/admin')
 const dataBase = require('./server')
 const session = require('express-session')
+const nocache = require("nocache");
 
 
 // set the view engine to ejs
@@ -21,9 +22,10 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge:60000*20}
-  }))
+    cookie: { maxAge:600000*20}
+}))
 
+app.use(nocache());
 // set the roters
 
 app.use('/admin',adminRouter)
@@ -31,13 +33,12 @@ app.use('/',userRouter)
 
 app.use(function(req, res, next) {
   res.status(404);
-
   // respond with html page
   if (req.accepts('html')) {
     res.render('user/error', { url: req.url });
     return;
-    }
-  });
+}
+});
 
 // server coccenting 
 
