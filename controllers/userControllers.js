@@ -235,11 +235,9 @@ module.exports = {
     },
 
     cart: async (req, res) => {
-        
         if (req.session.userloggedIn) {
             const productId = req.params.id
             const product = await products.findOne({ _id: productId })
-            if(product){
                 const totalAmount = product.Price
                 const userId = req.session.UserId
                 const cartData = await cart.findOne({ UserId: userId })
@@ -266,11 +264,8 @@ module.exports = {
                         res.json({ status: true })
                     })
                 }
-            } else {
-                res.json({ notUser: true })
-            }
-            }else{
-                res.redirect('/404')
+            }else {
+                res.json({notUser: true })
             }    
     }
     ,

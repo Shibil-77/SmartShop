@@ -28,7 +28,7 @@ router.get('/shopsingle/:id',controller.shopsingle)
 router.route('/otp')
       .get(controller.otp)
       .post(controller.postotp)
-router.get("/cart/:id",session,controller.cart)
+router.get("/cart/:id",controller.cart)
 
 router.route('/cartList')
        .get(session,controller.cartList)
@@ -37,7 +37,7 @@ router.get('/shop',controller.shop)
 
 router.get('/categoryfilter/:data',controller.categoryfilter)
 
-router.get('/wishList/:id',session,controller.wishList)
+router.get('/wishList/:id',controller.wishList)
 
 router.get('/Cartquantity/:id',session,controller.Cartquantity)
 

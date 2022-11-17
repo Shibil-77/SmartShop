@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <%- include('../inclueds/head.ejs'); %>
+<%- include('../inclueds/head.ejs'); %>
 
 <body>
 
-    <%- include('../inclueds/navbar.ejs'); %>
+<%- include('../inclueds/navbar.ejs'); %>
 
 <div class="breadcrumbs">
 <div class="container">
@@ -24,7 +24,7 @@
 <div class="shopping-cart section">
 <div class="container">
     <% if (dataLength == 0) { %>
-        <h1 class="text-danger ms-4 mb-5">Pleace Add Cart</h1>
+        <h1 class="text-danger ms-4 mb-5">Please Add Cart</h1>
     <%} else { %>
         <h1 class="text-danger"></h1>
      <% } %> 
@@ -69,26 +69,23 @@
 </div>
 </div>
 <% }) %>
-
-
 <% if (dataLength == 0) { %>
-    <h1 class="text-danger ms-4 mb-5"></h1>
+<h1 class="text-danger ms-4 mb-5"></h1>
 <%} else { %>
-    
 <div class="col-7 col-md-3">
-    <div class="cart-total-amount">
-    <form action="/checkout" method="post">
-    <ul>
-    <li>Shipping<span>Free</span></li>
-    <li>Tax<span>$00.00</span></li>
-    <li class="last">You Pay<span><input type="number" name="totalBill" style=" background-color:#F6F7FB;   color:#32B87D; font-weight:700;  border:none;" class="input-number"  id="totalBill" data-min="1" readonly data-max="1000" value="<%=cartData.totalBill%>"></span></li>
-    </ul>
-    <div class="checkout-section">
-    <input type="submit" class="btn checkout-btn" value="Continue shopping">
-    </div>
-    </form>
-    </div>
-    </div>
+<div class="cart-total-amount">
+<form action="/checkout" method="post">
+<ul>
+<li>Shipping<span>Free</span></li>
+<li>Tax<span>$00.00</span></li>
+<li class="last">You Pay<span><input type="number" name="totalBill" style=" background-color:#F6F7FB;   color:#32B87D; font-weight:700;  border:none;" class="input-number"  id="totalBill" data-min="1" readonly data-max="1000" value="<%=cartData.totalBill%>"></span></li>
+</ul>
+<div class="checkout-section">
+<input type="submit" class="btn checkout-btn" value="Continue shopping">
+</div>
+</form>
+</div>
+</div>
 <% } %> 
 </div>
 </div>
