@@ -1,4 +1,4 @@
-
+require('dotenv').config()
 const users = require('../models/schema/user-schema')
 const products = require('../models/schema/product-schema')
 const banner = require('../models/schema/banner-schema')
@@ -28,7 +28,6 @@ const instance = new Razorpay({
 let orderId
 let userError = null
 module.exports = {
-
     home: async (req, res) => {
         try {
             const banner_Data = await banner.find()

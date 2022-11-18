@@ -302,7 +302,11 @@ $.ajax({
                   Price = totalBills - 1000
                 }
                 document.getElementById('totalBill').value = Price
-                document.getElementById('total').value = Price
+              //   Swal.fire({
+              //     icon: 'success',
+              //     title: 'Save',
+              //     text: 'Coupon Success',
+              //  })
 
            }else if(response.couponExpiredDateError){
                Swal.fire({

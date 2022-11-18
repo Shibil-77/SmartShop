@@ -7,7 +7,6 @@ const dataBase = require('./server')
 const session = require('express-session')
 const nocache = require("nocache");
 
-
 // set the view engine to ejs
 
 app.set('view engine', 'ejs');
