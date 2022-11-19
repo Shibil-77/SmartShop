@@ -6,7 +6,7 @@ module.exports = {
         useUnifiedTopology:true,
     }  
     try{
-        mongoose.connect("mongodb://localhost:27017/test").then((data)=>{
+        mongoose.connect("mongodb+srv://Shibil:3SCSNGMjlr4GOIxG@cluster0.fxwwlws.mongodb.net/smartshop?retryWrites=true&w=majority").then((data)=>{
             connectionParams,
             console.log("Databse connected");
         }).catch((error)=>{

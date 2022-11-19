@@ -13,13 +13,12 @@ const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const twilioDatas = require('../twilio/twilio')
 const RazorpayData = require('../Razorpay/razorpay')
-const dataCheck = require('../Middlewares/data-checking')
 
-let accountSid = twilioDatas.accountSid
-let authToken = twilioDatas.authToken
-let verifySid = twilioDatas.verifySid
-const key_id = RazorpayData.key_id
-const key_secret = RazorpayData.key_secret
+let accountSid = process.env.ACCOUNT_SID
+let authToken = process.env.AUTH_TOKEN
+let verifySid = process.env.VERIFY_SID
+const key_id = process.env.KEY_ID
+const key_secret = process.env.KEY_SECRET
 const client = require('twilio')(accountSid, authToken);
 const instance = new Razorpay({
     key_id: key_id,

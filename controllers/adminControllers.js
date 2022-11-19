@@ -18,27 +18,32 @@ module.exports = {
       res.render('admin/admin-error')
    },
    dashboard: async (req, res) => {
-      const salesData = await Middlewares.sales()
-      const totalPriceData = salesData.map((data) => data.totalPrice)
-      const dateData = salesData.map((data) => data._id.date)
-      const ProfitData = salesData.map((value) => {
-         let profitvalue = value.totalPrice * 70 / 100
-         let Profit = value.totalPrice - profitvalue
-         return Profit
-      })
-      const paymentDataOnline = await Middlewares.orderPaymentMethodOnline()
-      const paymentDataCod = await Middlewares.orderPaymentMethodCod()
-      const TotalEarning = salesData.reduce((data, total) => data.totalPrice + total)
-      const TotalEarnings = TotalEarning.totalPrice
-      const totalSales = Number(paymentDataOnline) + Number(paymentDataCod)
-      const orderdetail = {}
-      orderdetail.TotalEarnings = TotalEarnings
-      orderdetail.totalSales = totalSales
-      //   console.log(orderdetail)
-      const AdminId = req.session.AdminId
-      const AdminData = await admin.findById(AdminId)
-      //   console.log(AdminData)
-      res.render('admin/dashboard', { totalPriceData, dateData, paymentDataOnline, paymentDataCod, ProfitData, orderdetail, AdminData })
+      try {
+         const salesData = await Middlewares.sales()
+         const totalPriceData = salesData.map((data) => data.totalPrice)
+         const dateData = salesData.map((data) => data._id.date)
+         const ProfitData = salesData.map((value) => {
+            let profitvalue = value.totalPrice * 70 / 100
+            let Profit = value.totalPrice - profitvalue
+            return Profit
+         })
+         const paymentDataOnline = await Middlewares.orderPaymentMethodOnline()
+         const paymentDataCod = await Middlewares.orderPaymentMethodCod()
+         const TotalEarning = salesData.reduce((data, total) => data.totalPrice + total)
+         const TotalEarnings = TotalEarning.totalPrice
+         const totalSales = Number(paymentDataOnline) + Number(paymentDataCod)
+         const orderdetail = {}
+         orderdetail.TotalEarnings = TotalEarnings
+         orderdetail.totalSales = totalSales
+         //   console.log(orderdetail)
+         const AdminId = req.session.AdminId
+         const AdminData = await admin.findById(AdminId)
+         //   console.log(AdminData)
+         res.render('admin/dashboard', { totalPriceData, dateData, paymentDataOnline, paymentDataCod, ProfitData, orderdetail, AdminData })
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+    
    },
    adminsignup: (req, res) => {
       res.render('admin/adminsignup')
