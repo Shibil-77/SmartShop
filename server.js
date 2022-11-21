@@ -8,13 +8,13 @@ module.exports = {
     try{
         mongoose.connect("mongodb+srv://Shibil:3SCSNGMjlr4GOIxG@cluster0.fxwwlws.mongodb.net/smartshop?retryWrites=true&w=majority").then((data)=>{
             connectionParams,
-            console.log("Databse connected");
+            console.log("Database connected");
         }).catch((error)=>{
-            throw new Error('Error')
+            console.log("Database Failed");
         })
         
     }catch(err){
-        console.log("Database Failedeeee");
+        console.log("Database Failed");
     }
 }
 }
