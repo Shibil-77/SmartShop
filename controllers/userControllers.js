@@ -11,8 +11,6 @@ const coupon = require("../models/schema/coupon")
 const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
-const twilioDatas = require('../twilio/twilio')
-const RazorpayData = require('../Razorpay/razorpay')
 
 let accountSid = process.env.ACCOUNT_SID
 let authToken = process.env.AUTH_TOKEN
