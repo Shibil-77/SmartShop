@@ -35,10 +35,8 @@ module.exports = {
          const orderdetail = {}
          orderdetail.TotalEarnings = TotalEarnings
          orderdetail.totalSales = totalSales
-         //   console.log(orderdetail)
          const AdminId = req.session.AdminId
          const AdminData = await admin.findById(AdminId)
-         //   console.log(AdminData)
          res.render('admin/dashboard', { totalPriceData, dateData, paymentDataOnline, paymentDataCod, ProfitData, orderdetail, AdminData })
       } catch (error) {
          res.redirect('/admin/error')
@@ -67,7 +65,6 @@ module.exports = {
                const { Name, Email } = AdminData
                AdminData.Password = bcryptpassword
                AdminData.Admin = false
-               // console.log(AdminData);
                const adminData = new Admin(AdminData)
                await adminData.save()
                res.json({ status: true })
@@ -80,7 +77,6 @@ module.exports = {
       } catch (error) {
          res.redirect('/admin/error')
       }
-
    },
 
    postadminlogin: async (req, res) => {
@@ -95,15 +91,12 @@ module.exports = {
                      res.json({ status: true })
                   } else {
                      res.json({ passworError: true })
-                     console.log("password invalied");
                   }
                })
             } else {
                res.json({ accessError: true })
-               console.log("block");
             }
          } else {
-            console.log("email error");
             res.json({ emailError: true })
          }
       } catch (error) {

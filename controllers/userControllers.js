@@ -1,4 +1,6 @@
 require('dotenv').config()
+            //    require schema
+
 const users = require('../models/schema/user-schema')
 const products = require('../models/schema/product-schema')
 const banner = require('../models/schema/banner-schema')
@@ -8,9 +10,14 @@ const wishList = require('../models/schema/wishList_schema')
 const address = require('../models/schema/address')
 const order = require('../models/schema/orders')
 const coupon = require("../models/schema/coupon")
+    
+       //    require npm 
+   
 const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
+
+
 
 let accountSid = process.env.ACCOUNT_SID
 let authToken = process.env.AUTH_TOKEN
@@ -62,12 +69,12 @@ module.exports = {
     Profile: async (req, res) => {
         let UserId = req.session.UserId
         let profile = await users.findOne({ _id: UserId })
-        if(profile){
+        if (profile) {
             res.render('user/profile', { profile, UserId })
-        }else{
+        } else {
             res.redirect('/404')
         }
-       
+
     },
 
     editProfile: async (req, res) => {
@@ -75,26 +82,25 @@ module.exports = {
             const UserId = req.session.UserId
             const profileId = req.params.id
             const Profile = await users.findOne({ _id: profileId })
-            if(Profile){
-                res.render('user/editProfile', { Profile,UserId})
-            }else{
+            if (Profile) {
+                res.render('user/editProfile', { Profile, UserId })
+            } else {
                 res.redirect('/404')
             }
         } catch (error) {
             res.redirect('/404')
-        } 
+        }
     },
 
-    logout:(req,res)=>{
+    logout: (req, res) => {
         req.session.userloggedIn = false
-        req.session.UserId =null
+        req.session.UserId = null
         res.redirect('/')
     },
 
     postProfile: async (req, res) => {
         try {
             ProfileId = req.params.id
-            // console.log(ProfileId);
             await users.findOneAndUpdate(
                 { _id: mongoose.Types.ObjectId(ProfileId) },
                 {
@@ -114,15 +120,15 @@ module.exports = {
     shopsingle: async (req, res) => {
         try {
             let product = await products.findOne({ _id: req.params.id })
-            if(product){
+            if (product) {
                 let UserId = req.session.UserId
                 res.render('user/shopsingle', { product, UserId })
-            }else{
+            } else {
                 res.redirect('/404')
-            } 
+            }
         } catch (error) {
             res.redirect('/404')
-        }  
+        }
     },
 
     otp: (req, res) => {
@@ -137,8 +143,8 @@ module.exports = {
         let confirmPassword = user.confirmPassword
         if (Password === confirmPassword) {
             let UserData = await users.findOne({ Email: user.Email })
-            let UserPhone = await users.findOne({Phone:user.Phone})
-            if (!UserData||!UserPhone) {
+            let UserPhone = await users.findOne({ Phone: user.Phone })
+            if (!UserData || !UserPhone) {
                 req.session.userData = user
                 // Download the helper library from https://www.twilio.com/docs/node/install
                 // Find your Account SID and Auth Token at twilio.com/console
@@ -148,7 +154,6 @@ module.exports = {
                 client.verify.v2.services(verifySid)
                     .verifications
                     .create({ to: '+91' + user.Phone, channel: 'sms' })
-                    // .then(verification => console.log(verification.status));
                 res.json({ status: true })
 
             } else {
@@ -156,7 +161,6 @@ module.exports = {
             }
         } else {
             res.json({ confirmpasswordError: true })
-            // console.log("confirmPassword");
         }
     },
     //    <- ========dologin======== ->
@@ -190,79 +194,78 @@ module.exports = {
     //    <- ======== edit profile======== ->
 
     postotp: (req, res) => {
-    try {
-        client.verify.v2.services(verifySid)
-        .verificationChecks
-        .create({ to: '+91' + req.session.userData.Phone, code: req.body.otp })
-        .then(async (verification_check) => {
+        try {
+            client.verify.v2.services(verifySid)
+                .verificationChecks
+                .create({ to: '+91' + req.session.userData.Phone, code: req.body.otp })
+                .then(async (verification_check) => {
 
-            if (verification_check.status == "approved") {
-                let UserData = req.session.userData
-                let bcryptpassword = await bcrypt.hash(UserData.Password, 10)
-                let today = new Date();
-                let dd = String(today.getDate()).padStart(2, '0');
-                let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                let yyyy = today.getFullYear();
-                today = mm + '/' + dd + '/' + yyyy;
+                    if (verification_check.status == "approved") {
+                        let UserData = req.session.userData
+                        let bcryptpassword = await bcrypt.hash(UserData.Password, 10)
+                        let today = new Date();
+                        let dd = String(today.getDate()).padStart(2, '0');
+                        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                        let yyyy = today.getFullYear();
+                        today = mm + '/' + dd + '/' + yyyy;
 
-                const userData = new users({
-                    Name: UserData.Name,
-                    Email: UserData.Email,
-                    Phone: UserData.Phone,
-                    Password: bcryptpassword,
-                    Date: today,
-                    Action: true
-                })
-                await userData.save()
-                    .then(data => {
-                        req.session.UserId = data.id
+                        const userData = new users({
+                            Name: UserData.Name,
+                            Email: UserData.Email,
+                            Phone: UserData.Phone,
+                            Password: bcryptpassword,
+                            Date: today,
+                            Action: true
+                        })
+                        await userData.save()
+                            .then(data => {
+                                req.session.UserId = data.id
+                                req.session.userData = null
+                                req.session.userloggedIn = true
+                                res.redirect('/')
+                            })
+                    } else {
                         req.session.userData = null
-                        req.session.userloggedIn = true
-                        res.redirect('/')
-                    })
-            } else {
-                req.session.userData = null
-                // console.log("OTP ERROR");
-            }
-        });
-    } catch (error) {
-        res.redirect('/404')
-    }  
+                    }
+                });
+        } catch (error) {
+            res.redirect('/404')
+        }
     },
 
     cart: async (req, res) => {
         if (req.session.userloggedIn) {
             const productId = req.params.id
             const product = await products.findOne({ _id: productId })
-                const totalAmount = product.Price
-                const userId = req.session.UserId
-                const cartData = await cart.findOne({ UserId: userId })
-                if (cartData) {
-                    let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
-                    if (productIndex >= 0) {
-                        cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity) + 1
-                        await cartData.save()
-                        res.json({ status: true })
-                    } else {
-                        cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
-                        await cartData.save()
-                        res.json({ status: true })
-                    }
+            const totalAmount = product.Price
+            const userId = req.session.UserId
+            const cartData = await cart.findOne({ UserId: userId })
+            if (cartData) {
+                let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
+                if (productIndex >= 0) {
+                    cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity) + 1
+                    await cartData.save()
+                    res.json({ status: true })
                 } else {
-                    cart.create({
-                        UserId: mongoose.Types.ObjectId(userId),
-                        totalBill: totalAmount,
-                        Product: [{
-                            ProductId: mongoose.Types.ObjectId(productId),
-                            quantity: 1
-                        }]
-                    }).then((data) => {
-                        res.json({ status: true })
-                    })
+                    cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
+                    await cartData.save()
+                    res.json({ status: true })
                 }
-            }else {
-                res.json({notUser: true })
-            }    
+            } else {
+                cart.create({
+                    UserId: mongoose.Types.ObjectId(userId),
+                    totalBill: totalAmount,
+                    Product: [{
+                        ProductId: mongoose.Types.ObjectId(productId),
+                        quantity: 1
+                    }]
+                }).then((data) => {
+                    res.json({ status: true })
+                })
+            }
+        } else {
+            res.json({ notUser: true })
+        }
     }
     ,
     cartList: async (req, res) => {
@@ -270,7 +273,6 @@ module.exports = {
         const data = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
         if (data) {
             const dataLength = data.Product.length
-            // console.log(dataLength);
             const cartData = data.Product.map((data) => {
                 let array = {}
                 array.quantity = data.quantity
@@ -304,12 +306,12 @@ module.exports = {
     categoryfilter: async (req, res) => {
         req.session.categoryData = null
         let categoryData = await products.find({ $and: [{ Delete: false }, { Category: req.params.data }] })
-        if(categoryData){
+        if (categoryData) {
             req.session.categoryData = categoryData
             res.redirect('/shop')
-        }else{
+        } else {
             res.redirect('/404')
-        }    
+        }
     },
 
     wishList: async (req, res) => {
@@ -321,7 +323,6 @@ module.exports = {
                 const wishListData = await wishList.findOne({ UserId: userId })
                 if (wishListData) {
                     let productIndex = wishListData.Product.findIndex(p => p.ProductId == _id)
-                    // let productIndex = wishList.Product.findIndex({ProductId :{ $eq :productId}})
                     if (productIndex >= 0) {
                         res.json({ wishList: true })
                     } else {
@@ -404,11 +405,11 @@ module.exports = {
     checkoutpage: async (req, res) => {
         try {
             let totalBill = req.body.totalBill
-        const UserId = req.session.UserId
-        const addressData = await address.find({ UserId }).limit(3);
-        res.render('user/checkout', { UserId, totalBill, addressData })
+            const UserId = req.session.UserId
+            const addressData = await address.find({ UserId }).limit(3);
+            res.render('user/checkout', { UserId, totalBill, addressData })
         } catch (error) {
-           res,redirect('/404') 
+            res, redirect('/404')
         }
     },
 
@@ -436,7 +437,7 @@ module.exports = {
                     await addressData.save()
                     addressId = addressData.id
                 }
-                let today = new Date().toJSON().slice(0,10)
+                let today = new Date().toJSON().slice(0, 10)
                 const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
                 const cartDatas = cartData.Product.map((data) => {
                     let array = {}
@@ -449,8 +450,6 @@ module.exports = {
                     array.Brand = data.ProductId.Brand
                     return array
                 })
-                // console.log('cartDatas ', cartDatas)
-                // cartDataquantity = cartData
                 const orderdata = {
                     paymentMethod: "cash",
                     paymentAmount: data.totalBill,
@@ -479,7 +478,6 @@ module.exports = {
                     await cart.deleteOne({ UserId })
                     res.json({ paymentSuccess: true })
                 } else {
-                    // console.log('orderId', orderId);
                     const totalBill = data.totalBill
                     let options = {
                         amount: totalBill * 100,  // amount in the smallest currency unit
@@ -487,8 +485,6 @@ module.exports = {
                         receipt: "" + orderId
                     };
                     instance.orders.create(options, function (err, order) {
-                        // console.log(order);
-                        // console.log("error", err);
                         res.json(order)
                     });
                 }
@@ -518,10 +514,10 @@ module.exports = {
                 }
             } else {
                 res.redirect('/login')
-            }  
+            }
         } catch (error) {
             res.redirect('/404')
-        } 
+        }
     },
 
 
@@ -543,20 +539,18 @@ module.exports = {
     verifyPayment: async (req, res) => {
         try {
             const UserId = req.session.UserId
-            // console.log(UserId)
             const crypto = require('crypto')
             let hmac = crypto.createHmac('sha256', 'ktvJfYCp7BxR2pAydfHF1Y79')
             hmac.update(req.body.payment.razorpay_order_id + '|' + req.body.payment.razorpay_payment_id)
             hmac = hmac.digest('hex')
             if (hmac == req.body.payment.razorpay_signature) {
-                let userOrder = await order.findOne({userId:UserId})
+                let userOrder = await order.findOne({ userId: UserId })
                 if (userOrder) {
                     let index = userOrder.orders.length
                     orderId = userOrder.orders[index - 1].id
                     let orderIndex = userOrder.orders.findIndex(p => p._id == orderId)
                     if (orderIndex >= 0) {
                         let changeStatus = userOrder.orders[orderIndex]
-                        // console.log(changeStatus);
                         changeStatus.orderStatus = "Placed"
                         changeStatus.paymentMethod = "online payment"
                         userOrder.orders[orderIndex] = changeStatus
@@ -598,7 +592,6 @@ module.exports = {
     orderdetail: async (req, res) => {
         const UserId = req.session.UserId
         try {
-            // console.log('req.params.id', req.params.id);
             const data = await order.findOne({ UserId }).populate('orders.cart').exec()
             if (data) {
                 const orderData = data.orders
@@ -680,7 +673,7 @@ module.exports = {
         try {
             const addressId = req.params.id
             const addressData = req.body
-            const userAddress = await address.findOne({ _id:mongoose.Types.ObjectId(addressId) })
+            const userAddress = await address.findOne({ _id: mongoose.Types.ObjectId(addressId) })
             if (userAddress) {
                 await address.findOneAndUpdate(
                     { _id: mongoose.Types.ObjectId(addressId) },
@@ -696,52 +689,57 @@ module.exports = {
         }
     },
 
-    orderCancel:async(req,res)=>{
-          const UserId = req.session.UserId
+    orderCancel: async (req, res) => {
+        try {
+            const UserId = req.session.UserId
         //   console.log(req.params.id);
-          const data = await order.findOne({userId:UserId}).populate('orders.cart').exec()
-          if(data){
-          const orderIndex  = data.orders.findIndex(p => p._id == req.params.id)
-            if(orderIndex >=0){
+        const data = await order.findOne({ userId: UserId }).populate('orders.cart').exec()
+        if (data) {
+            const orderIndex = data.orders.findIndex(p => p._id == req.params.id)
+            if (orderIndex >= 0) {
                 let changeStatusOrder = data.orders[orderIndex]
                 changeStatusOrder.orderStatus = "cancel"
-                  data.orders[orderIndex] = changeStatusOrder
-                  await data.save()
-                  res.redirect('/orderlist')
-            }else{
+                data.orders[orderIndex] = changeStatusOrder
+                await data.save()
+                res.redirect('/orderlist')
+            } else {
                 res.redirect('/404')
             }
-          }else{
+        } else {
             res.redirect('/404')
-          }
-        },
-
-        applyCoupon:async(req,res)=>{
-            try {
-                const UserId = req.session.UserId
-                const couponData = await coupon.findOne({couponId:req.body.couponId})
-                if(couponData){
-                    const couponExist = couponData.userData.findIndex(p => p.userId == UserId)
-                    if(couponExist == -1){
-                        const currentDate = new Date()
-                        if(currentDate <= couponData.couponExpiredDate){
-                           await coupon.updateOne(
-                                {couponId:req.body.couponId}, 
-                                { $push: { userData: {userId:UserId}}}
-                            )
-                            res.json({status:true,couponData:couponData})
-                        }else{
-                            res.json({couponExpiredDateError:true})
-                        }
-                    }else{
-                        res.json({couponExistError:true})
-                    }
-                }else{
-                    res.json({couponDataError:true})
-                }
-            } catch (error) {
-                res.redirect('/404')
-            } 
+        } 
+        } catch (error) {
+            res.redirect('/404')
         }
+       
+    },
+
+    applyCoupon: async (req, res) => {
+        try {
+            const UserId = req.session.UserId
+            const couponData = await coupon.findOne({ couponId: req.body.couponId })
+            if (couponData) {
+                const couponExist = couponData.userData.findIndex(p => p.userId == UserId)
+                if (couponExist == -1) {
+                    const currentDate = new Date()
+                    if (currentDate <= couponData.couponExpiredDate) {
+                        await coupon.updateOne(
+                            { couponId: req.body.couponId },
+                            { $push: { userData: { userId: UserId } } }
+                        )
+                        res.json({ status: true, couponData: couponData })
+                    } else {
+                        res.json({ couponExpiredDateError: true })
+                    }
+                } else {
+                    res.json({ couponExistError: true })
+                }
+            } else {
+                res.json({ couponDataError: true })
+            }
+        } catch (error) {
+            res.redirect('/404')
+        }
+    }
 }
 
