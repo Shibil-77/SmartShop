@@ -11,7 +11,8 @@ const bcrypt = require('bcrypt')
 const dataCheck = require('../Middlewares/data-checking')
 const Middlewares = require("../Middlewares/dashboard")
 const admin = require('../models/schema/admin')
-
+const path = require('path')
+const fs = require('fs')
 
 module.exports = {
    adminError: (req, res) => {
@@ -260,13 +261,19 @@ module.exports = {
             const image = req.files
             if (req.files.length === 3) {
                database_image = image.map((data) => data.filename)
-               Data.moreImage = database_image
+               Data.moreImage = database_image 
             }
-            await products.findOneAndUpdate(
+           const product = await products.findOneAndUpdate(
                { _id: mongoose.Types.ObjectId(_id) },
                {
                   $set: Data
                })
+               console.log(product)
+               let imagePath = path.join(__dirname, '../', '/public', '/img','/product')
+               console.log(imagePath)
+               for (let i = 0; i < req.files.length; i++) {
+                   fs.unlinkSync(`${imagePath}/${product.moreImage[i]}`);
+               }
             res.redirect('/admin/product')
 
          } else {

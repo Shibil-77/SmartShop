@@ -698,10 +698,14 @@ module.exports = {
             const orderIndex = data.orders.findIndex(p => p._id == req.params.id)
             if (orderIndex >= 0) {
                 let changeStatusOrder = data.orders[orderIndex]
-                changeStatusOrder.orderStatus = "cancel"
-                data.orders[orderIndex] = changeStatusOrder
-                await data.save()
-                res.redirect('/orderlist')
+                if(changeStatusOrder.orderStatus == "Placed"){
+                    res.redirect('/orderlist')
+                }else{
+                    changeStatusOrder.orderStatus = "cancel"
+                    data.orders[orderIndex] = changeStatusOrder
+                    await data.save()
+                    res.redirect('/orderlist')
+                }    
             } else {
                 res.redirect('/404')
             }
