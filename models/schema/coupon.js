@@ -26,6 +26,10 @@ const coupon = new Schema({
     },
     userData:{
         type:[userId]
+    },
+    Amount:{
+        type:Number,
+        required:true
     }
 })
 

@@ -577,7 +577,6 @@ module.exports = {
 
    postAddCoupon: async (req, res) => {
       const couponData = new coupon(req.body)
-      // console.log(couponData)
       await couponData.save()
       res.json({ status: true })
    },

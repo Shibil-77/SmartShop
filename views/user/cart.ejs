@@ -73,7 +73,7 @@
 <% if (dataLength == 0) { %>
 <h1 class="text-danger ms-4 mb-5"></h1>
 <%} else { %>
-<div class="col-7 col-md-3">
+<div class="col-12 col-md-5">
 <div class="cart-total-amount">
 <form action="/checkout" method="post">
 <ul>
@@ -92,6 +92,7 @@
 </div>
 </div>
 </div>
+
 <%- include('../inclueds/footer.ejs'); %>
 
 <%- include('../inclueds/end.ejs'); %>

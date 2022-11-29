@@ -4,7 +4,6 @@
 
     <%- include('../inclueds/navbar.ejs'); %>
 
-
       <div class="breadcrumbs">
         <div class="container">
           <div class="row">
@@ -21,188 +20,208 @@
       </div>
       <section class="shop checkout section">
         <div class="container">
-          <form class="form" id="checkoutSubmission">     
-            <div class="accordion accordion-flush" id="accordionFlushExample"> 
+          <form class="form" id="checkoutSubmission">
+            <div class="accordion accordion-flush" id="accordionFlushExample">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-headingOne">
-                  <button class="accordion-button collapsed text-white"  style="background-color:#8493ca;" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                  <button class="accordion-button collapsed text-white"
+                    style="background-color:#8493ca;" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseOne" aria-expanded="false"
+                    aria-controls="flush-collapseOne">
                     Pleace Choose Address
                   </button>
                 </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                  aria-labelledby="flush-headingOne"
+                  data-bs-parent="#accordionFlushExample">
                   <div class="row">
-                  <% addressData.forEach(addressData=> { %>
-                    <div class="cart-total-amount col-lg-3 col-6 ms-5">
-                      <h6 class="mb-2">Pleace Choose Address</h6>
-                       <input type="radio" name="Address" value="<%=addressData.id %>">
-                            <ul>
-                                <li>Name<span><%=addressData.firstName %></span></li>
-                                <li>Phone<span><%=addressData.phoneNumber %></span></li>
-                                <li>Address<span><%=addressData.arrresLine %></span></li>
+                    <% addressData.forEach(addressData=> { %>
+                      <div class="cart-total-amount col-lg-3 col-6 ms-5">
+                        <h6 class="mb-2">Pleace Choose Address</h6>
+                        <input type="radio" name="Address" value="<%=addressData.id %>">
+                        <ul>
+                          <li>Name<span><%=addressData.firstName %></span></li>
+                            <li>Phone<span><%=addressData.phoneNumber %></span></li>
+                              <li>Address<span><%=addressData.arrresLine %></span></li>
                                 <li>Pin Code<span><%=addressData.postCode %></li>
-                            </ul>
+                                  </ul>
+                                </div>
+                                <% }) %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-8 col-12">
+                              <div class="checkout-form">
+                                <h2>Your Shipping Address</h2>
+                                <p>It is a long established fact that a reader
+                                  will be
+                                  distracted</p>
+                                <div class="row">
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>First Name<span>*</span></label>
+                                      <input type="text" name="firstName"
+                                        placeholder="">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>Last Name<span>*</span></label>
+                                      <input type="text" name="lastName"
+                                        placeholder="">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>Email Address<span>*</span></label>
+                                      <input type="email" name="email"
+                                        placeholder="">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>Phone Number<span>*</span></label>
+                                      <input type="number" name="number"
+                                        placeholder="">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>Country<span>*</span></label>
+                                      <select name="countryName" id="country-2">
+                                        <option value="AF">Afghanistan</option>
+                                        <option value="AX">Åland Islands</option>
+                                        <option value="AL">Albania</option>
+                                        <option value="DZ">Algeria</option>
+                                        <option value="AS">American Samoa</option>
+                                        <option value="AD">Andorra</option>
+                                        <option value="AO">Angola</option>
+                                        <option value="AI">Anguilla</option>
+                                        <option value="AQ">Antarctica</option>
+                                        <option value="AG">Antigua and Barbuda</option>
+                                        <option value="AR">Argentina</option>
+                                        <option value="AM">Armenia</option>
+                                        <option value="CM">Cameroon</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="CV">Cape Verde</option>
+                                        <option value="KY">Cayman Islands</option>
+                                        <option value="CF">Central African
+                                          Republic</option>
+                                        <option value="TD">Chad</option>
+                                        <option value="CL">Chile</option>
+                                        <option value="CN">China</option>
+                                        <option value="CX">Christmas Island</option>
+                                        <option value="CC">Cocos [Keeling]
+                                          Islands</option>
+                                        <option value="CO">Colombia</option>
+                                        <option value="KM">Comoros</option>
+                                        <option value="CG">Congo - Brazzaville</option>
+                                        <option value="CD">Congo - Kinshasa</option>
+                                        <option value="CK">Cook Islands</option>
+                                        <option value="CR">Costa Rica</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>State / Divition<span>*</span></label>
+                                      <select name="state">
+                                        <option value="divition"
+                                          selected="selected">New Yourk</option>
+                                        <option>Los Angeles</option>
+                                        <option>Chicago</option>
+                                        <option>Houston</option>
+                                        <option>San Diego</option>
+                                        <option>Dallas</option>
+                                        <option>Charlotte</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>Address Line 1<span>*</span></label>
+                                      <input type="text" name="addresLine"
+                                        placeholder="">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>Address Line 2<span>*</span></label>
+                                      <input type="text" name="address"
+                                        placeholder="">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                      <label>Postal Code<span>*</span></label>
+                                      <input type="number" name="postCode"
+                                        placeholder="">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="cart-total-amount col-lg-4 h-auto mt-5">
+                              <ul>
+                                <li>Cart Subtotal <span style="color:#32B87D;
+                                    font-weight:700;"><%=totalBill
+                                      %></span></li>
+                                  <li class="last">You Pay<span><input
+                                        type="number"
+                                        name="totalBill" class="input-number"
+                                        readonly
+                                        style="color:#32B87D; font-weight:700;
+                                        border:none;
+                                        background-color:#F6F7FB;"
+                                        id="totalBill" data-min="1"
+                                        data-max="1000" value="<%=totalBill %>"></span></li>
+                                  <li class="col-12"><span>
+                                      <label for="" class="text-danger" style="
+                                        font-weight:700;">Cash on Delivery</label>
+                                      <input type="radio" name="cash"
+                                        value="cash">
+                                    </span>
+                                  </li>
+                                  <li>
+                                    <label for="" class="text-danger" style="
+                                      font-weight:700;">Online
+                                      Payment</label>
+                                    <input type="radio" name="cash"
+                                      value="online"
+                                      style="color:red;">
+                                  </li>
+                                </ul>
+                                <div class="checkout-section">
+                                  <input type="submit" class="btn checkout-btn"
+                                    value="shipping">
+                                </div>
+                              </form>
+                              <div class="col-lg-12">
+                                <div class="coupon-area">
+                                  <form id="couponSubmission">
+                                    <input type="text" placeholder="Apply your
+                                      coupon" name="couponId" id="couponId">
+                                    <button class="coupon-apply-btn"
+                                      type="submit">Apply Now</button>
+                                  </form>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
                         </div>
-                      <% }) %>
-                    </div>
-                </div>
-              </div>
-            </div>
-          <div class="row">
-            <div class="col-lg-8 col-12">
-              <div class="checkout-form">
-                <h2>Your Shipping Address</h2>
-                <p>It is a long established fact that a reader will be
-                  distracted</p>
-                  <div class="row">
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>First Name<span>*</span></label>
-                        <input type="text" name="firstName" placeholder="">
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>Last Name<span>*</span></label>
-                        <input type="text" name="lastName" placeholder="">
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>Email Address<span>*</span></label>
-                        <input type="email" name="email" placeholder="">
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>Phone Number<span>*</span></label>
-                        <input type="number" name="number" placeholder="">
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>Country<span>*</span></label>
-                        <select name="countryName" id="country-2">
-                          <option value="AF">Afghanistan</option>
-                          <option value="AX">Åland Islands</option>
-                          <option value="AL">Albania</option>
-                          <option value="DZ">Algeria</option>
-                          <option value="AS">American Samoa</option>
-                          <option value="AD">Andorra</option>
-                          <option value="AO">Angola</option>
-                          <option value="AI">Anguilla</option>
-                          <option value="AQ">Antarctica</option>
-                          <option value="AG">Antigua and Barbuda</option>
-                          <option value="AR">Argentina</option>
-                          <option value="AM">Armenia</option>
-                          <option value="CM">Cameroon</option>
-                          <option value="CA">Canada</option>
-                          <option value="CV">Cape Verde</option>
-                          <option value="KY">Cayman Islands</option>
-                          <option value="CF">Central African Republic</option>
-                          <option value="TD">Chad</option>
-                          <option value="CL">Chile</option>
-                          <option value="CN">China</option>
-                          <option value="CX">Christmas Island</option>
-                          <option value="CC">Cocos [Keeling] Islands</option>
-                          <option value="CO">Colombia</option>
-                          <option value="KM">Comoros</option>
-                          <option value="CG">Congo - Brazzaville</option>
-                          <option value="CD">Congo - Kinshasa</option>
-                          <option value="CK">Cook Islands</option>
-                          <option value="CR">Costa Rica</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>State / Divition<span>*</span></label>
-                        <select name="state">
-                          <option value="divition" selected="selected">New Yourk</option>
-                          <option>Los Angeles</option>
-                          <option>Chicago</option>
-                          <option>Houston</option>
-                          <option>San Diego</option>
-                          <option>Dallas</option>
-                          <option>Charlotte</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>Address Line 1<span>*</span></label>
-                        <input type="text" name="addresLine" placeholder="">
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>Address Line 2<span>*</span></label>
-                        <input type="text" name="address" placeholder="">
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12">
-                      <div class="form-group">
-                        <label>Postal Code<span>*</span></label>
-                        <input type="number" name="postCode" placeholder="">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="cart-total-amount col-lg-4 h-auto mt-5">
-                <ul>
-                  <li>Cart Subtotal <span  style="color:#32B87D;
-                      font-weight:700;"><%=totalBill
-                        %></span></li>
-                    <li class="last">You Pay<span><input type="number"
-                          name="totalBill" class="input-number" readonly
-                          style="color:#32B87D; font-weight:700; border:none;
-                          background-color:#F6F7FB;" id="totalBill" data-min="1"
-                          data-max="1000" value="<%=totalBill %>"></span></li>
-                       <li class="col-12"><span>
-                        <label for="" class="text-danger" style="
-                          font-weight:700;">Cash on Delivery</label>
-                        <input type="radio" name="cash" value="cash">
-                      </span>
-                    </li>
-                    <li>
-                      <label for="" class="text-danger" style="
-                        font-weight:700;">Online
-                        Payment</label>
-                      <input type="radio" name="cash" value="online"
-                        style="color:red;">
-                    </li>
-                  </ul>
-                  <div class="checkout-section">
-                    <input type="submit" class="btn checkout-btn"
-                      value="shipping">
-                  </div>
-                </form>
+                      </section>
 
-                <div class="col-lg-12">
-                  <div class="coupon-area">
-                  <form  id="couponSubmission">
-                  <input type="text" placeholder="Apply your coupon" name="couponId">
-                  <button class="coupon-apply-btn" type="submit">Apply Now</button>
-                  </form>
-                  </div>
-                  </div>
+                      <%- include('../inclueds/footer.ejs'); %>
 
-                </div>
-            </div>
-          </div>
-        </section>
+                        <%- include('../inclueds/end.ejs'); %>
 
-
-
-
-
-<%- include('../inclueds/footer.ejs'); %>
-
-  <%- include('../inclueds/end.ejs'); %>
-
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-<script>
+                          <script
+                            src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                          <script>
 $("#checkoutSubmission").submit((e) => {
 e.preventDefault()
 $.ajax({
@@ -296,32 +315,34 @@ $.ajax({
                  const  disconutAmounts = totalBills*disconut/100
                  let  disconutAmount= Math.round(disconutAmounts);
                  let Price
-                if(disconutAmount <= 1000){
+                if(disconutAmount <= response.couponData.Amount){
                  Price = totalBills - disconutAmount
                 }else{
-                  Price = totalBills - 1000
+                  Price = totalBills - response.couponData.Amount
                 }
                 document.getElementById('totalBill').value = Price
-              //   Swal.fire({
-              //     icon: 'success',
-              //     title: 'Save',
-              //     text: 'Coupon Success',
-              //  })
-
+                document.getElementById('couponId').value = ''
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Save',
+                  text: 'Coupon Success',
+               })
            }else if(response.couponExpiredDateError){
+            document.getElementById('couponId').value = ''
                Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
                   text: 'already completed Expired Date',
                })
            }else if(response.couponExistError){
+            document.getElementById('couponId').value = ''
                 Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
                   text: 'already used this coupon',
                })
-             
            }else if(response.couponDataError){
+            document.getElementById('couponId').value = ''
             Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
