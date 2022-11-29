@@ -15,38 +15,14 @@ const path = require('path')
 const fs = require('fs')
 
 module.exports = {
-   adminError: (req, res) => {
-      res.render('admin/admin-error')
-   },
-   dashboard: async (req, res) => {
-      try {
-         const salesData = await Middlewares.sales()
-         const totalPriceData = salesData.map((data) => data.totalPrice)
-         const dateData = salesData.map((data) => data._id.date)
-         const ProfitData = salesData.map((value) => {
-            let profitvalue = value.totalPrice * 70 / 100
-            let Profit = value.totalPrice - profitvalue
-            return Profit
-         })
-         const paymentDataOnline = await Middlewares.orderPaymentMethodOnline()
-         const paymentDataCod = await Middlewares.orderPaymentMethodCod()
-         const TotalEarning = salesData.reduce((data, total) => data.totalPrice + total)
-         const TotalEarnings = TotalEarning.totalPrice
-         const totalSales = Number(paymentDataOnline) + Number(paymentDataCod)
-         const orderdetail = {}
-         orderdetail.TotalEarnings = TotalEarnings
-         orderdetail.totalSales = totalSales
-         const AdminId = req.session.AdminId
-         const AdminData = await admin.findById(AdminId)
-         res.render('admin/dashboard', { totalPriceData, dateData, paymentDataOnline, paymentDataCod, ProfitData, orderdetail, AdminData })
-      } catch (error) {
-         res.redirect('/admin/error')
-      }
-    
-   },
+
+
+   //  <--- ===========================----- admin -----=================---> 
+
    adminsignup: (req, res) => {
       res.render('admin/adminsignup')
    },
+
    adminlogin: (req, res) => {
       res.render('admin/adminlogin')
    },
@@ -104,8 +80,11 @@ module.exports = {
          res.redirect('/admin/error')
       }
 
-   }
-   ,
+   },
+
+   adminError: (req, res) => {
+      res.render('admin/admin-error')
+   },
 
    adminList: async (req, res) => {
       try {
@@ -143,9 +122,37 @@ module.exports = {
       }
    },
 
-   //<- ============= product  management ========== ->
 
-   // productList
+ //  <--- ===========================----- Dashboard -----=================---> 
+
+   dashboard: async (req, res) => {
+      try {
+         const salesData = await Middlewares.sales()
+         const totalPriceData = salesData.map((data) => data.totalPrice)
+         const dateData = salesData.map((data) => data._id.date)
+         const ProfitData = salesData.map((value) => {
+            let profitvalue = value.totalPrice * 70 / 100
+            let Profit = value.totalPrice - profitvalue
+            return Profit
+         })
+         const paymentDataOnline = await Middlewares.orderPaymentMethodOnline()
+         const paymentDataCod = await Middlewares.orderPaymentMethodCod()
+         const TotalEarning = salesData.reduce((data, total) => data.totalPrice + total)
+         const TotalEarnings = TotalEarning.totalPrice
+         const totalSales = Number(paymentDataOnline) + Number(paymentDataCod)
+         const orderdetail = {}
+         orderdetail.TotalEarnings = TotalEarnings
+         orderdetail.totalSales = totalSales
+         const AdminId = req.session.AdminId
+         const AdminData = await admin.findById(AdminId)
+         res.render('admin/dashboard', { totalPriceData, dateData, paymentDataOnline, paymentDataCod, ProfitData, orderdetail, AdminData })
+      } catch (error) {
+         res.redirect('/admin/error')
+      }
+    
+   },
+
+ //  <--- ===========================----- Product  Management -----=================---> 
 
    productList: async (req, res) => {
       try {
@@ -159,7 +166,6 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-   // viewProduct
 
    viewProduct: async (req, res) => {
       try {
@@ -173,8 +179,6 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-
-   //  editProduct
 
    editProduct: async (req, res) => {
       try {
@@ -195,7 +199,6 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-   // deleteProduct
 
    deleteProduct: async (req, res) => {
       try {
@@ -218,8 +221,6 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-
-   // addProduct 
 
    addProduct: async (req, res, next) => {
       try {
@@ -249,8 +250,6 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-
-   // postEditProduct
 
    postEditProduct: async (req, res) => {
       try {
@@ -284,9 +283,7 @@ module.exports = {
       }
    },
 
-   //<- ============= user  management ========== ->
-
-   //  userList
+    //  <--- ===========================----- User  Management -----=================---> 
 
    userList: async (req, res) => {
       try {
@@ -301,8 +298,6 @@ module.exports = {
       }
 
    },
-
-   //  blockUser
 
    blockUser: async (req, res) => {
       try {
@@ -330,16 +325,12 @@ module.exports = {
       }
    },
 
-   // < ============= Category  management ========== >
-
-   // addCategory 
+      //  <--- ===========================----- Category  Management -----=================---> 
 
    addCategory: (req, res) => {
       const categoryError = req.session.category
       res.render('admin/Category', { categoryError })
    },
-
-   // postCategory
 
    postCategory: async (req, res) => {
       try {
@@ -389,7 +380,7 @@ module.exports = {
       }
    },
 
-   // ========= bannner management =========
+      //  <--- ===========================----- Bannner Management -----=================---> 
 
    addbanner: (req, res) => {
       res.render('admin/addbanner')
@@ -492,6 +483,8 @@ module.exports = {
       }
    },
 
+   //  <--- ===========================----- order Management -----=================---> 
+
    adminAllOrder: async (req, res) => {
       try {
          const orderdetail = await order.aggregate([
@@ -506,6 +499,7 @@ module.exports = {
             }
          ])
          if (orderdetail) {
+            orderdetail.reverse()
             res.render('admin/all-order', { orderdetail })
          } else {
             res.redirect('/admin/error')
@@ -514,7 +508,7 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-
+   
    adminOrderDetail: async (req, res) => {
       try {
          const data = await order.findOne({ _id: req.params.id }).populate('orders.cart').exec()
@@ -542,7 +536,7 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-
+   
    paymentStatusChange: async (req, res) => {
       try {
          const data = await order.findOne({ _id: req.params.id }).populate('orders.cart').exec()
@@ -574,6 +568,8 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
+    
+   //  <--- ===========================----- Coupon Management -----=================---> 
 
    addCoupon: (req, res) => {
       res.render('admin/addcoupon')
@@ -585,7 +581,7 @@ module.exports = {
       await couponData.save()
       res.json({ status: true })
    },
-
+   
    couponList: async (req, res) => {
       try {
          const couponData = await coupon.find()
@@ -599,7 +595,7 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-
+   
    deleteCoupon: async (req, res) => {
       const _id = req.params.id
       //  console.log(_id)
@@ -612,6 +608,8 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
+   
+//  <--- ===========================----- Sales Management -----=================---> 
 
    salesReport: async (req, res) => {
       const data = await order.aggregate([
@@ -650,6 +648,7 @@ module.exports = {
       //   console.log(salesReport);
       res.render("admin/sales", { salesReport })
    }
+   
 }
 
 

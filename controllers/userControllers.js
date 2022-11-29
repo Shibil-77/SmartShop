@@ -10,7 +10,7 @@ const wishList = require('../models/schema/wishList_schema')
 const address = require('../models/schema/address')
 const order = require('../models/schema/orders')
 const coupon = require("../models/schema/coupon")
-    
+ 
        //    require npm 
    
 const Razorpay = require('razorpay')
@@ -30,66 +30,74 @@ const instance = new Razorpay({
     key_secret: key_secret
 })
 let orderId
-let userError = null
 module.exports = {
-    home: async (req, res) => {
-        try {
-            const banner_Data = await banner.find()
-            const product = await products.find({ Delete: false })
-            const UserId = req.session.UserId
-            if (banner_Data && product) {
-                res.render('user/home', { product, banner_Data, UserId })
-            } else {
-                res.redirect('/404')
-            }
-        } catch (error) {
-            res.redirect('/404')
-        }
-    },
-    orderSuccess: (req, res) => {
-        res.render("user/orderSuccess")
-    },
+     
+  //  <--- ===========================----- Register -----=================--->   
+
 
     login: (req, res) => {
-        res.render('user/loginPage')
+    res.render('user/loginPage')
     },
 
     signup: (req, res) => {
-        res.render('user/register')
+    res.render('user/register')
+    },
+  
+    otp: (req, res) => {
+    res.render('user/otp')
     },
 
-    error: (req, res) => {
-        res.render('user/error')
-    },
+    doSignup: async (req, res) => {
+    let user = req.body
+    let Password = user.Password
+    let confirmPassword = user.confirmPassword
+    if (Password === confirmPassword) {
+        let UserData = await users.findOne({ Email: user.Email })
+        let UserPhone = await users.findOne({ Phone: user.Phone })
+        if (!UserData || !UserPhone) {
+            req.session.userData = user
+            // Download the helper library from https://www.twilio.com/docs/node/install
+            // Find your Account SID and Auth Token at twilio.com/console
+            // and set the environment variables. See http://twil.io/secure
+            // const client = require('twilio')(accountSid, authToken);
 
-    forgotPassword: (req, res) => {
-        res.render('user/forgot-password')
-    },
+            client.verify.v2.services(verifySid)
+                .verifications
+                .create({ to: '+91' + user.Phone, channel: 'sms' })
+            res.json({ status: true })
 
-    Profile: async (req, res) => {
-        let UserId = req.session.UserId
-        let profile = await users.findOne({ _id: UserId })
-        if (profile) {
-            res.render('user/profile', { profile, UserId })
         } else {
-            res.redirect('/404')
+            res.json({ emailExist: true })
         }
-
+    } else {
+        res.json({ confirmpasswordError: true })
+    }
     },
 
-    editProfile: async (req, res) => {
-        try {
-            const UserId = req.session.UserId
-            const profileId = req.params.id
-            const Profile = await users.findOne({ _id: profileId })
-            if (Profile) {
-                res.render('user/editProfile', { Profile, UserId })
+    dologin: async (req, res) => {
+    let User = await users.findOne({ Email: req.body.Email })
+    if (User) {
+        if (User.Action) {
+            if (User.Email === req.body.Email) {
+                bcrypt.compare(req.body.Password, User.Password).then((data) => {
+                    if (data) {
+                        req.session.UserId = User.id
+                        req.session.userloggedIn = true
+                        res.json({ status: true })
+                    } else {
+                        res.json({ passworError: true })
+                    }
+                })
             } else {
-                res.redirect('/404')
+                res.json({ emailError: true })
             }
-        } catch (error) {
-            res.redirect('/404')
+        } else {
+            res.json({ accessError: true })
         }
+    } else {
+        res.json({ emailError: true })
+    }
+
     },
 
     logout: (req, res) => {
@@ -97,101 +105,6 @@ module.exports = {
         req.session.UserId = null
         res.redirect('/')
     },
-
-    postProfile: async (req, res) => {
-        try {
-            ProfileId = req.params.id
-            await users.findOneAndUpdate(
-                { _id: mongoose.Types.ObjectId(ProfileId) },
-                {
-                    $set: {
-                        Name: req.body.Name,
-                        Email: req.body.Email,
-                        Phone: req.body.Phone
-                    }
-                })
-            res.redirect('/profile')
-        }
-        catch (e) {
-            res.redirect('/404')
-        }
-    },
-
-    shopsingle: async (req, res) => {
-        try {
-            let product = await products.findOne({ _id: req.params.id })
-            if (product) {
-                let UserId = req.session.UserId
-                res.render('user/shopsingle', { product, UserId })
-            } else {
-                res.redirect('/404')
-            }
-        } catch (error) {
-            res.redirect('/404')
-        }
-    },
-
-    otp: (req, res) => {
-        res.render('user/otp')
-    },
-    // <- ====================================================== post method ====================================== ->
-    //   <========== dosignup ========>
-
-    doSignup: async (req, res) => {
-        let user = req.body
-        let Password = user.Password
-        let confirmPassword = user.confirmPassword
-        if (Password === confirmPassword) {
-            let UserData = await users.findOne({ Email: user.Email })
-            let UserPhone = await users.findOne({ Phone: user.Phone })
-            if (!UserData || !UserPhone) {
-                req.session.userData = user
-                // Download the helper library from https://www.twilio.com/docs/node/install
-                // Find your Account SID and Auth Token at twilio.com/console
-                // and set the environment variables. See http://twil.io/secure
-                // const client = require('twilio')(accountSid, authToken);
-
-                client.verify.v2.services(verifySid)
-                    .verifications
-                    .create({ to: '+91' + user.Phone, channel: 'sms' })
-                res.json({ status: true })
-
-            } else {
-                res.json({ emailExist: true })
-            }
-        } else {
-            res.json({ confirmpasswordError: true })
-        }
-    },
-    //    <- ========dologin======== ->
-
-    dologin: async (req, res) => {
-        let User = await users.findOne({ Email: req.body.Email })
-        if (User) {
-            if (User.Action) {
-                if (User.Email === req.body.Email) {
-                    bcrypt.compare(req.body.Password, User.Password).then((data) => {
-                        if (data) {
-                            req.session.UserId = User.id
-                            req.session.userloggedIn = true
-                            res.json({ status: true })
-                        } else {
-                            res.json({ passworError: true })
-                        }
-                    })
-                } else {
-                    res.json({ emailError: true })
-                }
-            } else {
-                res.json({ accessError: true })
-            }
-        } else {
-            res.json({ emailError: true })
-        }
-
-    },
-
-    //    <- ======== edit profile======== ->
 
     postotp: (req, res) => {
         try {
@@ -233,59 +146,36 @@ module.exports = {
         }
     },
 
-    cart: async (req, res) => {
-        if (req.session.userloggedIn) {
-            const productId = req.params.id
-            const product = await products.findOne({ _id: productId })
-            const totalAmount = product.Price
-            const userId = req.session.UserId
-            const cartData = await cart.findOne({ UserId: userId })
-            if (cartData) {
-                let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
-                if (productIndex >= 0) {
-                    cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity) + 1
-                    await cartData.save()
-                    res.json({ status: true })
-                } else {
-                    cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
-                    await cartData.save()
-                    res.json({ status: true })
-                }
+
+//  <--- ===========================----- Home -----=================--->  
+
+
+    home: async (req, res) => {
+        try {
+            const banner_Data = await banner.find()
+            const product = await products.find({ Delete: false })
+            const UserId = req.session.UserId
+            if (banner_Data && product) {
+                res.render('user/home', { product, banner_Data, UserId })
             } else {
-                cart.create({
-                    UserId: mongoose.Types.ObjectId(userId),
-                    totalBill: totalAmount,
-                    Product: [{
-                        ProductId: mongoose.Types.ObjectId(productId),
-                        quantity: 1
-                    }]
-                }).then((data) => {
-                    res.json({ status: true })
-                })
+                res.redirect('/404')
             }
-        } else {
-            res.json({ notUser: true })
+        } catch (error) {
+            res.redirect('/404')
         }
-    }
-    ,
-    cartList: async (req, res) => {
-        const UserId = req.session.UserId
-        const data = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
-        if (data) {
-            const dataLength = data.Product.length
-            const cartData = data.Product.map((data) => {
-                let array = {}
-                array.quantity = data.quantity
-                array.ProductId = data.ProductId
-                array.totalAmount = data.ProductId.Price * data.quantity
-                array.arrayId = data.id
-                return array
-            })
-            let totalBill = cartData.reduce((total, value) => total + value.totalAmount, 0)
-            cartData.totalBill = totalBill
-            res.render('user/cart', { UserId, cartData, data, dataLength })
-        } else {
-            res.redirect('/')
+    },
+
+    shopsingle: async (req, res) => {
+        try {
+            let product = await products.findOne({ _id: req.params.id })
+            if (product) {
+                let UserId = req.session.UserId
+                res.render('user/shopsingle', { product, UserId })
+            } else {
+                res.redirect('/404')
+            }
+        } catch (error) {
+            res.redirect('/404')
         }
     },
 
@@ -312,44 +202,67 @@ module.exports = {
         } else {
             res.redirect('/404')
         }
-    },
+     },
 
-    wishList: async (req, res) => {
-        try {
-            if (req.session.userloggedIn) {
-                const _id = req.params.id
-                const product = await products.findOne({ _id: _id })
-                const userId = req.session.UserId
-                const wishListData = await wishList.findOne({ UserId: userId })
-                if (wishListData) {
-                    let productIndex = wishListData.Product.findIndex(p => p.ProductId == _id)
-                    if (productIndex >= 0) {
-                        res.json({ wishList: true })
-                    } else {
-                        wishListData.Product.push({ ProductId: mongoose.Types.ObjectId(_id) })
-                        await wishListData.save()
-                        res.json({ status: true })
-                    }
-                } else {
-                    await wishList.create({
-                        UserId: mongoose.Types.ObjectId(userId),
-                        Product: [{
-                            ProductId: mongoose.Types.ObjectId(_id),
-                        }]
-                    }).then((data) => {
-                        res.json({ status: true })
-                    })
-                }
+//  <--- ===========================----- Cart -----=================---> 
+
+     cart: async (req, res) => {
+    if (req.session.userloggedIn) {
+        const productId = req.params.id
+        const product = await products.findOne({ _id: productId })
+        const totalAmount = product.Price
+        const userId = req.session.UserId
+        const cartData = await cart.findOne({ UserId: userId })
+        if (cartData) {
+            let productIndex = cartData.Product.findIndex(p => p.ProductId == productId)
+            if (productIndex >= 0) {
+                cartData.Product[productIndex].quantity = Number(cartData.Product[productIndex].quantity) + 1
+                await cartData.save()
+                res.json({ status: true })
             } else {
-                res.json({ notUser: true })
+                cartData.Product.push({ ProductId: mongoose.Types.ObjectId(productId), quantity: 1 })
+                await cartData.save()
+                res.json({ status: true })
             }
-        } catch (error) {
-            res.redirect('/404')
+        } else {
+            cart.create({
+                UserId: mongoose.Types.ObjectId(userId),
+                totalBill: totalAmount,
+                Product: [{
+                    ProductId: mongoose.Types.ObjectId(productId),
+                    quantity: 1
+                }]
+            }).then((data) => {
+                res.json({ status: true })
+            })
         }
-    },
+    } else {
+        res.json({ notUser: true })
+    }
+     },
 
+     cartList: async (req, res) => {
+    const UserId = req.session.UserId
+    const data = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
+    if (data) {
+        const dataLength = data.Product.length
+        const cartData = data.Product.map((data) => {
+            let array = {}
+            array.quantity = data.quantity
+            array.ProductId = data.ProductId
+            array.totalAmount = data.ProductId.Price * data.quantity
+            array.arrayId = data.id
+            return array
+        })
+        let totalBill = cartData.reduce((total, value) => total + value.totalAmount, 0)
+        cartData.totalBill = totalBill
+        res.render('user/cart', { UserId, cartData, data, dataLength })
+    } else {
+        res.redirect('/')
+    }
+     },
 
-    Cartquantity: async (req, res) => {
+     Cartquantity: async (req, res) => {
         try {
             const _id = req.params.id
             const UserId = req.session.UserId
@@ -366,7 +279,7 @@ module.exports = {
         } catch (error) {
             res.redirect('/404')
         }
-    },
+     },
 
     lessCartquantity: async (req, res) => {
         try {
@@ -402,98 +315,41 @@ module.exports = {
         }
     },
 
-    checkoutpage: async (req, res) => {
-        try {
-            let totalBill = req.body.totalBill
-            const UserId = req.session.UserId
-            const addressData = await address.find({ UserId }).limit(3);
-            res.render('user/checkout', { UserId, totalBill, addressData })
-        } catch (error) {
-            res, redirect('/404')
-        }
-    },
+//  <--- ===========================----- WishList -----=================---> 
+     
 
-    postcheckout: async (req, res) => {
-        try {
-            const UserId = req.session.UserId
-            if (req.body) {
-                const data = req.body
-                let addressId
-                if (data.Address) {
-                    addressId = data.Address
+    wishList: async (req, res) => {
+    try {
+        if (req.session.userloggedIn) {
+            const _id = req.params.id
+            const product = await products.findOne({ _id: _id })
+            const userId = req.session.UserId
+            const wishListData = await wishList.findOne({ UserId: userId })
+            if (wishListData) {
+                let productIndex = wishListData.Product.findIndex(p => p.ProductId == _id)
+                if (productIndex >= 0) {
+                    res.json({ wishList: true })
                 } else {
-                    const addressData = new address({
-                        firstName: data.firstName,
-                        lastName: data.lastName,
-                        email: data.email,
-                        countryName: data.countryName,
-                        state: data.state,
-                        arrresLine: data.addresLine,
-                        address: data.address,
-                        postCode: data.postCode,
-                        UserId: UserId,
-                        phoneNumber: data.number
-                    })
-                    await addressData.save()
-                    addressId = addressData.id
-                }
-                let today = new Date().toJSON().slice(0, 10)
-                const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
-                const cartDatas = cartData.Product.map((data) => {
-                    let array = {}
-                    array.quantity = data.quantity
-                    array.ProductId = data.ProductId
-                    array.totalAmount = data.ProductId.Price * data.quantity
-                    array.Name = data.ProductId.Name
-                    array.moreImage = data.ProductId.moreImage
-                    array.Category = data.ProductId.Category
-                    array.Brand = data.ProductId.Brand
-                    return array
-                })
-                const orderdata = {
-                    paymentMethod: "cash",
-                    paymentAmount: data.totalBill,
-                    orderStatus: "pending",
-                    orderDate: today,
-                    addressId: addressId,
-                    cart: cartDatas
-                }
-
-                const orderData = await order.findOne({ userId: UserId })
-                if (orderData) {
-                    orderData.orders.push(orderdata)
-                    await orderData.save()
-                    let index = orderData.orders.length
-                    orderId = orderData.orders[index - 1].id
-                } else {
-                    order.create({
-                        userId: mongoose.Types.ObjectId(UserId),
-                        orders: [orderdata]
-                    }).then((data) => {
-                        let index = data.orders.length
-                        orderId = data.orders[index - 1].id
-                    })
-                }
-                if (req.body.cash == 'cash') {
-                    await cart.deleteOne({ UserId })
-                    res.json({ paymentSuccess: true })
-                } else {
-                    const totalBill = data.totalBill
-                    let options = {
-                        amount: totalBill * 100,  // amount in the smallest currency unit
-                        currency: "INR",
-                        receipt: "" + orderId
-                    };
-                    instance.orders.create(options, function (err, order) {
-                        res.json(order)
-                    });
+                    wishListData.Product.push({ ProductId: mongoose.Types.ObjectId(_id) })
+                    await wishListData.save()
+                    res.json({ status: true })
                 }
             } else {
-                res.redirect('/404')
+                await wishList.create({
+                    UserId: mongoose.Types.ObjectId(userId),
+                    Product: [{
+                        ProductId: mongoose.Types.ObjectId(_id),
+                    }]
+                }).then((data) => {
+                    res.json({ status: true })
+                })
             }
-        } catch (error) {
-            res.redirect('/404')
+        } else {
+            res.json({ notUser: true })
         }
+    } catch (error) {
+        res.redirect('/404')
+    }
     },
 
     wishListPage: async (req, res) => {
@@ -520,7 +376,6 @@ module.exports = {
         }
     },
 
-
     deletewishlist: async (req, res) => {
         try {
             const ProductId = req.params.id
@@ -534,6 +389,106 @@ module.exports = {
         } catch (error) {
             res.redirect('/404')
         }
+    },
+
+//  <--- ===========================----- checkout  -----=================---> 
+
+    checkoutpage: async (req, res) => {
+    try {
+        let totalBill = req.body.totalBill
+        const UserId = req.session.UserId
+        const addressData = await address.find({ UserId }).limit(3);
+        res.render('user/checkout', { UserId, totalBill, addressData })
+    } catch (error) {
+        res, redirect('/404')
+    }
+    },
+
+    postcheckout: async (req, res) => {
+    try {
+        const UserId = req.session.UserId
+        if (req.body) {
+            const data = req.body
+            let addressId
+            if (data.Address) {
+                addressId = data.Address
+            } else {
+                const addressData = new address({
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    countryName: data.countryName,
+                    state: data.state,
+                    arrresLine: data.addresLine,
+                    address: data.address,
+                    postCode: data.postCode,
+                    UserId: UserId,
+                    phoneNumber: data.number
+                })
+                await addressData.save()
+                addressId = addressData.id
+            }
+            let today = new Date().toJSON().slice(0, 10)
+            const cartData = await cart.findOne({ UserId }).populate('Product.ProductId').exec()
+            const cartDatas = cartData.Product.map((data) => {
+                let array = {}
+                array.quantity = data.quantity
+                array.ProductId = data.ProductId
+                array.totalAmount = data.ProductId.Price * data.quantity
+                array.Name = data.ProductId.Name
+                array.moreImage = data.ProductId.moreImage
+                array.Category = data.ProductId.Category
+                array.Brand = data.ProductId.Brand
+                return array
+            })
+            const orderdata = {
+                paymentMethod: "cash",
+                paymentAmount: data.totalBill,
+                orderStatus: "pending",
+                orderDate: today,
+                addressId: addressId,
+                cart: cartDatas
+            }
+
+            const orderData = await order.findOne({ userId: UserId })
+            if (orderData) {
+                orderData.orders.push(orderdata)
+                await orderData.save()
+                let index = orderData.orders.length
+                orderId = orderData.orders[index - 1].id
+            } else {
+                order.create({
+                    userId: mongoose.Types.ObjectId(UserId),
+                    orders: [orderdata]
+                }).then((data) => {
+                    let index = data.orders.length
+                    orderId = data.orders[index - 1].id
+                })
+            }
+            if (req.body.cash == 'cash') {
+                await cart.deleteOne({ UserId })
+                res.json({ paymentSuccess: true })
+            } else {
+                const totalBill = data.totalBill
+                let options = {
+                    amount: totalBill * 100,  // amount in the smallest currency unit
+                    currency: "INR",
+                    receipt: "" + orderId
+                };
+                instance.orders.create(options, function (err, order) {
+                    res.json(order)
+                });
+            }
+        } else {
+            res.redirect('/404')
+        }
+    } catch (error) {
+        res.redirect('/404')
+    }
+    },
+
+    orderSuccess: (req, res) => {
+        res.render("user/orderSuccess")
     },
 
     verifyPayment: async (req, res) => {
@@ -569,48 +524,50 @@ module.exports = {
         }
     },
 
-    orderlist: async (req, res) => {
-        const UserId = req.session.UserId
-        try {
-            const data = await order.findOne({ UserId }).populate('orders.cart').exec()
-            if (data) {
-                const orderData = data.orders
-                if (orderData) {
-                    const orderDatas = orderData.filter((data) => data.cart)
-                    res.render('user/order-list', { UserId, orderDatas })
-                } else {
-                    res.redirect('/404')
-                }
+
+//  <--- ===========================----- User Order -----=================---> 
+
+
+     orderlist: async (req, res) => {
+    const UserId = req.session.UserId
+    try {
+        const data = await order.findOne({ UserId }).populate('orders.cart').exec()
+        if (data) {
+            const orderData = data.orders
+            if (orderData) {
+                const orderDatas = orderData.filter((data) => data.cart)
+                orderDatas.reverse()
+                res.render('user/order-list', { UserId, orderDatas })
             } else {
                 res.redirect('/404')
             }
-        } catch (error) {
+        } else {
             res.redirect('/404')
         }
-    },
+    } catch (error) {
+        res.redirect('/404')
+    }
+     },
 
-    orderdetail: async (req, res) => {
-        const UserId = req.session.UserId
-        try {
-            const data = await order.findOne({ UserId }).populate('orders.cart').exec()
-            if (data) {
-                const orderData = data.orders
-                const order = orderData.find((data) => data.id == req.params.id)
-                if (order) {
-                    const orderdetail = order.cart
-                    if (orderdetail) {
-                        const addressId = order.addressId
-                        const addressData = await address.findOne({ addressId: addressId })
-                        const orderobj = {}
-                        orderobj.orderDate = order.orderDate
-                        orderobj.paymentAmount = order.paymentAmount
-                        orderobj.paymentMethod = order.paymentMethod
-                        orderobj.orderStatus = order.orderStatus
-                        if (addressData) {
-                            res.render('user/order-detail', { UserId, orderdetail, addressData, orderobj })
-                        }
-                    } else {
-                        res.redirect('/404')
+     orderdetail: async (req, res) => {
+    const UserId = req.session.UserId
+    try {
+        const data = await order.findOne({ UserId }).populate('orders.cart').exec()
+        if (data) {
+            const orderData = data.orders
+            const order = orderData.find((data) => data.id == req.params.id)
+            if (order) {
+                const orderdetail = order.cart
+                if (orderdetail) {
+                    const addressId = order.addressId
+                    const addressData = await address.findOne({ addressId: addressId })
+                    const orderobj = {}
+                    orderobj.orderDate = order.orderDate
+                    orderobj.paymentAmount = order.paymentAmount
+                    orderobj.paymentMethod = order.paymentMethod
+                    orderobj.orderStatus = order.orderStatus
+                    if (addressData) {
+                        res.render('user/order-detail', { UserId, orderdetail, addressData, orderobj })
                     }
                 } else {
                     res.redirect('/404')
@@ -618,78 +575,15 @@ module.exports = {
             } else {
                 res.redirect('/404')
             }
-        } catch (error) {
+        } else {
             res.redirect('/404')
         }
-    },
+    } catch (error) {
+        res.redirect('/404')
+    }
+     },
 
-
-    addresslist: async (req, res) => {
-        try {
-            const UserId = req.session.UserId
-            const addressData = await address.find({ UserId })
-            if (addressData) {
-                res.render('user/address-list', { UserId, addressData })
-            } else {
-                res.redirect('/login')
-            }
-        } catch (error) {
-            res.redirect('/404')
-        }
-    },
-
-    deleteAddress: async (req, res) => {
-        try {
-            const addressId = req.params.id
-            const addressData = await address.findOne({ _id: req.params.id })
-            if (addressData) {
-                await address.deleteOne(
-                    { _id: mongoose.Types.ObjectId(addressId) })
-                res.json({ status: true })
-            } else {
-                res.redirect('/404')
-            }
-        } catch (error) {
-            res.redirect('/404')
-        }
-    },
-
-    editAddress: async (req, res) => {
-        try {
-            const addressId = req.params.id
-            const UserId = req.session.UserId
-            const addressData = await address.findOne({ _id: req.params.id })
-            if (addressData) {
-                res.render("user/editaddress", { addressData, UserId })
-            } else {
-                res.redirect('/404')
-            }
-        } catch (error) {
-            res.redirect('/404')
-        }
-    },
-
-    postEditAddress: async (req, res) => {
-        try {
-            const addressId = req.params.id
-            const addressData = req.body
-            const userAddress = await address.findOne({ _id: mongoose.Types.ObjectId(addressId) })
-            if (userAddress) {
-                await address.findOneAndUpdate(
-                    { _id: mongoose.Types.ObjectId(addressId) },
-                    {
-                        $set: addressData
-                    })
-                res.redirect("/addresslist")
-            } else {
-                res.redirect('/404')
-            }
-        } catch (error) {
-            res.redirect('/404')
-        }
-    },
-
-    orderCancel: async (req, res) => {
+     orderCancel: async (req, res) => {
         try {
             const UserId = req.session.UserId
         //   console.log(req.params.id);
@@ -716,34 +610,162 @@ module.exports = {
             res.redirect('/404')
         }
        
-    },
+     },
 
-    applyCoupon: async (req, res) => {
-        try {
-            const UserId = req.session.UserId
-            const couponData = await coupon.findOne({ couponId: req.body.couponId })
-            if (couponData) {
-                const couponExist = couponData.userData.findIndex(p => p.userId == UserId)
-                if (couponExist == -1) {
-                    const currentDate = new Date()
-                    if (currentDate <= couponData.couponExpiredDate) {
-                        await coupon.updateOne(
-                            { couponId: req.body.couponId },
-                            { $push: { userData: { userId: UserId } } }
-                        )
-                        res.json({ status: true, couponData: couponData })
-                    } else {
-                        res.json({ couponExpiredDateError: true })
-                    }
-                } else {
-                    res.json({ couponExistError: true })
-                }
-            } else {
-                res.json({ couponDataError: true })
-            }
-        } catch (error) {
+
+//  <--- ===========================----- User Profile -----=================---> 
+
+
+        Profile: async (req, res) => {
+    let UserId = req.session.UserId
+    let profile = await users.findOne({ _id: UserId })
+    if (profile) {
+        res.render('user/profile', { profile, UserId })
+    } else {
+        res.redirect('/404')
+    }
+
+        },
+
+        editProfile: async (req, res) => {
+    try {
+        const UserId = req.session.UserId
+        const profileId = req.params.id
+        const Profile = await users.findOne({ _id: profileId })
+        if (Profile) {
+            res.render('user/editProfile', { Profile, UserId })
+        } else {
             res.redirect('/404')
         }
+    } catch (error) {
+        res.redirect('/404')
     }
+        },
+
+        postProfile: async (req, res) => {
+    try {
+        ProfileId = req.params.id
+        await users.findOneAndUpdate(
+            { _id: mongoose.Types.ObjectId(ProfileId) },
+            {
+                $set: {
+                    Name: req.body.Name,
+                    Email: req.body.Email,
+                    Phone: req.body.Phone
+                }
+            })
+        res.redirect('/profile')
+    }
+    catch (e) {
+        res.redirect('/404')
+    }
+        },
+
+        addresslist: async (req, res) => {
+            try {
+                const UserId = req.session.UserId
+                const addressData = await address.find({ UserId })
+                if (addressData) {
+                    res.render('user/address-list', { UserId, addressData })
+                } else {
+                    res.redirect('/login')
+                }
+            } catch (error) {
+                res.redirect('/404')
+            }
+        },
+    
+        deleteAddress: async (req, res) => {
+            try {
+                const addressId = req.params.id
+                const addressData = await address.findOne({ _id: req.params.id })
+                if (addressData) {
+                    await address.deleteOne(
+                        { _id: mongoose.Types.ObjectId(addressId) })
+                    res.json({ status: true })
+                } else {
+                    res.redirect('/404')
+                }
+            } catch (error) {
+                res.redirect('/404')
+            }
+        },
+    
+        editAddress: async (req, res) => {
+            try {
+                const addressId = req.params.id
+                const UserId = req.session.UserId
+                const addressData = await address.findOne({ _id: req.params.id })
+                if (addressData) {
+                    res.render("user/editaddress", { addressData, UserId })
+                } else {
+                    res.redirect('/404')
+                }
+            } catch (error) {
+                res.redirect('/404')
+            }
+        },
+    
+        postEditAddress: async (req, res) => {
+            try {
+                const addressId = req.params.id
+                const addressData = req.body
+                const userAddress = await address.findOne({ _id: mongoose.Types.ObjectId(addressId) })
+                if (userAddress) {
+                    await address.findOneAndUpdate(
+                        { _id: mongoose.Types.ObjectId(addressId) },
+                        {
+                            $set: addressData
+                        })
+                    res.redirect("/addresslist")
+                } else {
+                    res.redirect('/404')
+                }
+            } catch (error) {
+                res.redirect('/404')
+            }
+        },
+    
+//  <--- ===========================----- Coupon -----=================---> 
+
+
+     applyCoupon: async (req, res) => {
+    try {
+        const UserId = req.session.UserId
+        const couponData = await coupon.findOne({ couponId: req.body.couponId })
+        if (couponData) {
+            const couponExist = couponData.userData.findIndex(p => p.userId == UserId)
+            if (couponExist == -1) {
+                const currentDate = new Date()
+                if (currentDate <= couponData.couponExpiredDate) {
+                    await coupon.updateOne(
+                        { couponId: req.body.couponId },
+                        { $push: { userData: { userId: UserId } } }
+                    )
+                    res.json({ status: true, couponData: couponData })
+                } else {
+                    res.json({ couponExpiredDateError: true })
+                }
+            } else {
+                res.json({ couponExistError: true })
+            }
+        } else {
+            res.json({ couponDataError: true })
+        }
+    } catch (error) {
+        res.redirect('/404')
+    }
+     },
+
+//  <--- ===========================----- Other -----=================---> 
+
+    error: (req, res) => {
+        res.render('user/error')
+    },
+
+    forgotPassword: (req, res) => {
+        res.render('user/forgot-password')
+    },
+
 }
 
