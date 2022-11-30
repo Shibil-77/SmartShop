@@ -16,7 +16,6 @@ const fs = require('fs')
 
 module.exports = {
 
-
    //  <--- ===========================----- admin -----=================---> 
 
    adminsignup: (req, res) => {
@@ -121,7 +120,6 @@ module.exports = {
          res.redirect('/admin/error')
       }
    },
-
 
  //  <--- ===========================----- Dashboard -----=================---> 
 
@@ -325,7 +323,7 @@ module.exports = {
       }
    },
 
-      //  <--- ===========================----- Category  Management -----=================---> 
+   //  <--- ===========================----- Category  Management -----=================---> 
 
    addCategory: (req, res) => {
       const categoryError = req.session.category
@@ -380,7 +378,7 @@ module.exports = {
       }
    },
 
-      //  <--- ===========================----- Bannner Management -----=================---> 
+   //  <--- ===========================----- Bannner Management -----=================---> 
 
    addbanner: (req, res) => {
       res.render('admin/addbanner')
@@ -608,7 +606,7 @@ module.exports = {
       }
    },
    
-//  <--- ===========================----- Sales Management -----=================---> 
+   //  <--- ===========================----- Sales Management -----=================---> 
 
    salesReport: async (req, res) => {
       const data = await order.aggregate([

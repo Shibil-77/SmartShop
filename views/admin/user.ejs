@@ -52,7 +52,8 @@
 <h4 class="account-content-title"><i class="far fa-map-marker-alt"></i>Users</h4>
 <div class="account-content-table">
 <div class="table-responsive">
-<table class="table table-borderless">
+<table class="table table-borderless" id="example">
+<thead>
 <tr>
 <th>Name</th>
 <th>Email</th>
@@ -60,6 +61,8 @@
 <th>LoginDate</th>
 <th>Action</th>
 </tr>
+</thead>
+<tbody>
 <% userData.forEach(userData => { %>
 <tr class="account-order-list">
 <td><div class="product-info"><%-userData.Name %></div></td>
@@ -68,29 +71,17 @@
 <td><div class="product-info"><%-userData.Date %></div></td>
 <td>
 <div class="product-info">
-    <% if (userData.Action) { %>
-        <a href="/admin/blockUser/<%=userData.id %>" class="bg-danger">block</a>
-        <%} else { %>
-            <a href="/admin/blockUser/<%=userData.id %>" class="bg-success" >unblock</a>
-        <% } %>
+<% if (userData.Action) { %>
+<a href="/admin/blockUser/<%=userData.id %>" class="bg-danger">block</a>
+<%} else { %>
+<a href="/admin/blockUser/<%=userData.id %>" class="bg-success" >unblock</a>
+<% } %>
 </div>
 </td>
 </tr>
 <% }) %>
+</tbody>
 </table>
-</div>
-<div class="col-12">
-
-<div class="pagination center mt-2">
-<ul class="pagination-list">
-<li><a href="#"><i class="ti-arrow-left"></i></a></li>
-<li><a href="#">1</a></li>
-<li class="active"><a href="#">2</a></li>
-<li><a href="#">3</a></li>
-<li><a href="#"><i class="ti-arrow-right"></i></a></li>
-</ul>
-</div>
-
 </div>
 </div>
 </div>
@@ -104,6 +95,12 @@
 <%- include('../inclueds/footer.ejs'); %>
 
 <%- include('../inclueds/end.ejs'); %>
+<script>
 
+  $(document).ready(function () {
+    $('#example').DataTable();
+  });
+  
+  </script> 
 </body>
 </html>

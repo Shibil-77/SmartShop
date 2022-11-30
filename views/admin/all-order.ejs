@@ -45,18 +45,20 @@
 <h4 class="account-content-title"><i class="far fa-shopping-bag"></i> All Orders</h4>
 <div class="account-content-table">
 <div class="table-responsive">
-<table class="table table-borderless pagination"   data-pagecount="3">
+<table class="table table-borderless" id="example" >
+<thead>
 <tr>
-
-<th>Order #</th>
+<th>Order#</th>
 <th>Purchased Date</th>
 <th>Total</th>
 <th>Payment Method</th>
  <th>Status</th>
 <th>Action</th>
 </tr>
+</thead>
+<tbody > 
 <% orderdetail.forEach(orderdetail => { %>
-<tr class="account-order-list">
+<tr class="account-order-list" >
 <td><b>#<%-orderdetail.orders._id %></b></td>
 <td><%-orderdetail.orders.orderDate %></td>
 <td><%-orderdetail.orders.paymentAmount %></td>
@@ -65,20 +67,8 @@
 <td class="text-center"><a href="/admin/adminOrderDetail/<%-orderdetail._id %>/<%-orderdetail.orders._id %>" class="content-action"><i class="far fa-arrow-right"></i></a></td>
 </tr>
 <% }) %>
+</tbody>
 </table>
-</div>
-<div class="col-12">
-
-<div class="pagination center mt-2">
-<ul class="pagination-list">
-<li><a href="#"><i class="ti-arrow-left"></i></a></li>
-<li><a href="#">1</a></li>
-<li class="active"><a href="#">2</a></li>
-<li><a href="#">3</a></li>
-<li><a href="#"><i class="ti-arrow-right"></i></a></li>
-</ul>
-</div>
-
 </div>
 </div>
 </div>
@@ -192,6 +182,19 @@ function PaymentStatus(payment,order) {
           genTables();
       });
       </script>
+
+      
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script>
+
+$(document).ready(function () {
+  $('#example').DataTable();
+});
+
+</script> 
+
       
 </body>
 </html>

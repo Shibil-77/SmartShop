@@ -549,8 +549,8 @@ module.exports = {
     }
      },
 
-     orderdetail: async (req, res) => {
-    const UserId = req.session.UserId
+orderdetail: async (req, res) => {
+  const UserId = req.session.UserId
     try {
         const data = await order.findOne({ UserId }).populate('orders.cart').exec()
         if (data) {
