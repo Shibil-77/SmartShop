@@ -9,8 +9,8 @@ const address = require('../models/schema/address')
 const coupon = require("../models/schema/coupon")
 const bcrypt = require('bcrypt')
 const dataCheck = require('../Middlewares/data-checking')
-const Middlewares = require("../Middlewares/dashboard")
 const admin = require('../models/schema/admin')
+const Middlewares = require("../Middlewares/dashboard")
 const path = require('path')
 const fs = require('fs')
 
@@ -606,7 +606,7 @@ module.exports = {
       }
    },
    
-   //  <--- ===========================----- Sales Management -----=================---> 
+//  <--- ===========================----- Sales Management -----=================---> 
 
    salesReport: async (req, res) => {
       const data = await order.aggregate([

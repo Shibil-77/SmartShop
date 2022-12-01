@@ -206,7 +206,7 @@ module.exports = {
 
 //  <--- ===========================----- Cart -----=================---> 
 
-     cart: async (req, res) => {
+    cart: async (req, res) => {
     if (req.session.userloggedIn) {
         const productId = req.params.id
         const product = await products.findOne({ _id: productId })
@@ -317,7 +317,6 @@ module.exports = {
 
 //  <--- ===========================----- WishList -----=================---> 
      
-
     wishList: async (req, res) => {
     try {
         if (req.session.userloggedIn) {
@@ -549,7 +548,7 @@ module.exports = {
     }
      },
 
-orderdetail: async (req, res) => {
+     orderdetail: async (req, res) => {
   const UserId = req.session.UserId
     try {
         const data = await order.findOne({ UserId }).populate('orders.cart').exec()
@@ -609,7 +608,6 @@ orderdetail: async (req, res) => {
         } catch (error) {
             res.redirect('/404')
         }
-       
      },
 
 
